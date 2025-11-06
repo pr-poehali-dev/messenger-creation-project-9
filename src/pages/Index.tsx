@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { auth, User } from '@/lib/auth';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 
 type Chat = {
   id: number;
@@ -33,35 +36,51 @@ type Message = {
 
 type Section = 'chats' | 'contacts' | 'groups' | 'channels' | 'settings';
 
-const stories: Story[] = [
-  { id: 1, name: 'Иван', avatar: '👨‍💼', viewed: false },
-  { id: 2, name: 'Мария', avatar: '👩‍🎨', viewed: false },
-  { id: 3, name: 'Алекс', avatar: '👨‍💻', viewed: true },
-  { id: 4, name: 'Катя', avatar: '👩‍🔬', viewed: false },
-  { id: 5, name: 'Дима', avatar: '👨‍🎓', viewed: true },
-];
-
-const chats: Chat[] = [
-  { id: 1, name: 'Иван Петров', avatar: '👨‍💼', lastMessage: 'Привет! Как дела?', time: '14:30', unread: 3, online: true },
-  { id: 2, name: 'Мария Смирнова', avatar: '👩‍🎨', lastMessage: 'Отправила файлы', time: '13:15', unread: 0, online: true },
-  { id: 3, name: 'Алекс Козлов', avatar: '👨‍💻', lastMessage: 'Созвон в 15:00?', time: '12:45', unread: 1, online: false },
-  { id: 4, name: 'Дизайн-команда', avatar: '🎨', lastMessage: 'Новый макет готов', time: '11:20', unread: 12, online: true },
-  { id: 5, name: 'Разработчики', avatar: '💻', lastMessage: 'Деплой завершен', time: '10:05', unread: 0, online: false },
-  { id: 6, name: 'Катя Волкова', avatar: '👩‍🔬', lastMessage: 'Спасибо за помощь!', time: 'Вчера', unread: 0, online: false },
-  { id: 7, name: 'Бот поддержки', avatar: '🤖', lastMessage: 'Чем могу помочь?', time: 'Вчера', unread: 0, online: true },
-];
-
 export default function Index() {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
+  
   const [activeSection, setActiveSection] = useState<Section>('chats');
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messageText, setMessageText] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: 'Привет! Как твои дела?', time: '14:25', sent: false },
-    { id: 2, text: 'Отлично! Работаю над новым проектом 🚀', time: '14:26', sent: true },
-    { id: 3, text: 'Звучит круто! Расскажешь подробнее?', time: '14:28', sent: false, reaction: '👍' },
-    { id: 4, text: 'Конечно! Создаю мессенджер с крутым дизайном', time: '14:30', sent: true },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [showStickers, setShowStickers] = useState(false);
+  
+  useEffect(() => {
+    const checkAuth = async () => {
+      const currentUser = await auth.verifyToken();
+      setUser(currentUser);
+      setIsLoading(false);
+    };
+    checkAuth();
+  }, []);
+  
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    
+    try {
+      if (authMode === 'register') {
+        const { user: newUser } = await auth.register(email, password, username);
+        setUser(newUser);
+      } else {
+        const { user: loggedUser } = await auth.login(email, password);
+        setUser(loggedUser);
+      }
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+  
+  const handleLogout = () => {
+    auth.logout();
+    setUser(null);
+  };
 
   const stickers = ['😀', '😂', '❤️', '🔥', '👍', '🎉', '😍', '💯', '✨', '🚀', '💪', '🤖'];
   const reactions = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
@@ -95,6 +114,103 @@ export default function Index() {
       msg.id === messageId ? { ...msg, reaction } : msg
     ));
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <div className="w-20 h-20 mx-auto gradient-primary rounded-full animate-pulse" />
+          <p className="text-muted-foreground">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (!user) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md glass border-border">
+          <CardHeader className="space-y-1">
+            <div className="w-16 h-16 mx-auto mb-4 gradient-primary rounded-2xl flex items-center justify-center text-3xl font-bold">
+              T
+            </div>
+            <CardTitle className="text-2xl text-center gradient-text">
+              {authMode === 'login' ? 'Вход в аккаунт' : 'Регистрация'}
+            </CardTitle>
+            <CardDescription className="text-center">
+              {authMode === 'login' 
+                ? 'Войдите, чтобы продолжить общение' 
+                : 'Создайте аккаунт для начала'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleAuth} className="space-y-4">
+              {authMode === 'register' && (
+                <div className="space-y-2">
+                  <Label htmlFor="username">Имя пользователя</Label>
+                  <Input
+                    id="username"
+                    placeholder="Ваше имя"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    className="bg-muted border-0"
+                  />
+                </div>
+              )}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="example@mail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="bg-muted border-0"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Пароль</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  className="bg-muted border-0"
+                />
+              </div>
+              {error && (
+                <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-lg">
+                  {error}
+                </div>
+              )}
+              <Button type="submit" className="w-full gradient-primary border-0 hover:opacity-90">
+                {authMode === 'login' ? 'Войти' : 'Зарегистрироваться'}
+              </Button>
+              <div className="text-center text-sm">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode(authMode === 'login' ? 'register' : 'login');
+                    setError('');
+                  }}
+                  className="text-primary hover:underline"
+                >
+                  {authMode === 'login' 
+                    ? 'Нет аккаунта? Зарегистрируйтесь' 
+                    : 'Уже есть аккаунт? Войдите'}
+                </button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -133,9 +249,11 @@ export default function Index() {
           >
             <Icon name="Settings" size={24} />
           </button>
-          <Avatar className="cursor-pointer hover:scale-110 transition-transform">
+          <Avatar className="cursor-pointer hover:scale-110 transition-transform" onClick={handleLogout} title="Выйти">
             <AvatarImage src="" />
-            <AvatarFallback className="gradient-primary text-white font-semibold">Я</AvatarFallback>
+            <AvatarFallback className="gradient-primary text-white font-semibold text-xl">
+              {user.avatar}
+            </AvatarFallback>
           </Avatar>
         </div>
       </aside>
@@ -170,61 +288,12 @@ export default function Index() {
         </div>
 
         {activeSection === 'chats' && (
-          <>
-            <div className="px-6 pb-4">
-              <ScrollArea className="w-full">
-                <div className="flex gap-3 pb-2">
-                  {stories.map(story => (
-                    <div key={story.id} className="flex flex-col items-center gap-1 cursor-pointer group">
-                      <div className={`p-1 rounded-full ${story.viewed ? 'bg-muted' : 'gradient-primary'}`}>
-                        <div className="w-14 h-14 rounded-full bg-card flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                          {story.avatar}
-                        </div>
-                      </div>
-                      <span className="text-xs text-muted-foreground truncate w-16 text-center">
-                        {story.name}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
+          <ScrollArea className="flex-1 px-6">
+            <div className="text-center py-12 text-muted-foreground">
+              <p>Пока нет чатов</p>
+              <p className="text-sm mt-2">Начните общение с друзьями!</p>
             </div>
-
-            <ScrollArea className="flex-1 px-3">
-              <div className="space-y-1">
-                {chats.map(chat => (
-                  <div
-                    key={chat.id}
-                    onClick={() => setSelectedChat(chat)}
-                    className={`flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all hover:bg-muted ${
-                      selectedChat?.id === chat.id ? 'bg-muted' : ''
-                    }`}
-                  >
-                    <div className="relative">
-                      <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-xl">
-                        {chat.avatar}
-                      </div>
-                      {chat.online && (
-                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-semibold truncate">{chat.name}</h3>
-                        <span className="text-xs text-muted-foreground">{chat.time}</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground truncate">{chat.lastMessage}</p>
-                    </div>
-                    {chat.unread > 0 && (
-                      <Badge className="gradient-primary border-0 h-6 min-w-6 flex items-center justify-center">
-                        {chat.unread}
-                      </Badge>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          </>
+          </ScrollArea>
         )}
 
         {activeSection === 'settings' && (
@@ -257,7 +326,7 @@ export default function Index() {
       </div>
 
       <div className="flex-1 flex flex-col">
-        {selectedChat ? (
+        {false ? (
           <>
             <div className="h-20 glass border-b border-border px-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -402,9 +471,9 @@ export default function Index() {
               <div className="w-32 h-32 mx-auto gradient-primary rounded-full flex items-center justify-center text-6xl">
                 💬
               </div>
-              <h2 className="text-3xl font-bold gradient-text">Выберите чат</h2>
+              <h2 className="text-3xl font-bold gradient-text">Добро пожаловать, {user.username}!</h2>
               <p className="text-muted-foreground">
-                Начните общение с друзьями, коллегами или ботами
+                Выберите чат слева или создайте новый
               </p>
             </div>
           </div>
