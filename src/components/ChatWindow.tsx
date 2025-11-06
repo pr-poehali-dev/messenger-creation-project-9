@@ -2,6 +2,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
+import HighlightText from '@/components/HighlightText';
 import type { Chat, Message, User } from '@/types';
 
 type ChatWindowProps = {
@@ -128,7 +129,7 @@ export default function ChatWindow({
                         : 'glass rounded-bl-md'
                     }`}
                   >
-                    <p className="text-sm leading-relaxed">{message.text}</p>
+                    <HighlightText text={message.text} highlight={messageSearchQuery} className="text-sm leading-relaxed block" />
                     <span
                       className={`text-xs mt-1 block ${
                         isSent ? 'text-white/70' : 'text-muted-foreground'

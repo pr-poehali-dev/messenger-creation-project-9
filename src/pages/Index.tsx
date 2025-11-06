@@ -304,6 +304,7 @@ export default function Index() {
             chats={filteredChats}
             selectedChatId={selectedChat?.id || null}
             onSelectChat={setSelectedChat}
+            searchQuery={chatSearchQuery}
           />
         )}
 

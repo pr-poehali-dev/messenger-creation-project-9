@@ -1,15 +1,17 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
+import HighlightText from '@/components/HighlightText';
 import type { Chat } from '@/types';
 
 type ChatListProps = {
   chats: Chat[];
   selectedChatId: number | null;
   onSelectChat: (chat: Chat) => void;
+  searchQuery?: string;
 };
 
-export default function ChatList({ chats, selectedChatId, onSelectChat }: ChatListProps) {
+export default function ChatList({ chats, selectedChatId, onSelectChat, searchQuery = '' }: ChatListProps) {
   if (chats.length === 0) {
     return (
       <ScrollArea className="flex-1 px-3">
@@ -43,12 +45,12 @@ export default function ChatList({ chats, selectedChatId, onSelectChat }: ChatLi
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <h3 className="font-semibold truncate">{chat.name}</h3>
-                <span className="text-xs text-muted-foreground">
+                <HighlightText text={chat.name} highlight={searchQuery} className="font-semibold truncate block" />
+                <span className="text-xs text-muted-foreground flex-shrink-0 ml-2">
                   {chat.last_message_time ? new Date(chat.last_message_time).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : ''}
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground truncate">{chat.last_message || 'Начните общение'}</p>
+              <HighlightText text={chat.last_message || 'Начните общение'} highlight={searchQuery} className="text-sm text-muted-foreground truncate block" />
             </div>
             {chat.unread_count > 0 && (
               <Badge className="gradient-primary border-0 h-6 min-w-6 flex items-center justify-center">
