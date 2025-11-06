@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Icon from '@/components/ui/icon';
-import { ChatUser } from '@/lib/chats';
+import type { ChatUser } from '@/types';
 
 type NewChatDialogProps = {
   open: boolean;

@@ -3,29 +3,28 @@ import Icon from '@/components/ui/icon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { auth, User } from '@/lib/auth';
-import { chatsApi, Chat as ApiChat, Message as ApiMessage, ChatUser } from '@/lib/chats';
+import { auth } from '@/lib/auth';
+import { chatsApi } from '@/lib/chats';
 import AuthForm from '@/components/AuthForm';
 import ChatList from '@/components/ChatList';
 import ChatWindow from '@/components/ChatWindow';
 import NewChatDialog from '@/components/NewChatDialog';
-
-type Section = 'chats' | 'contacts' | 'groups' | 'channels' | 'settings';
+import type { User, Chat, Message, ChatUser, Section, AuthMode } from '@/types';
 
 export default function Index() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   
   const [activeSection, setActiveSection] = useState<Section>('chats');
-  const [chats, setChats] = useState<ApiChat[]>([]);
-  const [selectedChat, setSelectedChat] = useState<ApiChat | null>(null);
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messageText, setMessageText] = useState('');
-  const [messages, setMessages] = useState<ApiMessage[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [showStickers, setShowStickers] = useState(false);
   const [showNewChatDialog, setShowNewChatDialog] = useState(false);
   const [userSearch, setUserSearch] = useState('');

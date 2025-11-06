@@ -2,9 +2,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import type { AuthMode } from '@/types';
 
 type AuthFormProps = {
-  authMode: 'login' | 'register';
+  authMode: AuthMode;
   email: string;
   password: string;
   username: string;

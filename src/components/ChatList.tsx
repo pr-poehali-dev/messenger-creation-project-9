@@ -1,11 +1,11 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Chat as ApiChat } from '@/lib/chats';
+import type { Chat } from '@/types';
 
 type ChatListProps = {
-  chats: ApiChat[];
+  chats: Chat[];
   selectedChatId: number | null;
-  onSelectChat: (chat: ApiChat) => void;
+  onSelectChat: (chat: Chat) => void;
 };
 
 export default function ChatList({ chats, selectedChatId, onSelectChat }: ChatListProps) {

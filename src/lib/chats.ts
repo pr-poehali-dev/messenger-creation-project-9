@@ -1,33 +1,6 @@
+import type { Chat, Message, ChatUser } from '@/types';
+
 const CHATS_API_URL = 'https://functions.poehali.dev/fe62a1f5-6c6e-4d99-ba0c-8ceed33a9b17';
-
-export type ChatUser = {
-  id: number;
-  username: string;
-  email: string;
-  avatar: string;
-};
-
-export type Chat = {
-  id: number;
-  name: string;
-  avatar: string;
-  is_group: boolean;
-  last_message: string | null;
-  last_message_time: string | null;
-  unread_count: number;
-  online?: boolean;
-  other_user_id?: number;
-};
-
-export type Message = {
-  id: number;
-  text: string;
-  reaction: string | null;
-  created_at: string;
-  sender_id: number;
-  username: string;
-  avatar: string;
-};
 
 function getAuthHeaders() {
   const token = localStorage.getItem('auth_token');

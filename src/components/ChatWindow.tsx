@@ -2,12 +2,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
-import { Chat as ApiChat, Message as ApiMessage } from '@/lib/chats';
-import { User } from '@/lib/auth';
+import type { Chat, Message, User } from '@/types';
 
 type ChatWindowProps = {
-  selectedChat: ApiChat | null;
-  messages: ApiMessage[];
+  selectedChat: Chat | null;
+  messages: Message[];
   currentUser: User;
   messageText: string;
   onMessageTextChange: (value: string) => void;
