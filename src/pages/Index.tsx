@@ -8,31 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { auth, User } from '@/lib/auth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-
-type Chat = {
-  id: number;
-  name: string;
-  avatar: string;
-  lastMessage: string;
-  time: string;
-  unread: number;
-  online: boolean;
-};
-
-type Story = {
-  id: number;
-  name: string;
-  avatar: string;
-  viewed: boolean;
-};
-
-type Message = {
-  id: number;
-  text: string;
-  time: string;
-  sent: boolean;
-  reaction?: string;
-};
+import { chatsApi, Chat as ApiChat, Message as ApiMessage, ChatUser } from '@/lib/chats';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 type Section = 'chats' | 'contacts' | 'groups' | 'channels' | 'settings';
 
@@ -46,19 +23,89 @@ export default function Index() {
   const [error, setError] = useState('');
   
   const [activeSection, setActiveSection] = useState<Section>('chats');
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [chats, setChats] = useState<ApiChat[]>([]);
+  const [selectedChat, setSelectedChat] = useState<ApiChat | null>(null);
   const [messageText, setMessageText] = useState('');
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<ApiMessage[]>([]);
   const [showStickers, setShowStickers] = useState(false);
+  const [showNewChatDialog, setShowNewChatDialog] = useState(false);
+  const [userSearch, setUserSearch] = useState('');
+  const [searchResults, setSearchResults] = useState<ChatUser[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   
   useEffect(() => {
     const checkAuth = async () => {
       const currentUser = await auth.verifyToken();
       setUser(currentUser);
       setIsLoading(false);
+      if (currentUser) {
+        loadChats();
+      }
     };
     checkAuth();
   }, []);
+  
+  useEffect(() => {
+    if (selectedChat) {
+      loadMessages(selectedChat.id);
+    }
+  }, [selectedChat]);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (userSearch.trim()) {
+        searchUsers();
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [userSearch]);
+  
+  const loadChats = async () => {
+    try {
+      const data = await chatsApi.getChats();
+      setChats(data);
+    } catch (err) {
+      console.error('Failed to load chats:', err);
+    }
+  };
+  
+  const loadMessages = async (chatId: number) => {
+    try {
+      const data = await chatsApi.getMessages(chatId);
+      setMessages(data);
+    } catch (err) {
+      console.error('Failed to load messages:', err);
+    }
+  };
+  
+  const searchUsers = async () => {
+    setIsSearching(true);
+    try {
+      const data = await chatsApi.searchUsers(userSearch);
+      setSearchResults(data);
+    } catch (err) {
+      console.error('Failed to search users:', err);
+    }
+    setIsSearching(false);
+  };
+  
+  const handleCreateChat = async (otherUser: ChatUser) => {
+    try {
+      const chatId = await chatsApi.createChat(otherUser.id);
+      await loadChats();
+      const newChat = chats.find(c => c.id === chatId);
+      if (newChat) {
+        setSelectedChat(newChat);
+      }
+      setShowNewChatDialog(false);
+      setUserSearch('');
+      setSearchResults([]);
+    } catch (err) {
+      console.error('Failed to create chat:', err);
+    }
+  };
   
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,34 +132,39 @@ export default function Index() {
   const stickers = ['😀', '😂', '❤️', '🔥', '👍', '🎉', '😍', '💯', '✨', '🚀', '💪', '🤖'];
   const reactions = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
 
-  const handleSendMessage = () => {
-    if (messageText.trim()) {
-      const newMessage: Message = {
-        id: messages.length + 1,
-        text: messageText,
-        time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
-        sent: true,
-      };
-      setMessages([...messages, newMessage]);
-      setMessageText('');
+  const handleSendMessage = async () => {
+    if (messageText.trim() && selectedChat) {
+      try {
+        await chatsApi.sendMessage(selectedChat.id, messageText);
+        setMessageText('');
+        await loadMessages(selectedChat.id);
+        await loadChats();
+      } catch (err) {
+        console.error('Failed to send message:', err);
+      }
     }
   };
 
-  const handleStickerClick = (sticker: string) => {
-    const newMessage: Message = {
-      id: messages.length + 1,
-      text: sticker,
-      time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
-      sent: true,
-    };
-    setMessages([...messages, newMessage]);
-    setShowStickers(false);
+  const handleStickerClick = async (sticker: string) => {
+    if (selectedChat) {
+      try {
+        await chatsApi.sendMessage(selectedChat.id, sticker);
+        setShowStickers(false);
+        await loadMessages(selectedChat.id);
+        await loadChats();
+      } catch (err) {
+        console.error('Failed to send sticker:', err);
+      }
+    }
   };
 
-  const addReaction = (messageId: number, reaction: string) => {
-    setMessages(messages.map(msg =>
-      msg.id === messageId ? { ...msg, reaction } : msg
-    ));
+  const addReaction = async (messageId: number, reaction: string) => {
+    try {
+      await chatsApi.addReaction(messageId, reaction);
+      await loadMessages(selectedChat!.id);
+    } catch (err) {
+      console.error('Failed to add reaction:', err);
+    }
   };
 
   if (isLoading) {
@@ -272,7 +324,7 @@ export default function Index() {
               <Button size="icon" variant="ghost" className="rounded-full">
                 <Icon name="Search" size={20} />
               </Button>
-              <Button size="icon" variant="ghost" className="rounded-full">
+              <Button size="icon" variant="ghost" className="rounded-full" onClick={() => setShowNewChatDialog(true)}>
                 <Icon name="Plus" size={20} />
               </Button>
             </div>
@@ -288,11 +340,48 @@ export default function Index() {
         </div>
 
         {activeSection === 'chats' && (
-          <ScrollArea className="flex-1 px-6">
-            <div className="text-center py-12 text-muted-foreground">
-              <p>Пока нет чатов</p>
-              <p className="text-sm mt-2">Начните общение с друзьями!</p>
-            </div>
+          <ScrollArea className="flex-1 px-3">
+            {chats.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <p>Пока нет чатов</p>
+                <p className="text-sm mt-2">Нажмите + чтобы начать общение!</p>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {chats.map(chat => (
+                  <div
+                    key={chat.id}
+                    onClick={() => setSelectedChat(chat)}
+                    className={`flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all hover:bg-muted ${
+                      selectedChat?.id === chat.id ? 'bg-muted' : ''
+                    }`}
+                  >
+                    <div className="relative">
+                      <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-xl">
+                        {chat.avatar}
+                      </div>
+                      {chat.online && (
+                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-semibold truncate">{chat.name}</h3>
+                        <span className="text-xs text-muted-foreground">
+                          {chat.last_message_time ? new Date(chat.last_message_time).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : ''}
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground truncate">{chat.last_message || 'Начните общение'}</p>
+                    </div>
+                    {chat.unread_count > 0 && (
+                      <Badge className="gradient-primary border-0 h-6 min-w-6 flex items-center justify-center">
+                        {chat.unread_count}
+                      </Badge>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </ScrollArea>
         )}
 
@@ -326,7 +415,7 @@ export default function Index() {
       </div>
 
       <div className="flex-1 flex flex-col">
-        {false ? (
+        {selectedChat ? (
           <>
             <div className="h-20 glass border-b border-border px-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -360,20 +449,22 @@ export default function Index() {
 
             <ScrollArea className="flex-1 p-6">
               <div className="space-y-4 max-w-4xl mx-auto">
-                {messages.map(message => (
+                {messages.map(message => {
+                  const isSent = message.sender_id === user?.id;
+                  return (
                   <div
                     key={message.id}
-                    className={`flex items-end gap-2 group ${message.sent ? 'flex-row-reverse' : 'flex-row'}`}
+                    className={`flex items-end gap-2 group ${isSent ? 'flex-row-reverse' : 'flex-row'}`}
                   >
-                    {!message.sent && (
+                    {!isSent && (
                       <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm flex-shrink-0">
-                        {selectedChat.avatar}
+                        {message.avatar}
                       </div>
                     )}
                     <div className="relative max-w-md">
                       <div
                         className={`px-4 py-3 rounded-2xl animate-scale-in ${
-                          message.sent
+                          isSent
                             ? 'gradient-primary text-white rounded-br-md'
                             : 'glass rounded-bl-md'
                         }`}
@@ -381,10 +472,10 @@ export default function Index() {
                         <p className="text-sm leading-relaxed">{message.text}</p>
                         <span
                           className={`text-xs mt-1 block ${
-                            message.sent ? 'text-white/70' : 'text-muted-foreground'
+                            isSent ? 'text-white/70' : 'text-muted-foreground'
                           }`}
                         >
-                          {message.time}
+                          {new Date(message.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
                       {message.reaction && (
@@ -407,7 +498,8 @@ export default function Index() {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </ScrollArea>
 
@@ -479,6 +571,58 @@ export default function Index() {
           </div>
         )}
       </div>
+      
+      <Dialog open={showNewChatDialog} onOpenChange={setShowNewChatDialog}>
+        <DialogContent className="sm:max-w-md glass">
+          <DialogHeader>
+            <DialogTitle className="gradient-text">Новый чат</DialogTitle>
+            <DialogDescription>
+              Найдите пользователя и начните общение
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="relative">
+              <Icon name="Search" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Поиск по имени или email..."
+                value={userSearch}
+                onChange={(e) => setUserSearch(e.target.value)}
+                className="pl-10 bg-muted border-0"
+              />
+            </div>
+            <ScrollArea className="h-[300px] pr-4">
+              {isSearching ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>Поиск...</p>
+                </div>
+              ) : searchResults.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>{userSearch ? 'Пользователи не найдены' : 'Введите имя для поиска'}</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {searchResults.map(foundUser => (
+                    <div
+                      key={foundUser.id}
+                      onClick={() => handleCreateChat(foundUser)}
+                      className="flex items-center gap-3 p-3 rounded-2xl glass hover:bg-muted cursor-pointer transition-all"
+                    >
+                      <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-xl">
+                        {foundUser.avatar}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold truncate">{foundUser.username}</h4>
+                        <p className="text-sm text-muted-foreground truncate">{foundUser.email}</p>
+                      </div>
+                      <Icon name="MessageSquarePlus" size={20} className="text-primary" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
