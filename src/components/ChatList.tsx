@@ -1,5 +1,6 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import Icon from '@/components/ui/icon';
 import type { Chat } from '@/types';
 
 type ChatListProps = {
@@ -13,8 +14,9 @@ export default function ChatList({ chats, selectedChatId, onSelectChat }: ChatLi
     return (
       <ScrollArea className="flex-1 px-3">
         <div className="text-center py-12 text-muted-foreground">
-          <p>Пока нет чатов</p>
-          <p className="text-sm mt-2">Нажмите + чтобы начать общение!</p>
+          <Icon name="SearchX" size={48} className="mx-auto mb-3 opacity-50" />
+          <p>Ничего не найдено</p>
+          <p className="text-sm mt-2">Попробуйте изменить запрос</p>
         </div>
       </ScrollArea>
     );

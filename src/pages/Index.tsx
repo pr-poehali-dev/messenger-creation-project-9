@@ -30,6 +30,8 @@ export default function Index() {
   const [userSearch, setUserSearch] = useState('');
   const [searchResults, setSearchResults] = useState<ChatUser[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [chatSearchQuery, setChatSearchQuery] = useState('');
+  const [messageSearchQuery, setMessageSearchQuery] = useState('');
   
   useEffect(() => {
     const checkAuth = async () => {
@@ -129,6 +131,21 @@ export default function Index() {
 
   const stickers = ['😀', '😂', '❤️', '🔥', '👍', '🎉', '😍', '💯', '✨', '🚀', '💪', '🤖'];
   const reactions = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
+
+  const filteredChats = chats.filter(chat => {
+    if (!chatSearchQuery.trim()) return true;
+    const query = chatSearchQuery.toLowerCase();
+    return (
+      chat.name.toLowerCase().includes(query) ||
+      (chat.last_message && chat.last_message.toLowerCase().includes(query))
+    );
+  });
+
+  const filteredMessages = messages.filter(message => {
+    if (!messageSearchQuery.trim()) return true;
+    const query = messageSearchQuery.toLowerCase();
+    return message.text.toLowerCase().includes(query);
+  });
 
   const handleSendMessage = async () => {
     if (messageText.trim() && selectedChat) {
@@ -253,27 +270,38 @@ export default function Index() {
               {activeSection === 'settings' && 'Настройки'}
             </h1>
             <div className="flex gap-2">
-              <Button size="icon" variant="ghost" className="rounded-full">
-                <Icon name="Search" size={20} />
-              </Button>
               <Button size="icon" variant="ghost" className="rounded-full" onClick={() => setShowNewChatDialog(true)}>
                 <Icon name="Plus" size={20} />
               </Button>
             </div>
           </div>
 
-          <div className="relative">
-            <Icon name="Search" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Поиск..."
-              className="pl-10 rounded-full bg-muted border-0"
-            />
-          </div>
+          {activeSection === 'chats' && (
+            <div className="relative">
+              <Icon name="Search" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Поиск по чатам..."
+                value={chatSearchQuery}
+                onChange={(e) => setChatSearchQuery(e.target.value)}
+                className="pl-10 rounded-full bg-muted border-0"
+              />
+              {chatSearchQuery && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full h-8 w-8"
+                  onClick={() => setChatSearchQuery('')}
+                >
+                  <Icon name="X" size={16} />
+                </Button>
+              )}
+            </div>
+          )}
         </div>
 
         {activeSection === 'chats' && (
           <ChatList
-            chats={chats}
+            chats={filteredChats}
             selectedChatId={selectedChat?.id || null}
             onSelectChat={setSelectedChat}
           />
@@ -311,7 +339,7 @@ export default function Index() {
       <div className="flex-1 flex flex-col">
         <ChatWindow
           selectedChat={selectedChat}
-          messages={messages}
+          messages={filteredMessages}
           currentUser={user}
           messageText={messageText}
           onMessageTextChange={setMessageText}
@@ -322,6 +350,8 @@ export default function Index() {
           reactions={reactions}
           onStickerClick={handleStickerClick}
           onAddReaction={addReaction}
+          messageSearchQuery={messageSearchQuery}
+          onMessageSearchChange={setMessageSearchQuery}
         />
       </div>
       

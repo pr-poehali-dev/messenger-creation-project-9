@@ -17,6 +17,8 @@ type ChatWindowProps = {
   reactions: string[];
   onStickerClick: (sticker: string) => void;
   onAddReaction: (messageId: number, reaction: string) => void;
+  messageSearchQuery: string;
+  onMessageSearchChange: (value: string) => void;
 };
 
 export default function ChatWindow({
@@ -31,7 +33,9 @@ export default function ChatWindow({
   stickers,
   reactions,
   onStickerClick,
-  onAddReaction
+  onAddReaction,
+  messageSearchQuery,
+  onMessageSearchChange
 }: ChatWindowProps) {
   if (!selectedChat) {
     return (
@@ -66,6 +70,27 @@ export default function ChatWindow({
             <p className="text-sm text-muted-foreground">
               {selectedChat.online ? 'в сети' : 'был(а) недавно'}
             </p>
+          </div>
+        </div>
+        <div className="flex-1 max-w-md mx-4">
+          <div className="relative">
+            <Icon name="Search" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Поиск в сообщениях..."
+              value={messageSearchQuery}
+              onChange={(e) => onMessageSearchChange(e.target.value)}
+              className="pl-9 pr-9 rounded-full bg-muted border-0 h-9 text-sm"
+            />
+            {messageSearchQuery && (
+              <Button
+                size="icon"
+                variant="ghost"
+                className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full h-7 w-7"
+                onClick={() => onMessageSearchChange('')}
+              >
+                <Icon name="X" size={14} />
+              </Button>
+            )}
           </div>
         </div>
         <div className="flex gap-2">
