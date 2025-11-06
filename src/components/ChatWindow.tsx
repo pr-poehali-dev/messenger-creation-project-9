@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,6 +39,13 @@ export default function ChatWindow({
   messageSearchQuery,
   onMessageSearchChange
 }: ChatWindowProps) {
+  const firstMatchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messageSearchQuery.trim() && firstMatchRef.current) {
+      firstMatchRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [messageSearchQuery, messages]);
   if (!selectedChat) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -109,11 +117,16 @@ export default function ChatWindow({
 
       <ScrollArea className="flex-1 p-6">
         <div className="space-y-4 max-w-4xl mx-auto">
-          {messages.map(message => {
+          {messages.map((message, index) => {
             const isSent = message.sender_id === currentUser.id;
+            const isFirstMatch = messageSearchQuery.trim() && 
+              message.text.toLowerCase().includes(messageSearchQuery.toLowerCase()) &&
+              index === messages.findIndex(m => m.text.toLowerCase().includes(messageSearchQuery.toLowerCase()));
+            
             return (
               <div
                 key={message.id}
+                ref={isFirstMatch ? firstMatchRef : null}
                 className={`flex items-end gap-2 group ${isSent ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 {!isSent && (
