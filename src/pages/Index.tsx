@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { auth } from '@/lib/auth';
 import { chatsApi } from '@/lib/chats';
 import AuthForm from '@/components/AuthForm';
@@ -31,6 +31,8 @@ export default function Index() {
 
   const chatsHook = useChats();
   const storiesHook = useStories(user);
+  const touchStartX = useRef<number>(0);
+  const touchCurrentX = useRef<number>(0);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -40,6 +42,39 @@ export default function Index() {
     };
     checkAuth();
   }, []);
+
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX.current = e.touches[0].clientX;
+      touchCurrentX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      touchCurrentX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+      const diff = touchCurrentX.current - touchStartX.current;
+      
+      if (touchStartX.current < 50 && diff > 80) {
+        setIsSidebarOpen(true);
+      }
+      
+      if (isSidebarOpen && diff < -80) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isSidebarOpen]);
 
   useEffect(() => {
     if (user) {
