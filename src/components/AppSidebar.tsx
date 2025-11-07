@@ -6,9 +6,11 @@ interface AppSidebarProps {
   activeSection: Section;
   onSectionChange: (section: Section) => void;
   user: User;
+  isMobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
-export default function AppSidebar({ activeSection, onSectionChange, user }: AppSidebarProps) {
+export default function AppSidebar({ activeSection, onSectionChange, user, isMobileOpen, onMobileClose }: AppSidebarProps) {
   const menuItems = [
     { id: 'chats' as Section, icon: 'MessageCircle', label: 'Чаты' },
     { id: 'contacts' as Section, icon: 'Users', label: 'Контакты' },
@@ -17,7 +19,16 @@ export default function AppSidebar({ activeSection, onSectionChange, user }: App
   ];
 
   return (
-    <aside className="w-16 md:w-20 flex flex-col items-center py-4 md:py-6 gap-3 md:gap-4 border-r border-border bg-muted/30">
+    <>
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={onMobileClose}
+        />
+      )}
+      <aside className={`w-16 md:w-20 flex flex-col items-center py-4 md:py-6 gap-3 md:gap-4 border-r border-border bg-muted/30 md:relative fixed left-0 top-0 h-full z-50 transition-transform duration-300 ${
+        isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      }`}>
       <div className="w-12 h-12 md:w-12 md:h-12 rounded-2xl gradient-primary flex items-center justify-center mb-2 md:mb-4">
         <Icon name="MessageSquare" size={24} className="text-white" />
       </div>
@@ -54,6 +65,7 @@ export default function AppSidebar({ activeSection, onSectionChange, user }: App
           </AvatarFallback>
         </Avatar>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

@@ -27,6 +27,7 @@ export default function Index() {
   const [searchResults, setSearchResults] = useState<ChatUser[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showCreateStory, setShowCreateStory] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const chatsHook = useChats();
   const storiesHook = useStories(user);
@@ -169,8 +170,13 @@ export default function Index() {
     <div className="flex h-screen bg-background overflow-hidden">
       <AppSidebar
         activeSection={activeSection}
-        onSectionChange={setActiveSection}
+        onSectionChange={(section) => {
+          setActiveSection(section);
+          setIsSidebarOpen(false);
+        }}
         user={user}
+        isMobileOpen={isSidebarOpen}
+        onMobileClose={() => setIsSidebarOpen(false)}
       />
 
       {activeSection === 'profile' ? (
@@ -190,6 +196,8 @@ export default function Index() {
             chats={chatsHook.chats}
             selectedChat={chatsHook.selectedChat}
             onChatSelect={chatsHook.setSelectedChat}
+            onMenuClick={() => setIsSidebarOpen(true)}
+            currentUser={user}
             messages={chatsHook.messages}
             messageText={chatsHook.messageText}
             onMessageTextChange={chatsHook.setMessageText}

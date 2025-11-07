@@ -30,6 +30,8 @@ interface ChatSectionProps {
   currentUserId: number;
   onStoryClick: (story: Story) => void;
   onCreateStory: () => void;
+  onMenuClick?: () => void;
+  currentUser: { id: number; username: string; email: string; avatar: string };
 }
 
 export default function ChatSection({
@@ -56,6 +58,8 @@ export default function ChatSection({
   currentUserId,
   onStoryClick,
   onCreateStory,
+  onMenuClick,
+  currentUser,
 }: ChatSectionProps) {
   const filteredChats = chats.filter(chat => {
     if (!chatSearchQuery.trim()) return true;
@@ -86,7 +90,15 @@ export default function ChatSection({
 
         <div className="p-4 md:p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl md:text-3xl font-bold gradient-text">
+            <Button 
+              size="icon" 
+              variant="ghost" 
+              className="md:hidden rounded-full h-10 w-10 mr-2" 
+              onClick={onMenuClick}
+            >
+              <Icon name="Menu" size={24} />
+            </Button>
+            <h1 className="text-2xl md:text-3xl font-bold gradient-text flex-1">
               {activeSection === 'chats' && 'Чаты'}
               {activeSection === 'contacts' && 'Контакты'}
               {activeSection === 'groups' && 'Группы'}
@@ -201,6 +213,7 @@ export default function ChatSection({
         <ChatWindow
           selectedChat={selectedChat}
           messages={filteredMessages}
+          currentUser={currentUser}
           messageText={messageText}
           onMessageTextChange={onMessageTextChange}
           onSendMessage={onSendMessage}
