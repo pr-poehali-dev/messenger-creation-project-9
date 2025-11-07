@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
 import type { Story, StoryItem } from '@/types';
 
@@ -10,6 +11,7 @@ interface StoryViewerProps {
   currentUserId: number;
   onClose: () => void;
   onDeleteStory: (storyId: number) => void;
+  onReplyToStory?: (userId: number, username: string, message: string) => void;
 }
 
 export default function StoryViewer({ 
@@ -17,12 +19,15 @@ export default function StoryViewer({
   initialStoryIndex, 
   currentUserId,
   onClose,
-  onDeleteStory 
+  onDeleteStory,
+  onReplyToStory
 }: StoryViewerProps) {
   const [currentStoryIndex, setCurrentStoryIndex] = useState(initialStoryIndex);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [replyText, setReplyText] = useState('');
+  const [showReplyInput, setShowReplyInput] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -108,6 +113,22 @@ export default function StoryViewer({
 
   const handleDeleteStory = () => {
     onDeleteStory(currentStory.id);
+  };
+
+  const handleSendReply = () => {
+    if (replyText.trim() && onReplyToStory && !isMyStory) {
+      onReplyToStory(currentStory.user_id, currentStory.username, replyText);
+      setReplyText('');
+      setShowReplyInput(false);
+      onClose();
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendReply();
+    }
   };
 
   if (!currentStory || !currentItem) return null;
@@ -227,6 +248,50 @@ export default function StoryViewer({
           </Button>
         )}
       </div>
+
+      {!isMyStory && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-md px-4 z-20">
+          {showReplyInput ? (
+            <div className="flex items-center gap-2 bg-black/50 backdrop-blur-md rounded-full p-2 border border-white/20">
+              <Input
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder={`Ответить ${currentStory.username}...`}
+                className="flex-1 bg-transparent border-0 text-white placeholder:text-white/60 focus-visible:ring-0 focus-visible:ring-offset-0"
+                autoFocus
+              />
+              <Button
+                size="icon"
+                onClick={handleSendReply}
+                disabled={!replyText.trim()}
+                className="rounded-full bg-white/20 hover:bg-white/30 text-white h-9 w-9 flex-shrink-0"
+              >
+                <Icon name="Send" size={18} />
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => {
+                  setShowReplyInput(false);
+                  setReplyText('');
+                }}
+                className="rounded-full text-white hover:bg-white/20 h-9 w-9 flex-shrink-0"
+              >
+                <Icon name="X" size={18} />
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={() => setShowReplyInput(true)}
+              className="w-full rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 text-white border border-white/20"
+            >
+              <Icon name="MessageCircle" size={18} className="mr-2" />
+              Ответить {currentStory.username}
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

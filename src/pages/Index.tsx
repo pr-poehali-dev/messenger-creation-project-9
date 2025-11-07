@@ -77,6 +77,35 @@ export default function Index() {
     }
   };
 
+  const handleReplyToStory = async (userId: number, username: string, message: string) => {
+    try {
+      const existingChat = chatsHook.chats.find(
+        chat => !chat.is_group && chat.other_user_id === userId
+      );
+
+      let chatId: number;
+      
+      if (existingChat) {
+        chatId = existingChat.id;
+      } else {
+        chatId = await chatsHook.handleCreateChat({ id: userId, username, email: '', avatar: username.slice(0, 2).toUpperCase() });
+      }
+
+      if (chatId) {
+        await chatsApi.sendMessage(chatId, `Ответ на историю: ${message}`);
+        await chatsHook.loadChats();
+        
+        const targetChat = chatsHook.chats.find(c => c.id === chatId);
+        if (targetChat) {
+          chatsHook.setSelectedChat(targetChat);
+          setActiveSection('chats');
+        }
+      }
+    } catch (err) {
+      console.error('Failed to reply to story:', err);
+    }
+  };
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -204,6 +233,7 @@ export default function Index() {
           currentUserId={user.id}
           onClose={() => storiesHook.setShowStoryViewer(false)}
           onDeleteStory={storiesHook.handleDeleteStory}
+          onReplyToStory={handleReplyToStory}
         />
       )}
     </div>
