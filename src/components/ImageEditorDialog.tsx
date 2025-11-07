@@ -2,9 +2,28 @@ import { useState, useCallback, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
 import Cropper from 'react-easy-crop';
 import { useToast } from '@/hooks/use-toast';
+
+type TextOverlay = {
+  id: string;
+  text: string;
+  x: number;
+  y: number;
+  fontSize: number;
+  color: string;
+  fontWeight: 'normal' | 'bold';
+};
+
+type StickerOverlay = {
+  id: string;
+  emoji: string;
+  x: number;
+  y: number;
+  size: number;
+};
 
 type ImageEditorDialogProps = {
   open: boolean;
@@ -37,6 +56,18 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
   const [contrast, setContrast] = useState(100);
   const [saturation, setSaturation] = useState(100);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  
+  const [textOverlays, setTextOverlays] = useState<TextOverlay[]>([]);
+  const [stickerOverlays, setStickerOverlays] = useState<StickerOverlay[]>([]);
+  const [activeTab, setActiveTab] = useState<'filters' | 'text' | 'stickers'>('filters');
+  const [newText, setNewText] = useState('');
+  const [textColor, setTextColor] = useState('#ffffff');
+  const [textSize, setTextSize] = useState(32);
+  const [selectedTextId, setSelectedTextId] = useState<string | null>(null);
+  const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   const onCropComplete = useCallback((_: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -87,6 +118,26 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
         croppedAreaPixels.height
       );
 
+      ctx.filter = 'none';
+
+      textOverlays.forEach(overlay => {
+        ctx.font = `${overlay.fontWeight} ${overlay.fontSize}px Arial`;
+        ctx.fillStyle = overlay.color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.strokeText(overlay.text, overlay.x, overlay.y);
+        ctx.fillText(overlay.text, overlay.x, overlay.y);
+      });
+
+      stickerOverlays.forEach(overlay => {
+        ctx.font = `${overlay.size}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(overlay.emoji, overlay.x, overlay.y);
+      });
+
       return new Promise((resolve) => {
         canvas.toBlob((blob) => {
           resolve(blob);
@@ -96,6 +147,92 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
       console.error('Error cropping image:', e);
       return null;
     }
+  };
+
+  const handleAddText = () => {
+    if (!newText.trim()) return;
+    const overlay: TextOverlay = {
+      id: Date.now().toString(),
+      text: newText,
+      x: 250,
+      y: 200,
+      fontSize: textSize,
+      color: textColor,
+      fontWeight: 'bold',
+    };
+    setTextOverlays(prev => [...prev, overlay]);
+    setNewText('');
+    toast({
+      title: "Текст добавлен",
+      description: "Перетащите текст на нужное место",
+    });
+  };
+
+  const handleAddSticker = (emoji: string) => {
+    const overlay: StickerOverlay = {
+      id: Date.now().toString(),
+      emoji,
+      x: 250,
+      y: 200,
+      size: 48,
+    };
+    setStickerOverlays(prev => [...prev, overlay]);
+    toast({
+      title: "Стикер добавлен",
+      description: "Перетащите стикер на нужное место",
+    });
+  };
+
+  const handleTextMouseDown = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const overlay = textOverlays.find(o => o.id === id);
+    if (!overlay) return;
+    setSelectedTextId(id);
+    setIsDragging(true);
+    setDragOffset({ x: e.clientX - overlay.x, y: e.clientY - overlay.y });
+  };
+
+  const handleStickerMouseDown = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const overlay = stickerOverlays.find(o => o.id === id);
+    if (!overlay) return;
+    setSelectedStickerId(id);
+    setIsDragging(true);
+    setDragOffset({ x: e.clientX - overlay.x, y: e.clientY - overlay.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    
+    if (selectedTextId) {
+      setTextOverlays(prev => prev.map(overlay => 
+        overlay.id === selectedTextId
+          ? { ...overlay, x: e.clientX - dragOffset.x, y: e.clientY - dragOffset.y }
+          : overlay
+      ));
+    }
+    
+    if (selectedStickerId) {
+      setStickerOverlays(prev => prev.map(overlay => 
+        overlay.id === selectedStickerId
+          ? { ...overlay, x: e.clientX - dragOffset.x, y: e.clientY - dragOffset.y }
+          : overlay
+      ));
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setSelectedTextId(null);
+    setSelectedStickerId(null);
+  };
+
+  const handleDeleteText = (id: string) => {
+    setTextOverlays(prev => prev.filter(o => o.id !== id));
+  };
+
+  const handleDeleteSticker = (id: string) => {
+    setStickerOverlays(prev => prev.filter(o => o.id !== id));
   };
 
   const handleSave = async () => {
@@ -133,7 +270,14 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
     setBrightness(100);
     setContrast(100);
     setSaturation(100);
+    setTextOverlays([]);
+    setStickerOverlays([]);
   };
+
+  const stickers = [
+    '😀', '😂', '🥰', '😎', '🤔', '😱', '🔥', '❤️', '💯', '✨', '🎉', '👍',
+    '👏', '🙌', '💪', '🚀', '⭐', '🌈', '☀️', '🌙', '💕', '💖', '🎈', '🎊'
+  ];
 
   const filters: { name: Filter; label: string; icon: string }[] = [
     { name: 'none', label: 'Оригинал', icon: 'ImageOff' },
@@ -157,7 +301,13 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="relative h-96 bg-black rounded-xl overflow-hidden">
+          <div 
+            ref={previewRef}
+            className="relative h-96 bg-black rounded-xl overflow-hidden"
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
             <Cropper
               image={imageUrl}
               crop={crop}
@@ -178,8 +328,94 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
                 },
               }}
             />
+            
+            {textOverlays.map(overlay => (
+              <div
+                key={overlay.id}
+                className="absolute cursor-move select-none group"
+                style={{
+                  left: overlay.x,
+                  top: overlay.y,
+                  transform: 'translate(-50%, -50%)',
+                  fontSize: overlay.fontSize,
+                  color: overlay.color,
+                  fontWeight: overlay.fontWeight,
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                }}
+                onMouseDown={(e) => handleTextMouseDown(overlay.id, e)}
+              >
+                {overlay.text}
+                <button
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteText(overlay.id);
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            
+            {stickerOverlays.map(overlay => (
+              <div
+                key={overlay.id}
+                className="absolute cursor-move select-none group"
+                style={{
+                  left: overlay.x,
+                  top: overlay.y,
+                  transform: 'translate(-50%, -50%)',
+                  fontSize: overlay.size,
+                }}
+                onMouseDown={(e) => handleStickerMouseDown(overlay.id, e)}
+              >
+                {overlay.emoji}
+                <button
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteSticker(overlay.id);
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
           </div>
 
+          <div className="glass rounded-xl p-3">
+            <div className="flex gap-2">
+              <Button
+                variant={activeTab === 'filters' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveTab('filters')}
+                className={activeTab === 'filters' ? 'gradient-primary' : ''}
+              >
+                <Icon name="Palette" size={16} className="mr-2" />
+                Фильтры
+              </Button>
+              <Button
+                variant={activeTab === 'text' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveTab('text')}
+                className={activeTab === 'text' ? 'gradient-primary' : ''}
+              >
+                <Icon name="Type" size={16} className="mr-2" />
+                Текст
+              </Button>
+              <Button
+                variant={activeTab === 'stickers' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setActiveTab('stickers')}
+                className={activeTab === 'stickers' ? 'gradient-primary' : ''}
+              >
+                <Icon name="Smile" size={16} className="mr-2" />
+                Стикеры
+              </Button>
+            </div>
+          </div>
+
+          {activeTab === 'filters' && (
           <div className="glass rounded-xl p-4 space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -271,7 +507,9 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
               />
             </div>
           </div>
+          )}
 
+          {activeTab === 'filters' && (
           <div className="glass rounded-xl p-4">
             <label className="text-sm font-medium mb-3 block flex items-center gap-2">
               <Icon name="Palette" size={16} />
@@ -294,6 +532,102 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
               ))}
             </div>
           </div>
+          )}
+
+          {activeTab === 'text' && (
+            <div className="glass rounded-xl p-4 space-y-4">
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Введите текст..."
+                    value={newText}
+                    onChange={(e) => setNewText(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleAddText()}
+                    className="flex-1"
+                  />
+                  <Button onClick={handleAddText} className="gradient-primary">
+                    <Icon name="Plus" size={18} />
+                  </Button>
+                </div>
+                
+                <div className="flex gap-3 items-center">
+                  <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block">Размер текста</label>
+                    <Slider
+                      value={[textSize]}
+                      onValueChange={(val) => setTextSize(val[0])}
+                      min={16}
+                      max={72}
+                      step={4}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Цвет</label>
+                    <input
+                      type="color"
+                      value={textColor}
+                      onChange={(e) => setTextColor(e.target.value)}
+                      className="w-12 h-12 rounded-lg cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                {textOverlays.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-sm text-muted-foreground mb-2">Добавленные тексты:</p>
+                    <div className="space-y-2">
+                      {textOverlays.map(overlay => (
+                        <div key={overlay.id} className="flex items-center justify-between p-2 bg-muted rounded-lg">
+                          <span className="text-sm truncate flex-1">{overlay.text}</span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDeleteText(overlay.id)}
+                          >
+                            <Icon name="Trash2" size={14} />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'stickers' && (
+            <div className="glass rounded-xl p-4">
+              <p className="text-sm font-medium mb-3">Выберите стикер</p>
+              <div className="grid grid-cols-6 gap-2 max-h-64 overflow-y-auto">
+                {stickers.map((emoji, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleAddSticker(emoji)}
+                    className="text-4xl p-3 rounded-xl hover:bg-muted transition-all hover:scale-110"
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+              {stickerOverlays.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm text-muted-foreground mb-2">Добавленные стикеры:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {stickerOverlays.map(overlay => (
+                      <button
+                        key={overlay.id}
+                        onClick={() => handleDeleteSticker(overlay.id)}
+                        className="text-2xl p-2 bg-muted rounded-lg hover:bg-destructive/20 transition-all"
+                        title="Нажмите для удаления"
+                      >
+                        {overlay.emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="flex gap-3">
             <Button
