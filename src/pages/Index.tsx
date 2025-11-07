@@ -10,6 +10,7 @@ import ChatList from '@/components/ChatList';
 import ChatWindow from '@/components/ChatWindow';
 import NewChatDialog from '@/components/NewChatDialog';
 import ProfileView from '@/components/ProfileView';
+import SettingsView from '@/components/SettingsView';
 import type { User, Chat, Message, ChatUser, Section, AuthMode } from '@/types';
 
 export default function Index() {
@@ -264,6 +265,10 @@ export default function Index() {
         <ProfileView 
           user={user} 
           onLogout={handleLogout} 
+          onBack={() => setActiveSection('chats')}
+        />
+      ) : activeSection === 'settings' ? (
+        <SettingsView
           onBack={() => setActiveSection('chats')}
         />
       ) : (
