@@ -9,6 +9,7 @@ import AuthForm from '@/components/AuthForm';
 import ChatList from '@/components/ChatList';
 import ChatWindow from '@/components/ChatWindow';
 import NewChatDialog from '@/components/NewChatDialog';
+import ProfileView from '@/components/ProfileView';
 import type { User, Chat, Message, ChatUser, Section, AuthMode } from '@/types';
 
 export default function Index() {
@@ -250,7 +251,7 @@ export default function Index() {
           >
             <Icon name="Settings" size={24} />
           </button>
-          <Avatar className="cursor-pointer hover:scale-110 transition-transform" onClick={handleLogout} title="Выйти">
+          <Avatar className="cursor-pointer hover:scale-110 transition-transform" onClick={() => setActiveSection('profile')} title="Профиль">
             <AvatarImage src="" />
             <AvatarFallback className="gradient-primary text-white font-semibold text-xl">
               {user.avatar}
@@ -259,6 +260,14 @@ export default function Index() {
         </div>
       </aside>
 
+      {activeSection === 'profile' ? (
+        <ProfileView 
+          user={user} 
+          onLogout={handleLogout} 
+          onBack={() => setActiveSection('chats')}
+        />
+      ) : (
+        <>
       <div className="w-96 flex flex-col border-r border-border">
         <div className="p-6 space-y-4">
           <div className="flex items-center justify-between">
@@ -365,6 +374,8 @@ export default function Index() {
         isSearching={isSearching}
         onSelectUser={handleCreateChat}
       />
+        </>
+      )}
     </div>
   );
 }

@@ -34,6 +34,6 @@ export type Message = {
   avatar: string;
 };
 
-export type Section = 'chats' | 'contacts' | 'groups' | 'channels' | 'settings';
+export type Section = 'chats' | 'contacts' | 'groups' | 'channels' | 'settings' | 'profile';
 
 export type AuthMode = 'login' | 'register';
