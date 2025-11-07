@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,13 +39,42 @@ export default function ChatWindow({
   messageSearchQuery,
   onMessageSearchChange
 }: ChatWindowProps) {
-  const firstMatchRef = useRef<HTMLDivElement>(null);
+  const messageRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
+
+  const matchedIndices = useMemo(() => {
+    if (!messageSearchQuery.trim()) return [];
+    const query = messageSearchQuery.toLowerCase();
+    return messages
+      .map((msg, idx) => msg.text.toLowerCase().includes(query) ? idx : -1)
+      .filter(idx => idx !== -1);
+  }, [messages, messageSearchQuery]);
 
   useEffect(() => {
-    if (messageSearchQuery.trim() && firstMatchRef.current) {
-      firstMatchRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setCurrentMatchIndex(0);
+  }, [messageSearchQuery]);
+
+  useEffect(() => {
+    if (matchedIndices.length > 0 && messageRefs.current.size > 0) {
+      const messageIndex = matchedIndices[currentMatchIndex];
+      const element = messageRefs.current.get(messageIndex);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
-  }, [messageSearchQuery, messages]);
+  }, [currentMatchIndex, matchedIndices]);
+
+  const handlePrevMatch = () => {
+    setCurrentMatchIndex(prev => 
+      prev > 0 ? prev - 1 : matchedIndices.length - 1
+    );
+  };
+
+  const handleNextMatch = () => {
+    setCurrentMatchIndex(prev => 
+      prev < matchedIndices.length - 1 ? prev + 1 : 0
+    );
+  };
   if (!selectedChat) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -88,9 +117,40 @@ export default function ChatWindow({
               placeholder="Поиск в сообщениях..."
               value={messageSearchQuery}
               onChange={(e) => onMessageSearchChange(e.target.value)}
-              className="pl-9 pr-9 rounded-full bg-muted border-0 h-9 text-sm"
+              className="pl-9 pr-32 rounded-full bg-muted border-0 h-9 text-sm"
             />
-            {messageSearchQuery && (
+            {messageSearchQuery && matchedIndices.length > 0 && (
+              <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1 bg-card border border-border rounded-full px-2 py-1">
+                <span className="text-xs text-muted-foreground px-1">
+                  {currentMatchIndex + 1} / {matchedIndices.length}
+                </span>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="rounded-full h-6 w-6"
+                  onClick={handlePrevMatch}
+                >
+                  <Icon name="ChevronUp" size={14} />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="rounded-full h-6 w-6"
+                  onClick={handleNextMatch}
+                >
+                  <Icon name="ChevronDown" size={14} />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="rounded-full h-6 w-6"
+                  onClick={() => onMessageSearchChange('')}
+                >
+                  <Icon name="X" size={14} />
+                </Button>
+              </div>
+            )}
+            {messageSearchQuery && matchedIndices.length === 0 && (
               <Button
                 size="icon"
                 variant="ghost"
@@ -119,14 +179,16 @@ export default function ChatWindow({
         <div className="space-y-4 max-w-4xl mx-auto">
           {messages.map((message, index) => {
             const isSent = message.sender_id === currentUser.id;
-            const isFirstMatch = messageSearchQuery.trim() && 
-              message.text.toLowerCase().includes(messageSearchQuery.toLowerCase()) &&
-              index === messages.findIndex(m => m.text.toLowerCase().includes(messageSearchQuery.toLowerCase()));
+            const isMatch = matchedIndices.includes(index);
             
             return (
               <div
                 key={message.id}
-                ref={isFirstMatch ? firstMatchRef : null}
+                ref={(el) => {
+                  if (el && isMatch) {
+                    messageRefs.current.set(index, el);
+                  }
+                }}
                 className={`flex items-end gap-2 group ${isSent ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 {!isSent && (
