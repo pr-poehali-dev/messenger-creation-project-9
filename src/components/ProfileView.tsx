@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 import AvatarGalleryDialog from '@/components/AvatarGalleryDialog';
+import ImageEditorDialog from '@/components/ImageEditorDialog';
 import type { User } from '@/types';
 
 type AvatarMedia = {
@@ -36,6 +37,8 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
   ]);
   const [currentAvatarIndex, setCurrentAvatarIndex] = useState(0);
   const coverInputRef = useRef<HTMLInputElement>(null);
+  const [showCoverEditor, setShowCoverEditor] = useState(false);
+  const [editingCoverUrl, setEditingCoverUrl] = useState<string | null>(null);
 
   const handleSaveProfile = () => {
     toast({
@@ -103,7 +106,15 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
     }
 
     const url = URL.createObjectURL(file);
+    setEditingCoverUrl(url);
+    setShowCoverEditor(true);
+  };
+
+  const handleCoverEditorSave = (editedFile: File) => {
+    const url = URL.createObjectURL(editedFile);
     setCoverImage(url);
+    setShowCoverEditor(false);
+    setEditingCoverUrl(null);
     toast({
       title: "Обложка обновлена",
       description: "Фото обложки успешно изменено",
@@ -387,6 +398,15 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
         onDeleteAvatar={handleDeleteAvatar}
         onSetCurrentAvatar={handleSetCurrentAvatar}
       />
+
+      {editingCoverUrl && (
+        <ImageEditorDialog
+          open={showCoverEditor}
+          onOpenChange={setShowCoverEditor}
+          imageUrl={editingCoverUrl}
+          onSave={handleCoverEditorSave}
+        />
+      )}
     </div>
   );
 }

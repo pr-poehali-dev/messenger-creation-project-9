@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
+import ImageEditorDialog from '@/components/ImageEditorDialog';
 
 type AvatarMedia = {
   id: string;
@@ -32,6 +33,8 @@ export default function AvatarGalleryDialog({
   const { toast } = useToast();
   const [viewIndex, setViewIndex] = useState(currentIndex);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showEditor, setShowEditor] = useState(false);
+  const [editingImageUrl, setEditingImageUrl] = useState<string | null>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -58,11 +61,23 @@ export default function AvatarGalleryDialog({
       return;
     }
 
-    onAddAvatar(file);
-    toast({
-      title: "Аватарка добавлена",
-      description: "Фото успешно загружено в галерею",
-    });
+    if (file.type.startsWith('video/')) {
+      onAddAvatar(file);
+      toast({
+        title: "Видео добавлено",
+        description: "Видео успешно загружено в галерею",
+      });
+    } else {
+      const url = URL.createObjectURL(file);
+      setEditingImageUrl(url);
+      setShowEditor(true);
+    }
+  };
+
+  const handleEditorSave = (editedFile: File) => {
+    onAddAvatar(editedFile);
+    setShowEditor(false);
+    setEditingImageUrl(null);
   };
 
   const handlePrev = () => {
@@ -202,6 +217,15 @@ export default function AvatarGalleryDialog({
           onChange={handleFileSelect}
         />
       </DialogContent>
+
+      {editingImageUrl && (
+        <ImageEditorDialog
+          open={showEditor}
+          onOpenChange={setShowEditor}
+          imageUrl={editingImageUrl}
+          onSave={handleEditorSave}
+        />
+      )}
     </Dialog>
   );
 }
