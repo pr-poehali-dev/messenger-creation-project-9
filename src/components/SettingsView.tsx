@@ -32,12 +32,22 @@ export default function SettingsView({ onBack, onShowSwipeHint }: SettingsViewPr
   const [showOnlineStatus, setShowOnlineStatus] = useState(true);
   const [messageNotifications, setMessageNotifications] = useState(true);
   const [whoCanWriteMe, setWhoCanWriteMe] = useState<PrivacyOption>('all');
+  const [hapticFeedback, setHapticFeedback] = useState(
+    localStorage.getItem('hapticFeedback') !== 'false'
+  );
+  const [autoPlayVideos, setAutoPlayVideos] = useState(
+    localStorage.getItem('autoPlayVideos') !== 'false'
+  );
+  const [reducedMotion, setReducedMotion] = useState(
+    localStorage.getItem('reducedMotion') === 'true'
+  );
   
   const [showThemeDialog, setShowThemeDialog] = useState(false);
   const [showNotificationsDialog, setShowNotificationsDialog] = useState(false);
   const [showPrivacyDialog, setShowPrivacyDialog] = useState(false);
   const [showDataDialog, setShowDataDialog] = useState(false);
   const [showLanguageDialog, setShowLanguageDialog] = useState(false);
+  const [showMobileDialog, setShowMobileDialog] = useState(false);
 
   return (
     <div className="flex-1 flex flex-col bg-background">
@@ -134,26 +144,21 @@ export default function SettingsView({ onBack, onShowSwipeHint }: SettingsViewPr
             <Icon name="ChevronRight" size={20} className="text-muted-foreground" />
           </button>
 
-          {onShowSwipeHint && (
-            <button
-              onClick={() => {
-                onShowSwipeHint();
-                onBack();
-              }}
-              className="w-full glass rounded-3xl p-4 md:p-6 flex items-center justify-between hover:bg-muted/50 transition-colors active:scale-95 md:hidden"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
-                  <Icon name="Hand" size={24} className="text-white" />
-                </div>
-                <div className="text-left">
-                  <div className="font-semibold text-lg">Показать подсказку</div>
-                  <div className="text-sm text-muted-foreground">Как открыть меню свайпом</div>
-                </div>
+          <button
+            onClick={() => setShowMobileDialog(true)}
+            className="w-full glass rounded-3xl p-4 md:p-6 flex items-center justify-between hover:bg-muted/50 transition-colors active:scale-95 md:hidden"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
+                <Icon name="Smartphone" size={24} className="text-white" />
               </div>
-              <Icon name="ChevronsRight" size={20} className="text-muted-foreground" />
-            </button>
-          )}
+              <div className="text-left">
+                <div className="font-semibold text-lg">Мобильная версия</div>
+                <div className="text-sm text-muted-foreground">Настройки для смартфона</div>
+              </div>
+            </div>
+            <Icon name="ChevronRight" size={20} className="text-muted-foreground" />
+          </button>
         </div>
       </div>
 
@@ -396,6 +401,105 @@ export default function SettingsView({ onBack, onShowSwipeHint }: SettingsViewPr
                 {language === value && <Icon name="Check" size={20} className="text-primary" />}
               </button>
             ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showMobileDialog} onOpenChange={setShowMobileDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Icon name="Smartphone" size={20} />
+              Настройки мобильной версии
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="p-4 bg-muted rounded-xl space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Icon name="Vibrate" size={20} />
+                  <div>
+                    <div className="font-medium">Тактильный отклик</div>
+                    <div className="text-sm text-muted-foreground">Вибрация при нажатиях</div>
+                  </div>
+                </div>
+                <Switch
+                  checked={hapticFeedback}
+                  onCheckedChange={(checked) => {
+                    setHapticFeedback(checked);
+                    localStorage.setItem('hapticFeedback', String(checked));
+                    if (checked && navigator.vibrate) {
+                      navigator.vibrate(10);
+                    }
+                  }}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Icon name="Play" size={20} />
+                  <div>
+                    <div className="font-medium">Автовоспроизведение</div>
+                    <div className="text-sm text-muted-foreground">Видео и GIF в чатах</div>
+                  </div>
+                </div>
+                <Switch
+                  checked={autoPlayVideos}
+                  onCheckedChange={(checked) => {
+                    setAutoPlayVideos(checked);
+                    localStorage.setItem('autoPlayVideos', String(checked));
+                  }}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Icon name="Zap" size={20} />
+                  <div>
+                    <div className="font-medium">Уменьшить анимации</div>
+                    <div className="text-sm text-muted-foreground">Для экономии батареи</div>
+                  </div>
+                </div>
+                <Switch
+                  checked={reducedMotion}
+                  onCheckedChange={(checked) => {
+                    setReducedMotion(checked);
+                    localStorage.setItem('reducedMotion', String(checked));
+                    if (checked) {
+                      document.documentElement.style.setProperty('--animation-duration', '0.01s');
+                    } else {
+                      document.documentElement.style.removeProperty('--animation-duration');
+                    }
+                  }}
+                />
+              </div>
+            </div>
+
+            {onShowSwipeHint && (
+              <button
+                onClick={() => {
+                  setShowMobileDialog(false);
+                  onShowSwipeHint();
+                  onBack();
+                }}
+                className="w-full p-4 bg-primary/10 hover:bg-primary/20 rounded-xl flex items-center justify-between transition-colors active:scale-95"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                    <Icon name="Hand" size={20} className="text-white" />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-medium">Показать подсказку</div>
+                    <div className="text-sm text-muted-foreground">Как открыть меню свайпом</div>
+                  </div>
+                </div>
+                <Icon name="ChevronsRight" size={20} className="text-primary" />
+              </button>
+            )}
+
+            <div className="text-xs text-muted-foreground text-center pt-2">
+              Эти настройки доступны только на мобильных устройствах
+            </div>
           </div>
         </DialogContent>
       </Dialog>
