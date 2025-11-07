@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import type { Story, User } from '@/types';
 
 export function useStories(user: User | null) {
@@ -6,7 +6,7 @@ export function useStories(user: User | null) {
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
 
-  const loadStories = async () => {
+  const loadStories = useCallback(async () => {
     const mockStories: Story[] = [
       {
         id: 1,
@@ -54,7 +54,7 @@ export function useStories(user: User | null) {
       }
     ];
     setStories(mockStories);
-  };
+  }, [user]);
 
   const handleStoryClick = (story: Story) => {
     const storyIndex = stories.findIndex(s => s.id === story.id);

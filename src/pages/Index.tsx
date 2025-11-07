@@ -36,13 +36,16 @@ export default function Index() {
       const currentUser = await auth.verifyToken();
       setUser(currentUser);
       setIsLoading(false);
-      if (currentUser) {
-        chatsHook.loadChats();
-        storiesHook.loadStories();
-      }
     };
     checkAuth();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      chatsHook.loadChats();
+      storiesHook.loadStories();
+    }
+  }, [user]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

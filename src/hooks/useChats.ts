@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { chatsApi } from '@/lib/chats';
 import type { Chat, Message, ChatUser } from '@/types';
 
@@ -11,23 +11,23 @@ export function useChats() {
   const [chatSearchQuery, setChatSearchQuery] = useState('');
   const [messageSearchQuery, setMessageSearchQuery] = useState('');
 
-  const loadChats = async () => {
+  const loadChats = useCallback(async () => {
     try {
       const data = await chatsApi.getChats();
       setChats(data);
     } catch (err) {
       console.error('Failed to load chats:', err);
     }
-  };
+  }, []);
 
-  const loadMessages = async (chatId: number) => {
+  const loadMessages = useCallback(async (chatId: number) => {
     try {
       const data = await chatsApi.getMessages(chatId);
       setMessages(data);
     } catch (err) {
       console.error('Failed to load messages:', err);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (selectedChat) {
