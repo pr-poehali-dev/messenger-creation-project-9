@@ -16,7 +16,22 @@ export type StickerOverlay = {
   size: number;
 };
 
+export type DrawingPoint = {
+  x: number;
+  y: number;
+};
+
+export type DrawingPath = {
+  id: string;
+  points: DrawingPoint[];
+  color: string;
+  width: number;
+  tool: 'brush' | 'pen';
+};
+
 export type Filter = 'none' | 'grayscale' | 'sepia' | 'vintage' | 'cool' | 'warm' | 'bright' | 'contrast';
+
+export type EditorTab = 'filters' | 'text' | 'stickers' | 'draw';
 
 export const filterStyles: Record<Filter, string> = {
   none: '',

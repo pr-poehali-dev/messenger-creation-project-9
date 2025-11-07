@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import type { TextOverlay, StickerOverlay, Filter } from './types';
+import type { TextOverlay, StickerOverlay, Filter, EditorTab, DrawingPath, DrawingPoint } from './types';
 import { filterStyles } from './types';
 
 export function useImageEditor(imageUrl: string) {
@@ -16,7 +16,8 @@ export function useImageEditor(imageUrl: string) {
 
   const [textOverlays, setTextOverlays] = useState<TextOverlay[]>([]);
   const [stickerOverlays, setStickerOverlays] = useState<StickerOverlay[]>([]);
-  const [activeTab, setActiveTab] = useState<'filters' | 'text' | 'stickers'>('filters');
+  const [drawingPaths, setDrawingPaths] = useState<DrawingPath[]>([]);
+  const [activeTab, setActiveTab] = useState<EditorTab>('filters');
   const [newText, setNewText] = useState('');
   const [textColor, setTextColor] = useState('#ffffff');
   const [textSize, setTextSize] = useState(32);
@@ -24,6 +25,11 @@ export function useImageEditor(imageUrl: string) {
   const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [currentPath, setCurrentPath] = useState<DrawingPoint[]>([]);
+  const [drawColor, setDrawColor] = useState('#ff0000');
+  const [drawWidth, setDrawWidth] = useState(5);
+  const [drawTool, setDrawTool] = useState<'brush' | 'pen'>('brush');
 
   const onCropComplete = useCallback((_: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -92,6 +98,20 @@ export function useImageEditor(imageUrl: string) {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(overlay.emoji, overlay.x, overlay.y);
+      });
+
+      drawingPaths.forEach(path => {
+        if (path.points.length < 2) return;
+        ctx.strokeStyle = path.color;
+        ctx.lineWidth = path.width;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(path.points[0].x, path.points[0].y);
+        for (let i = 1; i < path.points.length; i++) {
+          ctx.lineTo(path.points[i].x, path.points[i].y);
+        }
+        ctx.stroke();
       });
 
       return new Promise((resolve) => {
@@ -191,6 +211,53 @@ export function useImageEditor(imageUrl: string) {
     setStickerOverlays(prev => prev.filter(o => o.id !== id));
   };
 
+  const handleDrawStart = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (activeTab !== 'draw') return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setIsDrawing(true);
+    setCurrentPath([{ x, y }]);
+  };
+
+  const handleDrawMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDrawing || activeTab !== 'draw') return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setCurrentPath(prev => [...prev, { x, y }]);
+  };
+
+  const handleDrawEnd = () => {
+    if (!isDrawing || currentPath.length < 2) {
+      setIsDrawing(false);
+      setCurrentPath([]);
+      return;
+    }
+    const newPath: DrawingPath = {
+      id: Date.now().toString(),
+      points: currentPath,
+      color: drawColor,
+      width: drawWidth,
+      tool: drawTool,
+    };
+    setDrawingPaths(prev => [...prev, newPath]);
+    setIsDrawing(false);
+    setCurrentPath([]);
+  };
+
+  const handleDeletePath = (id: string) => {
+    setDrawingPaths(prev => prev.filter(p => p.id !== id));
+  };
+
+  const handleClearDrawing = () => {
+    setDrawingPaths([]);
+    toast({
+      title: "Рисунок очищен",
+      description: "Все линии удалены",
+    });
+  };
+
   const resetAll = () => {
     setZoom(1);
     setRotation(0);
@@ -200,6 +267,7 @@ export function useImageEditor(imageUrl: string) {
     setSaturation(100);
     setTextOverlays([]);
     setStickerOverlays([]);
+    setDrawingPaths([]);
   };
 
   return {
@@ -212,6 +280,12 @@ export function useImageEditor(imageUrl: string) {
     saturation,
     textOverlays,
     stickerOverlays,
+    drawingPaths,
+    currentPath,
+    isDrawing,
+    drawColor,
+    drawWidth,
+    drawTool,
     activeTab,
     newText,
     textColor,
@@ -227,6 +301,9 @@ export function useImageEditor(imageUrl: string) {
     setNewText,
     setTextColor,
     setTextSize,
+    setDrawColor,
+    setDrawWidth,
+    setDrawTool,
     onCropComplete,
     getCroppedImg,
     handleAddText,
@@ -237,6 +314,11 @@ export function useImageEditor(imageUrl: string) {
     handleMouseUp,
     handleDeleteText,
     handleDeleteSticker,
+    handleDrawStart,
+    handleDrawMove,
+    handleDrawEnd,
+    handleDeletePath,
+    handleClearDrawing,
     resetAll,
   };
 }

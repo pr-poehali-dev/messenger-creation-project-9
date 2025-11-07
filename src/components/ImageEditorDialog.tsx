@@ -7,6 +7,7 @@ import EditorPreview from './ImageEditor/EditorPreview';
 import FilterTab from './ImageEditor/FilterTab';
 import TextTab from './ImageEditor/TextTab';
 import StickerTab from './ImageEditor/StickerTab';
+import DrawTab from './ImageEditor/DrawTab';
 
 type ImageEditorDialogProps = {
   open: boolean;
@@ -69,6 +70,12 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
             saturation={editor.saturation}
             textOverlays={editor.textOverlays}
             stickerOverlays={editor.stickerOverlays}
+            drawingPaths={editor.drawingPaths}
+            currentPath={editor.currentPath}
+            isDrawing={editor.isDrawing}
+            drawColor={editor.drawColor}
+            drawWidth={editor.drawWidth}
+            activeTab={editor.activeTab}
             onCropChange={editor.setCrop}
             onZoomChange={editor.setZoom}
             onCropComplete={editor.onCropComplete}
@@ -78,6 +85,9 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
             onDeleteSticker={editor.handleDeleteSticker}
             onMouseMove={editor.handleMouseMove}
             onMouseUp={editor.handleMouseUp}
+            onDrawStart={editor.handleDrawStart}
+            onDrawMove={editor.handleDrawMove}
+            onDrawEnd={editor.handleDrawEnd}
           />
 
           <div className="glass rounded-xl p-3">
@@ -108,6 +118,15 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
               >
                 <Icon name="Smile" size={16} className="mr-2" />
                 Стикеры
+              </Button>
+              <Button
+                variant={editor.activeTab === 'draw' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => editor.setActiveTab('draw')}
+                className={editor.activeTab === 'draw' ? 'gradient-primary' : ''}
+              >
+                <Icon name="Brush" size={16} className="mr-2" />
+                Рисование
               </Button>
             </div>
           </div>
@@ -148,6 +167,20 @@ export default function ImageEditorDialog({ open, onOpenChange, imageUrl, onSave
               stickerOverlays={editor.stickerOverlays}
               onAddSticker={editor.handleAddSticker}
               onDeleteSticker={editor.handleDeleteSticker}
+            />
+          )}
+
+          {editor.activeTab === 'draw' && (
+            <DrawTab
+              drawColor={editor.drawColor}
+              drawWidth={editor.drawWidth}
+              drawTool={editor.drawTool}
+              drawingPaths={editor.drawingPaths}
+              onDrawColorChange={editor.setDrawColor}
+              onDrawWidthChange={editor.setDrawWidth}
+              onDrawToolChange={editor.setDrawTool}
+              onDeletePath={editor.handleDeletePath}
+              onClearDrawing={editor.handleClearDrawing}
             />
           )}
 

@@ -1,6 +1,5 @@
 import Cropper from 'react-easy-crop';
-import Icon from '@/components/ui/icon';
-import type { TextOverlay, StickerOverlay, Filter } from './types';
+import type { TextOverlay, StickerOverlay, Filter, DrawingPath, DrawingPoint, EditorTab } from './types';
 import { filterStyles } from './types';
 
 type EditorPreviewProps = {
@@ -14,6 +13,12 @@ type EditorPreviewProps = {
   saturation: number;
   textOverlays: TextOverlay[];
   stickerOverlays: StickerOverlay[];
+  drawingPaths: DrawingPath[];
+  currentPath: DrawingPoint[];
+  isDrawing: boolean;
+  drawColor: string;
+  drawWidth: number;
+  activeTab: EditorTab;
   onCropChange: (crop: { x: number; y: number }) => void;
   onZoomChange: (zoom: number) => void;
   onCropComplete: (croppedArea: any, croppedAreaPixels: any) => void;
@@ -23,6 +28,9 @@ type EditorPreviewProps = {
   onDeleteSticker: (id: string) => void;
   onMouseMove: (e: React.MouseEvent) => void;
   onMouseUp: () => void;
+  onDrawStart: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onDrawMove: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onDrawEnd: () => void;
 };
 
 export default function EditorPreview({
@@ -36,6 +44,12 @@ export default function EditorPreview({
   saturation,
   textOverlays,
   stickerOverlays,
+  drawingPaths,
+  currentPath,
+  isDrawing,
+  drawColor,
+  drawWidth,
+  activeTab,
   onCropChange,
   onZoomChange,
   onCropComplete,
@@ -45,13 +59,18 @@ export default function EditorPreview({
   onDeleteSticker,
   onMouseMove,
   onMouseUp,
+  onDrawStart,
+  onDrawMove,
+  onDrawEnd,
 }: EditorPreviewProps) {
   return (
     <div
       className="relative h-96 bg-black rounded-xl overflow-hidden"
-      onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
-      onMouseLeave={onMouseUp}
+      style={{ cursor: activeTab === 'draw' ? 'crosshair' : 'default' }}
+      onMouseMove={activeTab === 'draw' ? onDrawMove : onMouseMove}
+      onMouseUp={activeTab === 'draw' ? onDrawEnd : onMouseUp}
+      onMouseLeave={activeTab === 'draw' ? onDrawEnd : onMouseUp}
+      onMouseDown={activeTab === 'draw' ? onDrawStart : undefined}
     >
       <Cropper
         image={imageUrl}
@@ -126,6 +145,30 @@ export default function EditorPreview({
           </button>
         </div>
       ))}
+
+      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        {drawingPaths.map(path => (
+          <polyline
+            key={path.id}
+            points={path.points.map(p => `${p.x},${p.y}`).join(' ')}
+            stroke={path.color}
+            strokeWidth={path.width}
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ))}
+        {isDrawing && currentPath.length > 0 && (
+          <polyline
+            points={currentPath.map(p => `${p.x},${p.y}`).join(' ')}
+            stroke={drawColor}
+            strokeWidth={drawWidth}
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
+      </svg>
     </div>
   );
 }
