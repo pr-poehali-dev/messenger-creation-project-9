@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -6,7 +6,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
+import AvatarGalleryDialog from '@/components/AvatarGalleryDialog';
 import type { User } from '@/types';
+
+type AvatarMedia = {
+  id: string;
+  url: string;
+  type: 'image' | 'gif' | 'video';
+};
 
 type ProfileViewProps = {
   user: User;
@@ -22,6 +29,13 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showAvatarGallery, setShowAvatarGallery] = useState(false);
+  const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [avatars, setAvatars] = useState<AvatarMedia[]>([
+    { id: '1', url: '', type: 'image' }
+  ]);
+  const [currentAvatarIndex, setCurrentAvatarIndex] = useState(0);
+  const coverInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveProfile = () => {
     toast({
@@ -49,6 +63,55 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
     setConfirmPassword('');
   };
 
+  const handleAddAvatar = (file: File) => {
+    const url = URL.createObjectURL(file);
+    const type: 'image' | 'gif' | 'video' = 
+      file.type.startsWith('video/') ? 'video' : 
+      file.type === 'image/gif' ? 'gif' : 'image';
+    
+    const newAvatar: AvatarMedia = {
+      id: Date.now().toString(),
+      url,
+      type
+    };
+    
+    setAvatars(prev => [...prev, newAvatar]);
+  };
+
+  const handleDeleteAvatar = (id: string) => {
+    setAvatars(prev => prev.filter(a => a.id !== id));
+    if (currentAvatarIndex >= avatars.length - 1) {
+      setCurrentAvatarIndex(Math.max(0, avatars.length - 2));
+    }
+  };
+
+  const handleSetCurrentAvatar = (index: number) => {
+    setCurrentAvatarIndex(index);
+  };
+
+  const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Ошибка",
+        description: "Можно загружать только изображения",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    setCoverImage(url);
+    toast({
+      title: "Обложка обновлена",
+      description: "Фото обложки успешно изменено",
+    });
+  };
+
+  const currentAvatar = avatars[currentAvatarIndex];
+
   return (
     <div className="flex-1 flex flex-col bg-background">
       <div className="h-20 glass border-b border-border px-6 flex items-center justify-between">
@@ -64,29 +127,70 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
         </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6">
-        <div className="max-w-2xl mx-auto space-y-6">
-          <div className="glass rounded-3xl p-8 space-y-6">
-            <div className="flex flex-col items-center gap-4">
-              <div className="relative">
-                <Avatar className="w-32 h-32">
-                  <AvatarImage src="" />
-                  <AvatarFallback className="gradient-primary text-white font-bold text-5xl">
-                    {user.avatar}
-                  </AvatarFallback>
-                </Avatar>
-                <Button
-                  size="icon"
-                  className="absolute bottom-0 right-0 rounded-full gradient-primary"
-                >
-                  <Icon name="Camera" size={18} />
-                </Button>
-              </div>
-              <div className="text-center">
-                <h3 className="text-2xl font-bold">{user.username}</h3>
-                <p className="text-muted-foreground">{user.email}</p>
-              </div>
+      <div className="flex-1 overflow-y-auto">
+        <div className="relative">
+          <div 
+            className="h-64 bg-gradient-to-br from-primary/20 to-secondary/20 relative group cursor-pointer"
+            onClick={() => coverInputRef.current?.click()}
+          >
+            {coverImage && (
+              <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+            )}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+              <Button
+                size="icon"
+                className="opacity-0 group-hover:opacity-100 transition-opacity rounded-full gradient-primary"
+              >
+                <Icon name="Camera" size={20} />
+              </Button>
             </div>
+          </div>
+          
+          <div className="max-w-2xl mx-auto px-6 -mt-16 relative z-10">
+            <div className="glass rounded-3xl p-8 space-y-6">
+              <div className="flex flex-col items-center gap-4">
+                <div 
+                  className="relative cursor-pointer group"
+                  onClick={() => setShowAvatarGallery(true)}
+                >
+                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-background shadow-xl">
+                    {currentAvatar.url ? (
+                      currentAvatar.type === 'video' ? (
+                        <video
+                          src={currentAvatar.url}
+                          className="w-full h-full object-cover"
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                        />
+                      ) : (
+                        <img
+                          src={currentAvatar.url}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      )
+                    ) : (
+                      <div className="w-full h-full gradient-primary flex items-center justify-center text-white font-bold text-5xl">
+                        {user.avatar}
+                      </div>
+                    )}
+                  </div>
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors rounded-full flex items-center justify-center">
+                    <Icon name="Camera" size={24} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                  {avatars.length > 1 && (
+                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
+                      {currentAvatarIndex + 1}/{avatars.length}
+                    </div>
+                  )}
+                </div>
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold">{user.username}</h3>
+                  <p className="text-muted-foreground">{user.email}</p>
+                </div>
+              </div>
 
             <Separator />
 
@@ -264,6 +368,25 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
           </div>
         </div>
       </div>
+      </div>
+
+      <input
+        ref={coverInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleCoverUpload}
+      />
+
+      <AvatarGalleryDialog
+        open={showAvatarGallery}
+        onOpenChange={setShowAvatarGallery}
+        avatars={avatars}
+        currentIndex={currentAvatarIndex}
+        onAddAvatar={handleAddAvatar}
+        onDeleteAvatar={handleDeleteAvatar}
+        onSetCurrentAvatar={handleSetCurrentAvatar}
+      />
     </div>
   );
 }
