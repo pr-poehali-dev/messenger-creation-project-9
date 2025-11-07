@@ -37,3 +37,19 @@ export type Message = {
 export type Section = 'chats' | 'contacts' | 'groups' | 'channels' | 'settings' | 'profile';
 
 export type AuthMode = 'login' | 'register';
+
+export type StoryItem = {
+  id: number;
+  url: string;
+  type: 'image' | 'video';
+  created_at: string;
+};
+
+export type Story = {
+  id: number;
+  user_id: number;
+  username: string;
+  avatar: string;
+  items: StoryItem[];
+  viewed: boolean;
+};
