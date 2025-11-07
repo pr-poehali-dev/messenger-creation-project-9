@@ -242,6 +242,13 @@ export default function Index() {
       ) : activeSection === 'settings' ? (
         <SettingsView
           onBack={() => setActiveSection('chats')}
+          onShowSwipeHint={() => {
+            localStorage.removeItem('hasSeenSwipeHint');
+            setShowSwipeHint(true);
+            setTimeout(() => {
+              setShowSwipeHint(false);
+            }, 3000);
+          }}
         />
       ) : (
         <>

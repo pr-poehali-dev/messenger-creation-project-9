@@ -19,13 +19,14 @@ import {
 
 type SettingsViewProps = {
   onBack: () => void;
+  onShowSwipeHint?: () => void;
 };
 
 type Theme = 'light' | 'dark' | 'auto';
 type Language = 'ru' | 'en';
 type PrivacyOption = 'all' | 'contacts' | 'nobody';
 
-export default function SettingsView({ onBack }: SettingsViewProps) {
+export default function SettingsView({ onBack, onShowSwipeHint }: SettingsViewProps) {
   const [theme, setTheme] = useState<Theme>('dark');
   const [language, setLanguage] = useState<Language>('ru');
   const [showOnlineStatus, setShowOnlineStatus] = useState(true);
@@ -132,6 +133,27 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
             </div>
             <Icon name="ChevronRight" size={20} className="text-muted-foreground" />
           </button>
+
+          {onShowSwipeHint && (
+            <button
+              onClick={() => {
+                onShowSwipeHint();
+                onBack();
+              }}
+              className="w-full glass rounded-3xl p-4 md:p-6 flex items-center justify-between hover:bg-muted/50 transition-colors active:scale-95 md:hidden"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
+                  <Icon name="Hand" size={24} className="text-white" />
+                </div>
+                <div className="text-left">
+                  <div className="font-semibold text-lg">Показать подсказку</div>
+                  <div className="text-sm text-muted-foreground">Как открыть меню свайпом</div>
+                </div>
+              </div>
+              <Icon name="ChevronsRight" size={20} className="text-muted-foreground" />
+            </button>
+          )}
         </div>
       </div>
 
