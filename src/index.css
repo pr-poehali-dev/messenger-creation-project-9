@@ -77,4 +77,18 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  @keyframes bounce-x {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(10px);
+    }
+  }
+
+  .animate-bounce-x {
+    animation: bounce-x 1.5s ease-in-out infinite;
+  }
 }

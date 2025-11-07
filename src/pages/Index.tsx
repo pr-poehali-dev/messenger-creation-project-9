@@ -11,6 +11,7 @@ import StoryViewer from '@/components/StoryViewer';
 import CreateStoryDialog from '@/components/CreateStoryDialog';
 import { useChats } from '@/hooks/useChats';
 import { useStories } from '@/hooks/useStories';
+import Icon from '@/components/ui/icon';
 import type { User, ChatUser, Section, AuthMode } from '@/types';
 
 export default function Index() {
@@ -28,6 +29,7 @@ export default function Index() {
   const [isSearching, setIsSearching] = useState(false);
   const [showCreateStory, setShowCreateStory] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showSwipeHint, setShowSwipeHint] = useState(false);
 
   const chatsHook = useChats();
   const storiesHook = useStories(user);
@@ -42,6 +44,23 @@ export default function Index() {
     };
     checkAuth();
   }, []);
+
+  useEffect(() => {
+    if (user && !isLoading) {
+      const hasSeenHint = localStorage.getItem('hasSeenSwipeHint');
+      const isMobile = window.innerWidth < 768;
+      
+      if (!hasSeenHint && isMobile) {
+        setTimeout(() => {
+          setShowSwipeHint(true);
+          setTimeout(() => {
+            setShowSwipeHint(false);
+            localStorage.setItem('hasSeenSwipeHint', 'true');
+          }, 3000);
+        }, 1000);
+      }
+    }
+  }, [user, isLoading]);
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
@@ -281,6 +300,23 @@ export default function Index() {
           onDeleteStory={storiesHook.handleDeleteStory}
           onReplyToStory={handleReplyToStory}
         />
+      )}
+
+      {showSwipeHint && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none md:hidden">
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 animate-pulse">
+            <div className="flex items-center gap-3 bg-primary/90 text-white px-6 py-4 rounded-r-2xl shadow-2xl backdrop-blur-sm">
+              <div className="flex items-center gap-2 animate-bounce-x">
+                <Icon name="ChevronsRight" size={32} className="text-white" />
+                <Icon name="ChevronsRight" size={32} className="text-white/60" />
+              </div>
+              <div className="text-left">
+                <div className="font-bold text-lg">Свайп вправо</div>
+                <div className="text-sm text-white/90">Чтобы открыть меню</div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
