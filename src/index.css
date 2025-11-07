@@ -55,6 +55,8 @@
   body {
     @apply bg-background text-foreground;
     font-family: "Rubik", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 }
 

@@ -17,8 +17,8 @@ export default function AppSidebar({ activeSection, onSectionChange, user }: App
   ];
 
   return (
-    <aside className="w-20 flex flex-col items-center py-6 gap-4 border-r border-border bg-muted/30">
-      <div className="w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center mb-4">
+    <aside className="w-16 md:w-20 flex flex-col items-center py-4 md:py-6 gap-3 md:gap-4 border-r border-border bg-muted/30">
+      <div className="w-12 h-12 md:w-12 md:h-12 rounded-2xl gradient-primary flex items-center justify-center mb-2 md:mb-4">
         <Icon name="MessageSquare" size={24} className="text-white" />
       </div>
 
@@ -27,9 +27,9 @@ export default function AppSidebar({ activeSection, onSectionChange, user }: App
           <button
             key={item.id}
             onClick={() => onSectionChange(item.id)}
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
+            className={`w-12 h-12 md:w-12 md:h-12 rounded-2xl flex items-center justify-center transition-all active:scale-95 ${
               activeSection === item.id
-                ? 'gradient-primary text-white shadow-lg scale-110'
+                ? 'gradient-primary text-white shadow-lg scale-105 md:scale-110'
                 : 'text-muted-foreground hover:bg-muted'
             }`}
             title={item.label}
@@ -42,7 +42,7 @@ export default function AppSidebar({ activeSection, onSectionChange, user }: App
       <div className="flex flex-col gap-3 items-center">
         <button
           onClick={() => onSectionChange('settings')}
-          className="w-12 h-12 rounded-2xl flex items-center justify-center text-muted-foreground hover:bg-muted transition-all"
+          className="w-12 h-12 md:w-12 md:h-12 rounded-2xl flex items-center justify-center text-muted-foreground hover:bg-muted transition-all active:scale-95"
           title="Настройки"
         >
           <Icon name="Settings" size={24} />

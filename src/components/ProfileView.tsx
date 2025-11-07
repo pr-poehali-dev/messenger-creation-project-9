@@ -125,12 +125,12 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
 
   return (
     <div className="flex-1 flex flex-col bg-background">
-      <div className="h-20 glass border-b border-border px-6 flex items-center justify-between">
+      <div className="h-16 md:h-20 glass border-b border-border px-4 md:px-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button size="icon" variant="ghost" className="rounded-full" onClick={onBack}>
+          <Button size="icon" variant="ghost" className="rounded-full h-12 w-12 md:h-10 md:w-10" onClick={onBack}>
             <Icon name="ArrowLeft" size={20} />
           </Button>
-          <h2 className="font-bold text-xl">Мой профиль</h2>
+          <h2 className="font-bold text-lg md:text-xl">Мой профиль</h2>
         </div>
         <Button variant="ghost" onClick={onLogout} className="text-destructive hover:text-destructive">
           <Icon name="LogOut" size={20} className="mr-2" />
@@ -157,8 +157,8 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
             </div>
           </div>
           
-          <div className="max-w-2xl mx-auto px-6 -mt-16 relative z-10">
-            <div className="glass rounded-3xl p-8 space-y-6">
+          <div className="max-w-2xl mx-auto px-4 md:px-6 -mt-16 relative z-10">
+            <div className="glass rounded-3xl p-6 md:p-8 space-y-6">
               <div className="flex flex-col items-center gap-4">
                 <div 
                   className="relative cursor-pointer group"

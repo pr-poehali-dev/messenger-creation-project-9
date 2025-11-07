@@ -74,7 +74,7 @@ export default function ChatSection({
 
   return (
     <>
-      <div className="w-96 flex flex-col border-r border-border">
+      <div className="w-full md:w-96 flex flex-col border-r border-border">
         {activeSection === 'chats' && stories.length > 0 && (
           <StoriesBar
             stories={stories}
@@ -84,9 +84,9 @@ export default function ChatSection({
           />
         )}
 
-        <div className="p-6 space-y-4">
+        <div className="p-4 md:p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold gradient-text">
+            <h1 className="text-2xl md:text-3xl font-bold gradient-text">
               {activeSection === 'chats' && 'Чаты'}
               {activeSection === 'contacts' && 'Контакты'}
               {activeSection === 'groups' && 'Группы'}
@@ -94,7 +94,7 @@ export default function ChatSection({
               {activeSection === 'settings' && 'Настройки'}
             </h1>
             <div className="flex gap-2">
-              <Button size="icon" variant="ghost" className="rounded-full" onClick={onNewChatClick}>
+              <Button size="icon" variant="ghost" className="rounded-full h-10 w-10 md:h-9 md:w-9" onClick={onNewChatClick}>
                 <Icon name="Plus" size={20} />
               </Button>
             </div>
@@ -107,7 +107,7 @@ export default function ChatSection({
                 placeholder="Поиск по чатам..."
                 value={chatSearchQuery}
                 onChange={(e) => onChatSearchChange(e.target.value)}
-                className="pl-10 rounded-full bg-muted border-0"
+                className="pl-10 rounded-full bg-muted border-0 h-11 md:h-10 text-base md:text-sm"
               />
               {chatSearchQuery && (
                 <Button
@@ -132,7 +132,7 @@ export default function ChatSection({
         )}
 
         {activeSection === 'contacts' && (
-          <div className="flex-1 px-6 py-4 space-y-3">
+          <div className="flex-1 px-4 md:px-6 py-4 space-y-3">
             {[
               { name: 'Алексей Петров', avatar: 'АП', online: true },
               { name: 'Мария Иванова', avatar: 'МИ', online: false },
@@ -159,7 +159,7 @@ export default function ChatSection({
         )}
 
         {activeSection === 'groups' && (
-          <div className="flex-1 px-6 py-4 space-y-3">
+          <div className="flex-1 px-4 md:px-6 py-4 space-y-3">
             {[
               { name: 'Команда проекта', avatar: 'КП', members: 12 },
               { name: 'Семья', avatar: 'СМ', members: 5 },
@@ -178,7 +178,7 @@ export default function ChatSection({
         )}
 
         {activeSection === 'channels' && (
-          <div className="flex-1 px-6 py-4 space-y-3">
+          <div className="flex-1 px-4 md:px-6 py-4 space-y-3">
             {[
               { name: 'Новости технологий', avatar: 'НТ', subscribers: 1234 },
               { name: 'Музыка', avatar: 'МЗ', subscribers: 567 },

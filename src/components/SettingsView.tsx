@@ -40,20 +40,20 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
 
   return (
     <div className="flex-1 flex flex-col bg-background">
-      <div className="h-20 glass border-b border-border px-6 flex items-center justify-between">
+      <div className="h-16 md:h-20 glass border-b border-border px-4 md:px-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button size="icon" variant="ghost" className="rounded-full" onClick={onBack}>
+          <Button size="icon" variant="ghost" className="rounded-full h-12 w-12 md:h-10 md:w-10" onClick={onBack}>
             <Icon name="ArrowLeft" size={20} />
           </Button>
-          <h2 className="font-bold text-xl">Настройки</h2>
+          <h2 className="font-bold text-lg md:text-xl">Настройки</h2>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6">
         <div className="max-w-2xl mx-auto space-y-4">
           <button
             onClick={() => setShowThemeDialog(true)}
-            className="w-full glass rounded-3xl p-6 flex items-center justify-between hover:bg-muted/50 transition-colors"
+            className="w-full glass rounded-3xl p-4 md:p-6 flex items-center justify-between hover:bg-muted/50 transition-colors active:scale-95"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
@@ -69,7 +69,7 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
 
           <button
             onClick={() => setShowNotificationsDialog(true)}
-            className="w-full glass rounded-3xl p-6 flex items-center justify-between hover:bg-muted/50 transition-colors"
+            className="w-full glass rounded-3xl p-4 md:p-6 flex items-center justify-between hover:bg-muted/50 transition-colors active:scale-95"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
@@ -85,7 +85,7 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
 
           <button
             onClick={() => setShowPrivacyDialog(true)}
-            className="w-full glass rounded-3xl p-6 flex items-center justify-between hover:bg-muted/50 transition-colors"
+            className="w-full glass rounded-3xl p-4 md:p-6 flex items-center justify-between hover:bg-muted/50 transition-colors active:scale-95"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
@@ -101,7 +101,7 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
 
           <button
             onClick={() => setShowDataDialog(true)}
-            className="w-full glass rounded-3xl p-6 flex items-center justify-between hover:bg-muted/50 transition-colors"
+            className="w-full glass rounded-3xl p-4 md:p-6 flex items-center justify-between hover:bg-muted/50 transition-colors active:scale-95"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
@@ -117,7 +117,7 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
 
           <button
             onClick={() => setShowLanguageDialog(true)}
-            className="w-full glass rounded-3xl p-6 flex items-center justify-between hover:bg-muted/50 transition-colors"
+            className="w-full glass rounded-3xl p-4 md:p-6 flex items-center justify-between hover:bg-muted/50 transition-colors active:scale-95"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">

@@ -166,7 +166,7 @@ export default function Index() {
   }
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
       <AppSidebar
         activeSection={activeSection}
         onSectionChange={setActiveSection}

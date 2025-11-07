@@ -56,7 +56,7 @@ export default function AuthForm({
                   value={username}
                   onChange={(e) => onUsernameChange(e.target.value)}
                   required
-                  className="bg-muted border-0"
+                  className="bg-muted border-0 h-12 md:h-10 text-base md:text-sm"
                 />
               </div>
             )}
@@ -69,7 +69,7 @@ export default function AuthForm({
                 value={email}
                 onChange={(e) => onEmailChange(e.target.value)}
                 required
-                className="bg-muted border-0"
+                className="bg-muted border-0 h-12 md:h-10 text-base md:text-sm"
               />
             </div>
             <div className="space-y-2">
@@ -82,7 +82,7 @@ export default function AuthForm({
                 onChange={(e) => onPasswordChange(e.target.value)}
                 required
                 minLength={6}
-                className="bg-muted border-0"
+                className="bg-muted border-0 h-12 md:h-10 text-base md:text-sm"
               />
             </div>
             {error && (
@@ -90,7 +90,7 @@ export default function AuthForm({
                 {error}
               </div>
             )}
-            <Button type="submit" className="w-full gradient-primary border-0 hover:opacity-90">
+            <Button type="submit" className="w-full gradient-primary border-0 hover:opacity-90 h-12 md:h-10 text-base md:text-sm active:scale-95">
               {authMode === 'login' ? 'Войти' : 'Зарегистрироваться'}
             </Button>
             <div className="text-center text-sm">

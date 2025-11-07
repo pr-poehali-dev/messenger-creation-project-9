@@ -93,10 +93,10 @@ export default function ChatWindow({
 
   return (
     <>
-      <div className="h-20 glass border-b border-border px-6 flex items-center justify-between">
+      <div className="h-16 md:h-20 glass border-b border-border px-4 md:px-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-xl">
+            <div className="w-12 h-12 md:w-12 md:h-12 rounded-full bg-muted flex items-center justify-center text-xl">
               {selectedChat.avatar}
             </div>
             {selectedChat.online && (
@@ -104,13 +104,13 @@ export default function ChatWindow({
             )}
           </div>
           <div>
-            <h2 className="font-bold text-lg">{selectedChat.name}</h2>
-            <p className="text-sm text-muted-foreground">
+            <h2 className="font-bold text-base md:text-lg">{selectedChat.name}</h2>
+            <p className="text-xs md:text-sm text-muted-foreground">
               {selectedChat.online ? 'в сети' : 'был(а) недавно'}
             </p>
           </div>
         </div>
-        <div className="flex-1 max-w-md mx-4">
+        <div className="hidden lg:flex flex-1 max-w-md mx-4">
           <div className="relative">
             <Icon name="Search" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -162,7 +162,7 @@ export default function ChatWindow({
             )}
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="hidden md:flex gap-2">
           <Button size="icon" variant="ghost" className="rounded-full">
             <Icon name="Phone" size={20} />
           </Button>
@@ -175,7 +175,7 @@ export default function ChatWindow({
         </div>
       </div>
 
-      <ScrollArea className="flex-1 p-6">
+      <ScrollArea className="flex-1 p-4 md:p-6">
         <div className="space-y-4 max-w-4xl mx-auto">
           {messages.map((message, index) => {
             const isSent = message.sender_id === currentUser.id;
@@ -192,13 +192,13 @@ export default function ChatWindow({
                 className={`flex items-end gap-2 group ${isSent ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 {!isSent && (
-                  <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm flex-shrink-0">
+                  <div className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-muted flex items-center justify-center text-sm flex-shrink-0">
                     {message.avatar}
                   </div>
                 )}
-                <div className="relative max-w-md">
+                <div className="relative max-w-[85%] md:max-w-md">
                   <div
-                    className={`px-4 py-3 rounded-2xl animate-scale-in ${
+                    className={`px-4 py-3 rounded-2xl animate-scale-in active:scale-95 ${
                       isSent
                         ? 'gradient-primary text-white rounded-br-md'
                         : 'glass rounded-bl-md'
@@ -238,15 +238,15 @@ export default function ChatWindow({
         </div>
       </ScrollArea>
 
-      <div className="p-6 glass border-t border-border">
+      <div className="p-4 md:p-6 glass border-t border-border">
         {showStickers && (
           <div className="mb-4 p-4 bg-card rounded-2xl border border-border animate-scale-in">
-            <div className="grid grid-cols-6 gap-2">
+            <div className="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
               {stickers.map(sticker => (
                 <button
                   key={sticker}
                   onClick={() => onStickerClick(sticker)}
-                  className="text-3xl p-2 hover:scale-125 transition-transform hover:bg-muted rounded-xl"
+                  className="text-3xl md:text-2xl p-3 md:p-2 active:scale-95 hover:scale-110 transition-transform hover:bg-muted rounded-xl"
                 >
                   {sticker}
                 </button>
@@ -258,13 +258,13 @@ export default function ChatWindow({
           <Button
             size="icon"
             variant="ghost"
-            className="rounded-full"
+            className="rounded-full h-12 w-12 md:h-10 md:w-10"
             onClick={onToggleStickers}
           >
-            <Icon name="Smile" size={22} />
+            <Icon name="Smile" size={24} />
           </Button>
-          <Button size="icon" variant="ghost" className="rounded-full">
-            <Icon name="Paperclip" size={22} />
+          <Button size="icon" variant="ghost" className="rounded-full h-12 w-12 md:h-10 md:w-10">
+            <Icon name="Paperclip" size={24} />
           </Button>
           <div className="flex-1 relative">
             <Input
@@ -272,7 +272,7 @@ export default function ChatWindow({
               value={messageText}
               onChange={(e) => onMessageTextChange(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && onSendMessage()}
-              className="rounded-full bg-muted border-0 pr-12"
+              className="rounded-full bg-muted border-0 pr-12 h-12 md:h-10 text-base md:text-sm"
             />
             <Button
               size="icon"
@@ -284,10 +284,10 @@ export default function ChatWindow({
           </div>
           <Button
             size="icon"
-            className="rounded-full gradient-primary border-0 hover:scale-110 transition-transform"
+            className="rounded-full gradient-primary border-0 h-12 w-12 md:h-10 md:w-10 active:scale-95 hover:scale-110 transition-transform"
             onClick={onSendMessage}
           >
-            <Icon name="Send" size={20} />
+            <Icon name="Send" size={22} />
           </Button>
         </div>
       </div>

@@ -31,16 +31,16 @@ export default function ChatList({ chats, selectedChatId, onSelectChat, searchQu
           <div
             key={chat.id}
             onClick={() => onSelectChat(chat)}
-            className={`flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all hover:bg-muted ${
+            className={`flex items-center gap-3 p-4 md:p-3 rounded-2xl cursor-pointer transition-all active:scale-95 hover:bg-muted ${
               selectedChatId === chat.id ? 'bg-muted' : ''
             }`}
           >
             <div className="relative">
-              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-xl">
+              <div className="w-14 h-14 md:w-12 md:h-12 rounded-full bg-muted flex items-center justify-center text-xl">
                 {chat.avatar}
               </div>
               {chat.online && (
-                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
+                <div className="absolute bottom-0 right-0 w-4 h-4 md:w-3 md:h-3 bg-green-500 rounded-full border-2 border-background" />
               )}
             </div>
             <div className="flex-1 min-w-0">
@@ -53,7 +53,7 @@ export default function ChatList({ chats, selectedChatId, onSelectChat, searchQu
               <HighlightText text={chat.last_message || 'Начните общение'} highlight={searchQuery} className="text-sm text-muted-foreground truncate block" />
             </div>
             {chat.unread_count > 0 && (
-              <Badge className="gradient-primary border-0 h-6 min-w-6 flex items-center justify-center">
+              <Badge className="gradient-primary border-0 h-7 min-w-7 md:h-6 md:min-w-6 flex items-center justify-center text-sm md:text-xs">
                 {chat.unread_count}
               </Badge>
             )}
