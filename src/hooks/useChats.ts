@@ -33,7 +33,7 @@ export function useChats() {
     if (selectedChat) {
       loadMessages(selectedChat.id);
     }
-  }, [selectedChat]);
+  }, [selectedChat, loadMessages]);
 
   const handleSendMessage = async () => {
     if (messageText.trim() && selectedChat) {

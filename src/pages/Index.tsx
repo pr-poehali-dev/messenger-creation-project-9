@@ -100,7 +100,7 @@ export default function Index() {
       chatsHook.loadChats();
       storiesHook.loadStories();
     }
-  }, [user, chatsHook.loadChats, storiesHook.loadStories]);
+  }, [user]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
