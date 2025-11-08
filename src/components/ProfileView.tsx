@@ -4,10 +4,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 import AvatarGalleryDialog from '@/components/AvatarGalleryDialog';
 import ImageEditorDialog from '@/components/ImageEditorDialog';
+import PrivacyDialog from '@/components/settings/PrivacyDialog';
 import type { User } from '@/types';
 
 type AvatarMedia = {
@@ -39,6 +41,10 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [showCoverEditor, setShowCoverEditor] = useState(false);
   const [editingCoverUrl, setEditingCoverUrl] = useState<string | null>(null);
+  const [showPrivacyDialog, setShowPrivacyDialog] = useState(false);
+  const [showOnlineStatus, setShowOnlineStatus] = useState(true);
+  const [pushNotifications, setPushNotifications] = useState(true);
+  const [whoCanWriteMe, setWhoCanWriteMe] = useState<'all' | 'contacts' | 'nobody'>('all');
 
   const handleSaveProfile = () => {
     toast({
@@ -349,7 +355,10 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
                     <div className="text-sm text-muted-foreground">Другие видят когда вы в сети</div>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">Вкл</Button>
+                <Switch
+                  checked={showOnlineStatus}
+                  onCheckedChange={setShowOnlineStatus}
+                />
               </div>
 
               <div className="flex items-center justify-between p-3 bg-muted rounded-xl">
@@ -360,15 +369,24 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
                     <div className="text-sm text-muted-foreground">Получать push-уведомления</div>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">Вкл</Button>
+                <Switch
+                  checked={pushNotifications}
+                  onCheckedChange={setPushNotifications}
+                />
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-muted rounded-xl">
+              <div 
+                className="flex items-center justify-between p-3 bg-muted rounded-xl cursor-pointer hover:bg-muted/80 transition-colors"
+                onClick={() => setShowPrivacyDialog(true)}
+              >
                 <div className="flex items-center gap-3">
                   <Icon name="Users" size={20} className="text-muted-foreground" />
                   <div>
                     <div className="font-medium">Кто может писать мне</div>
-                    <div className="text-sm text-muted-foreground">Все пользователи</div>
+                    <div className="text-sm text-muted-foreground">
+                      {whoCanWriteMe === 'all' ? 'Все пользователи' : 
+                       whoCanWriteMe === 'contacts' ? 'Только контакты' : 'Никто'}
+                    </div>
                   </div>
                 </div>
                 <Button variant="outline" size="sm">
@@ -407,6 +425,15 @@ export default function ProfileView({ user, onLogout, onBack }: ProfileViewProps
           onSave={handleCoverEditorSave}
         />
       )}
+
+      <PrivacyDialog
+        open={showPrivacyDialog}
+        onOpenChange={setShowPrivacyDialog}
+        showOnlineStatus={showOnlineStatus}
+        onShowOnlineStatusChange={setShowOnlineStatus}
+        whoCanWriteMe={whoCanWriteMe}
+        onWhoCanWriteMeChange={setWhoCanWriteMe}
+      />
     </div>
   );
 }
