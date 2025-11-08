@@ -219,11 +219,16 @@ export default function Index() {
 
       if (existingChat) {
         chatsHook.setSelectedChat(existingChat);
+        setActiveSection('chats');
       } else {
-        await chatsHook.handleCreateChat(contact);
+        const newChat = await chatsHook.handleCreateChat(contact);
+        if (newChat) {
+          chatsHook.setSelectedChat(newChat);
+          setActiveSection('chats');
+        }
       }
       
-      setActiveSection('chats');
+      setIsSidebarOpen(false);
     } catch (err) {
       console.error('Failed to open chat with contact:', err);
     }

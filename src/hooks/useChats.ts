@@ -73,12 +73,15 @@ export function useChats() {
   const handleCreateChat = async (otherUser: ChatUser) => {
     try {
       const chatId = await chatsApi.createChat(otherUser.id);
-      await loadChats();
-      const newChat = chats.find(c => c.id === chatId);
+      const updatedChats = await chatsApi.getChats();
+      setChats(updatedChats);
+      
+      const newChat = updatedChats.find(c => c.id === chatId);
       if (newChat) {
         setSelectedChat(newChat);
+        return newChat;
       }
-      return chatId;
+      return null;
     } catch (err) {
       console.error('Failed to create chat:', err);
       throw err;
