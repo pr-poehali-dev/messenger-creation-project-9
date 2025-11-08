@@ -12,7 +12,7 @@ function getAuthHeaders() {
   };
 }
 
-export const webrtcApi = {
+export const webrtc = {
   async initiateCall(receiverId: number, callType: 'video' | 'audio'): Promise<string> {
     const response = await fetch(CHATS_API_URL, {
       method: 'POST',
