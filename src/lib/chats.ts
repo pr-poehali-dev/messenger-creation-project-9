@@ -60,7 +60,7 @@ export const chatsApi = {
     return data.messages;
   },
   
-  async sendMessage(chatId: number, text: string): Promise<Message> {
+  async sendMessage(chatId: number, text: string): Promise<{ message: Message }> {
     const response = await fetch(CHATS_API_URL, {
       method: 'POST',
       headers: getAuthHeaders(),
@@ -70,7 +70,7 @@ export const chatsApi = {
     if (!response.ok) throw new Error('Failed to send message');
     
     const data = await response.json();
-    return data.message;
+    return data;
   },
   
   async addReaction(messageId: number, reaction: string): Promise<void> {
