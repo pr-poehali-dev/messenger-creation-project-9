@@ -57,6 +57,20 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
+    if (user) {
+      const loadContacts = async () => {
+        try {
+          const contactsList = await chatsApi.getContacts();
+          setContacts(contactsList);
+        } catch (err) {
+          console.error('Failed to load contacts:', err);
+        }
+      };
+      loadContacts();
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (user && !isLoading) {
       const hasSeenHint = localStorage.getItem('hasSeenSwipeHint');
       const isMobile = window.innerWidth < 768;
@@ -195,6 +209,24 @@ export default function Index() {
   const handleLogout = () => {
     auth.logout();
     setUser(null);
+  };
+
+  const handleContactClick = async (contact: ChatUser) => {
+    try {
+      const existingChat = chatsHook.chats.find(
+        chat => !chat.is_group && chat.other_user_id === contact.id
+      );
+
+      if (existingChat) {
+        chatsHook.setSelectedChat(existingChat);
+      } else {
+        await chatsHook.handleCreateChat(contact);
+      }
+      
+      setActiveSection('chats');
+    } catch (err) {
+      console.error('Failed to open chat with contact:', err);
+    }
   };
 
   const handleCreateChannel = (data: ChannelData) => {
@@ -340,6 +372,8 @@ export default function Index() {
             onCreateStory={() => setShowCreateStory(true)}
             channels={channels}
             groups={groups}
+            contacts={contacts}
+            onContactClick={handleContactClick}
           />
         </>
       )}

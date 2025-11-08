@@ -4,7 +4,7 @@ import Icon from '@/components/ui/icon';
 import ChatList from '@/components/ChatList';
 import ChatWindow from '@/components/ChatWindow';
 import StoriesBar from '@/components/StoriesBar';
-import type { Chat, Message, Section, Story } from '@/types';
+import type { Chat, Message, Section, Story, ChatUser } from '@/types';
 
 interface ChatSectionProps {
   activeSection: Section;
@@ -34,6 +34,8 @@ interface ChatSectionProps {
   currentUser: { id: number; username: string; email: string; avatar: string };
   channels?: Chat[];
   groups?: Chat[];
+  contacts?: ChatUser[];
+  onContactClick?: (contact: ChatUser) => void;
 }
 
 export default function ChatSection({
@@ -64,6 +66,8 @@ export default function ChatSection({
   currentUser,
   channels = [],
   groups = [],
+  contacts = [],
+  onContactClick,
 }: ChatSectionProps) {
   const filteredChats = chats.filter(chat => {
     if (!chatSearchQuery.trim()) return true;
@@ -149,28 +153,29 @@ export default function ChatSection({
 
         {activeSection === 'contacts' && (
           <div className="flex-1 px-4 md:px-6 py-4 space-y-3">
-            {[
-              { name: 'Алексей Петров', avatar: 'АП', online: true },
-              { name: 'Мария Иванова', avatar: 'МИ', online: false },
-              { name: 'Дмитрий Сидоров', avatar: 'ДС', online: true },
-            ].map((contact, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-2xl glass hover:bg-muted/50 cursor-pointer transition-all">
-                <div className="relative">
+            {contacts.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <Icon name="Users" size={48} className="mx-auto mb-3 opacity-50" />
+                <p>У вас пока нет контактов</p>
+                <p className="text-sm mt-2">Начните новый чат чтобы добавить контакт</p>
+              </div>
+            ) : (
+              contacts.map((contact) => (
+                <div 
+                  key={contact.id} 
+                  className="flex items-center gap-3 p-3 rounded-2xl glass hover:bg-muted/50 cursor-pointer transition-all"
+                  onClick={() => onContactClick?.(contact)}
+                >
                   <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-semibold">
                     {contact.avatar}
                   </div>
-                  {contact.online && (
-                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
-                  )}
+                  <div className="flex-1">
+                    <h4 className="font-semibold">{contact.username}</h4>
+                    <p className="text-sm text-muted-foreground">{contact.email}</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold">{contact.name}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {contact.online ? 'в сети' : 'был(а) недавно'}
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
 

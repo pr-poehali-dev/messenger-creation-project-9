@@ -81,5 +81,17 @@ export const chatsApi = {
     });
     
     if (!response.ok) throw new Error('Failed to add reaction');
+  },
+
+  async getContacts(): Promise<ChatUser[]> {
+    const response = await fetch(`${CHATS_API_URL}?action=contacts`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch contacts');
+    
+    const data = await response.json();
+    return data.contacts || [];
   }
 };
