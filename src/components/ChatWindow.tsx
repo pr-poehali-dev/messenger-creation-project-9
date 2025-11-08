@@ -50,6 +50,7 @@ export default function ChatWindow({
   const [showVoiceRecorder, setShowVoiceRecorder] = useState(false);
   const [activeCall, setActiveCall] = useState<{ type: 'video' | 'audio', user: { id: number, name: string, avatar?: string } } | null>(null);
   const [messageMenuId, setMessageMenuId] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const matchedIndices = useMemo(() => {
     if (!messageSearchQuery.trim()) return [];
@@ -151,6 +152,49 @@ export default function ChatWindow({
       onSendMessage();
     } catch (error) {
       console.error('Failed to delete message:', error);
+    }
+  };
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !selectedChat) return;
+
+    try {
+      const fileType = file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : null;
+      if (!fileType) {
+        console.error('Unsupported file type');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const mediaData = e.target?.result as string;
+        const text = fileType === 'image' ? 'Изображение' : 'Видео';
+        const response = await chatsApi.sendMessage(selectedChat.id, text);
+        const messageId = response.message.id;
+        
+        let duration = 0;
+        if (fileType === 'video') {
+          const video = document.createElement('video');
+          video.src = mediaData;
+          await new Promise(resolve => {
+            video.onloadedmetadata = () => {
+              duration = Math.floor(video.duration);
+              resolve(null);
+            };
+          });
+        }
+
+        await chatsApi.uploadMedia(messageId, fileType, mediaData, duration);
+        onSendMessage();
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Failed to upload file:', error);
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
   if (!selectedChat) {
@@ -374,6 +418,21 @@ export default function ChatWindow({
             onClick={onToggleStickers}
           >
             <Icon name="Smile" size={24} />
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,video/*"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          <Button
+            size="icon"
+            variant="ghost"
+            className="rounded-full h-12 w-12 md:h-10 md:w-10"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Icon name="Image" size={24} />
           </Button>
           {showVoiceRecorder ? (
             <div className="flex-1">
