@@ -103,17 +103,47 @@ exports.handler = async (event, context) => {
       }
       
       const messages = await queryDB(
-        `SELECT m.id, m.text, m.reaction, m.created_at, m.sender_id, u.username, u.avatar
+        `SELECT m.id, m.text, m.reaction, m.created_at, m.sender_id, u.username, u.avatar,
+         mm.message_type, mm.media_url, mm.media_duration, mm.media_thumbnail,
+         (SELECT COUNT(*) FROM t_p59162637_messenger_creation_p.removed_messages WHERE message_id = m.id) as is_removed
          FROM messages m
          JOIN users u ON m.sender_id = u.id
+         LEFT JOIN t_p59162637_messenger_creation_p.media_messages mm ON m.id = mm.message_id
          WHERE m.chat_id = ${chatId}
          ORDER BY m.created_at ASC`
+      );
+      
+      const validMessages = messages.filter(msg => msg.is_removed === 0);
+      
+      for (const msg of validMessages) {
+        const reactions = await queryDB(
+          `SELECT r.reaction, r.user_id, u.username 
+           FROM t_p59162637_messenger_creation_p.message_reactions r
+           JOIN users u ON r.user_id = u.id
+           WHERE r.message_id = ${msg.id}`
+        );
+        msg.reactions = reactions;
+      }
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ messages: validMessages })
+      };
+    }
+    
+    if (action === 'contacts') {
+      const contacts = await queryDB(
+        `SELECT DISTINCT u.id, u.username, u.email, u.avatar
+         FROM users u
+         WHERE u.id != ${userId}
+         ORDER BY u.username`
       );
       
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({ messages })
+        body: JSON.stringify({ contacts })
       };
     }
     
@@ -221,13 +251,98 @@ exports.handler = async (event, context) => {
       const reactionEscaped = reaction.replace(/'/g, "''");
       
       await queryDB(
-        `UPDATE messages SET reaction = '${reactionEscaped}' WHERE id = ${messageId}`
+        `INSERT INTO t_p59162637_messenger_creation_p.message_reactions (message_id, user_id, reaction)
+         VALUES (${messageId}, ${userId}, '${reactionEscaped}')
+         ON CONFLICT (message_id, user_id, reaction) DO NOTHING`
       );
       
       return {
         statusCode: 200,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
         body: JSON.stringify({ success: true })
+      };
+    }
+    
+    if (action === 'remove_reaction') {
+      const { reactionId } = body;
+      
+      await queryDB(
+        `UPDATE t_p59162637_messenger_creation_p.message_reactions 
+         SET reaction = NULL 
+         WHERE id = ${reactionId} AND user_id = ${userId}`
+      );
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ success: true })
+      };
+    }
+    
+    if (action === 'delete_message') {
+      const { messageId } = body;
+      
+      await queryDB(
+        `INSERT INTO t_p59162637_messenger_creation_p.removed_messages (message_id, removed_by)
+         VALUES (${messageId}, ${userId})
+         ON CONFLICT (message_id) DO NOTHING`
+      );
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ success: true })
+      };
+    }
+    
+    if (action === 'upload_media') {
+      const { messageId, mediaType, duration } = body;
+      
+      const mediaUrl = `https://storage.example.com/media/${messageId}.${mediaType}`;
+      const thumbnailUrl = mediaType === 'video' ? `https://storage.example.com/media/${messageId}_thumb.jpg` : null;
+      
+      await queryDB(
+        `INSERT INTO t_p59162637_messenger_creation_p.media_messages 
+         (message_id, message_type, media_url, media_duration, media_thumbnail)
+         VALUES (${messageId}, '${mediaType}', '${mediaUrl}', ${duration || 'NULL'}, ${thumbnailUrl ? `'${thumbnailUrl}'` : 'NULL'})
+         ON CONFLICT (message_id) DO UPDATE SET
+           message_type = EXCLUDED.message_type,
+           media_url = EXCLUDED.media_url,
+           media_duration = EXCLUDED.media_duration,
+           media_thumbnail = EXCLUDED.media_thumbnail`
+      );
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ mediaUrl, thumbnailUrl, messageId })
+      };
+    }
+    
+    if (action === 'initiate_call') {
+      const { receiverId, callType } = body;
+      const callId = `call_${userId}_${receiverId}_${Date.now()}`;
+      
+      await queryDB(
+        `INSERT INTO t_p59162637_messenger_creation_p.calls 
+         (chat_id, caller_id, receiver_id, call_type, status)
+         VALUES (0, ${userId}, ${receiverId}, '${callType}', 'pending')`
+      );
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ callId, status: 'initiated' })
+      };
+    }
+    
+    if (action === 'end_call') {
+      const { callId } = body;
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ status: 'call_ended' })
       };
     }
   }

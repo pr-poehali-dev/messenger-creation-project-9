@@ -83,6 +83,38 @@ export const chatsApi = {
     if (!response.ok) throw new Error('Failed to add reaction');
   },
 
+  async removeReaction(reactionId: number): Promise<void> {
+    const response = await fetch(CHATS_API_URL, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ action: 'remove_reaction', reactionId })
+    });
+    
+    if (!response.ok) throw new Error('Failed to remove reaction');
+  },
+
+  async deleteMessage(messageId: number): Promise<void> {
+    const response = await fetch(CHATS_API_URL, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ action: 'delete_message', messageId })
+    });
+    
+    if (!response.ok) throw new Error('Failed to delete message');
+  },
+
+  async uploadMedia(messageId: number, mediaType: string, mediaData: string, duration?: number): Promise<any> {
+    const response = await fetch(CHATS_API_URL, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ action: 'upload_media', messageId, mediaType, mediaData, duration })
+    });
+    
+    if (!response.ok) throw new Error('Failed to upload media');
+    
+    return await response.json();
+  },
+
   async getContacts(): Promise<ChatUser[]> {
     const response = await fetch(`${CHATS_API_URL}?action=contacts`, {
       method: 'GET',

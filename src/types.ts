@@ -31,6 +31,13 @@ export type Chat = {
   invite_link?: string;
 };
 
+export type MessageReaction = {
+  id: number;
+  reaction: string;
+  user_id: number;
+  username: string;
+};
+
 export type Message = {
   id: number;
   text: string;
@@ -39,6 +46,24 @@ export type Message = {
   sender_id: number;
   username: string;
   avatar: string;
+  message_type?: 'text' | 'audio' | 'video' | 'image' | 'sticker';
+  media_url?: string;
+  media_duration?: number;
+  media_thumbnail?: string;
+  reactions?: MessageReaction[];
+  is_removed?: number;
+};
+
+export type Call = {
+  id: number;
+  chat_id: number;
+  caller_id: number;
+  receiver_id: number;
+  call_type: 'video' | 'audio';
+  status: 'pending' | 'active' | 'ended' | 'rejected';
+  started_at: string;
+  ended_at?: string;
+  duration?: number;
 };
 
 export type Section = 'chats' | 'contacts' | 'groups' | 'channels' | 'settings' | 'profile';
