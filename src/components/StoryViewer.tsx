@@ -134,7 +134,8 @@ export default function StoryViewer({
   if (!currentStory || !currentItem) return null;
 
   return (
-    <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black z-50 flex items-center justify-center p-0 md:p-4">
+      <div className="relative w-full h-full md:w-auto md:h-auto md:max-w-[420px] md:aspect-[9/16] md:rounded-3xl overflow-hidden bg-black">
       <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Avatar className="w-10 h-10">
@@ -198,7 +199,7 @@ export default function StoryViewer({
       </div>
 
       <div
-        className="relative w-full max-w-md h-full max-h-[80vh] bg-black flex items-center justify-center cursor-pointer"
+        className="absolute inset-0 flex items-center justify-center cursor-pointer"
         onClick={handleClick}
         onMouseDown={() => setIsPaused(true)}
         onMouseUp={() => setIsPaused(false)}
@@ -209,7 +210,7 @@ export default function StoryViewer({
           <video
             ref={videoRef}
             src={currentItem.url}
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover"
             onTimeUpdate={handleVideoTimeUpdate}
             onEnded={handleVideoEnded}
             playsInline
@@ -218,39 +219,13 @@ export default function StoryViewer({
           <img
             src={currentItem.url}
             alt="Story"
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover"
           />
         )}
       </div>
 
-      <div className="absolute left-4 top-1/2 -translate-y-1/2">
-        {(currentStoryIndex > 0 || currentItemIndex > 0) && (
-          <Button
-            size="icon"
-            variant="ghost"
-            className="text-white hover:bg-white/20 rounded-full"
-            onClick={goToPrev}
-          >
-            <Icon name="ChevronLeft" size={32} />
-          </Button>
-        )}
-      </div>
-
-      <div className="absolute right-4 top-1/2 -translate-y-1/2">
-        {(currentStoryIndex < stories.length - 1 || currentItemIndex < currentStory.items.length - 1) && (
-          <Button
-            size="icon"
-            variant="ghost"
-            className="text-white hover:bg-white/20 rounded-full"
-            onClick={goToNext}
-          >
-            <Icon name="ChevronRight" size={32} />
-          </Button>
-        )}
-      </div>
-
       {!isMyStory && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-md px-4 z-20">
+        <div className="absolute bottom-6 left-4 right-4 z-20">
           {showReplyInput ? (
             <div className="flex items-center gap-2 bg-black/50 backdrop-blur-md rounded-full p-2 border border-white/20">
               <Input
@@ -292,6 +267,7 @@ export default function StoryViewer({
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }
