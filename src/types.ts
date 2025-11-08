@@ -17,11 +17,18 @@ export type Chat = {
   name: string;
   avatar: string;
   is_group: boolean;
+  is_channel?: boolean;
+  description?: string;
+  members_count?: number;
   last_message: string | null;
   last_message_time: string | null;
   unread_count: number;
   online?: boolean;
   other_user_id?: number;
+  creator_id?: number;
+  is_admin?: boolean;
+  is_public?: boolean;
+  invite_link?: string;
 };
 
 export type Message = {

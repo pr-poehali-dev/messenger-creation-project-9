@@ -9,6 +9,10 @@ import ChatSection from '@/components/ChatSection';
 import NewChatDialog from '@/components/NewChatDialog';
 import StoryViewer from '@/components/StoryViewer';
 import CreateStoryDialog from '@/components/CreateStoryDialog';
+import CreateChannelDialog, { type ChannelData } from '@/components/CreateChannelDialog';
+import CreateGroupDialog, { type GroupData } from '@/components/CreateGroupDialog';
+import ChannelInfoDialog from '@/components/ChannelInfoDialog';
+import GroupInfoDialog from '@/components/GroupInfoDialog';
 import { useChats } from '@/hooks/useChats';
 import { useStories } from '@/hooks/useStories';
 import Icon from '@/components/ui/icon';
@@ -30,6 +34,13 @@ export default function Index() {
   const [showCreateStory, setShowCreateStory] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
+  const [showCreateChannel, setShowCreateChannel] = useState(false);
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [showChannelInfo, setShowChannelInfo] = useState(false);
+  const [showGroupInfo, setShowGroupInfo] = useState(false);
+  const [channels, setChannels] = useState<any[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
+  const [contacts, setContacts] = useState<ChatUser[]>([]);
 
   const chatsHook = useChats();
   const storiesHook = useStories(user);
@@ -186,6 +197,55 @@ export default function Index() {
     setUser(null);
   };
 
+  const handleCreateChannel = (data: ChannelData) => {
+    const newChannel = {
+      id: Date.now(),
+      name: data.name,
+      description: data.description,
+      avatar: data.avatar || '',
+      is_group: true,
+      is_channel: true,
+      is_public: data.isPublic,
+      members_count: 1,
+      creator_id: user?.id,
+      is_admin: true,
+      last_message: null,
+      last_message_time: null,
+      unread_count: 0,
+      invite_link: `https://app.com/join/${Date.now()}`
+    };
+    setChannels(prev => [...prev, newChannel]);
+  };
+
+  const handleCreateGroup = (data: GroupData) => {
+    const newGroup = {
+      id: Date.now(),
+      name: data.name,
+      description: data.description,
+      avatar: data.avatar || '',
+      is_group: true,
+      is_channel: false,
+      members_count: data.members.length + 1,
+      creator_id: user?.id,
+      is_admin: true,
+      last_message: null,
+      last_message_time: null,
+      unread_count: 0,
+      invite_link: `https://app.com/join/${Date.now()}`
+    };
+    setGroups(prev => [...prev, newGroup]);
+  };
+
+  const handleNewChatClick = () => {
+    if (activeSection === 'channels') {
+      setShowCreateChannel(true);
+    } else if (activeSection === 'groups') {
+      setShowCreateGroup(true);
+    } else {
+      setShowNewChatDialog(true);
+    }
+  };
+
   const stickers = ['😀', '😂', '❤️', '🔥', '👍', '🎉', '😍', '💯', '✨', '🚀', '💪', '🤖'];
   const reactions = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
 
@@ -273,11 +333,13 @@ export default function Index() {
             onChatSearchChange={chatsHook.setChatSearchQuery}
             messageSearchQuery={chatsHook.messageSearchQuery}
             onMessageSearchChange={chatsHook.setMessageSearchQuery}
-            onNewChatClick={() => setShowNewChatDialog(true)}
+            onNewChatClick={handleNewChatClick}
             stories={storiesHook.stories}
             currentUserId={user.id}
             onStoryClick={storiesHook.handleStoryClick}
             onCreateStory={() => setShowCreateStory(true)}
+            channels={channels}
+            groups={groups}
           />
         </>
       )}
@@ -296,6 +358,19 @@ export default function Index() {
         open={showCreateStory}
         onClose={() => setShowCreateStory(false)}
         onCreateStory={storiesHook.handleCreateStory}
+      />
+
+      <CreateChannelDialog
+        open={showCreateChannel}
+        onOpenChange={setShowCreateChannel}
+        onCreateChannel={handleCreateChannel}
+      />
+
+      <CreateGroupDialog
+        open={showCreateGroup}
+        onOpenChange={setShowCreateGroup}
+        contacts={contacts}
+        onCreateGroup={handleCreateGroup}
       />
 
       {storiesHook.showStoryViewer && storiesHook.stories.filter(s => s.items.length > 0).length > 0 && (

@@ -32,6 +32,8 @@ interface ChatSectionProps {
   onCreateStory: () => void;
   onMenuClick?: () => void;
   currentUser: { id: number; username: string; email: string; avatar: string };
+  channels?: Chat[];
+  groups?: Chat[];
 }
 
 export default function ChatSection({
@@ -60,6 +62,8 @@ export default function ChatSection({
   onCreateStory,
   onMenuClick,
   currentUser,
+  channels = [],
+  groups = [],
 }: ChatSectionProps) {
   const filteredChats = chats.filter(chat => {
     if (!chatSearchQuery.trim()) return true;
@@ -172,39 +176,52 @@ export default function ChatSection({
 
         {activeSection === 'groups' && (
           <div className="flex-1 px-4 md:px-6 py-4 space-y-3">
-            {[
-              { name: 'Команда проекта', avatar: 'КП', members: 12 },
-              { name: 'Семья', avatar: 'СМ', members: 5 },
-            ].map((group, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-2xl glass hover:bg-muted/50 cursor-pointer transition-all">
-                <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-semibold">
-                  {group.avatar}
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold">{group.name}</h4>
-                  <p className="text-sm text-muted-foreground">{group.members} участников</p>
-                </div>
+            {groups.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <Icon name="Users" size={48} className="mx-auto mb-3 opacity-50" />
+                <p>У вас пока нет групп</p>
+                <p className="text-sm mt-2">Нажмите + чтобы создать</p>
               </div>
-            ))}
+            ) : (
+              groups.map((group) => (
+                <div key={group.id} className="flex items-center gap-3 p-3 rounded-2xl glass hover:bg-muted/50 cursor-pointer transition-all" onClick={() => onChatSelect(group)}>
+                  <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-semibold">
+                    {group.avatar || group.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold">{group.name}</h4>
+                    <p className="text-sm text-muted-foreground">{group.members_count} участников</p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
 
         {activeSection === 'channels' && (
           <div className="flex-1 px-4 md:px-6 py-4 space-y-3">
-            {[
-              { name: 'Новости технологий', avatar: 'НТ', subscribers: 1234 },
-              { name: 'Музыка', avatar: 'МЗ', subscribers: 567 },
-            ].map((channel, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-2xl glass hover:bg-muted/50 cursor-pointer transition-all">
-                <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-semibold">
-                  {channel.avatar}
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold">{channel.name}</h4>
-                  <p className="text-sm text-muted-foreground">{channel.subscribers} подписчиков</p>
-                </div>
+            {channels.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <Icon name="Radio" size={48} className="mx-auto mb-3 opacity-50" />
+                <p>У вас пока нет каналов</p>
+                <p className="text-sm mt-2">Нажмите + чтобы создать</p>
               </div>
-            ))}
+            ) : (
+              channels.map((channel) => (
+                <div key={channel.id} className="flex items-center gap-3 p-3 rounded-2xl glass hover:bg-muted/50 cursor-pointer transition-all" onClick={() => onChatSelect(channel)}>
+                  <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-semibold">
+                    {channel.avatar || channel.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-semibold truncate">{channel.name}</h4>
+                      {channel.is_public && <Icon name="Globe" size={14} className="text-primary flex-shrink-0" />}
+                    </div>
+                    <p className="text-sm text-muted-foreground">{channel.members_count} подписчиков</p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
       </div>
