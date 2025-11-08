@@ -284,14 +284,14 @@ export default function ChatWindow({
             )}
           </div>
         </div>
-        <div className="hidden md:flex gap-2">
-          <Button size="icon" variant="ghost" className="rounded-full" onClick={() => handleStartCall('audio')}>
+        <div className="flex gap-2">
+          <Button size="icon" variant="ghost" className="rounded-full h-10 w-10" onClick={() => handleStartCall('audio')}>
             <Icon name="Phone" size={20} />
           </Button>
-          <Button size="icon" variant="ghost" className="rounded-full" onClick={() => handleStartCall('video')}>
+          <Button size="icon" variant="ghost" className="rounded-full h-10 w-10" onClick={() => handleStartCall('video')}>
             <Icon name="Video" size={20} />
           </Button>
-          <Button size="icon" variant="ghost" className="rounded-full">
+          <Button size="icon" variant="ghost" className="rounded-full h-10 w-10">
             <Icon name="MoreVertical" size={20} />
           </Button>
         </div>
