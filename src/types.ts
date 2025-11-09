@@ -52,6 +52,10 @@ export type Message = {
   media_thumbnail?: string;
   reactions?: MessageReaction[];
   is_removed?: number;
+  sender_username?: string;
+  timestamp?: string;
+  chat_id?: number;
+  is_read?: boolean;
 };
 
 export type Call = {

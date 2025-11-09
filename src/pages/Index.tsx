@@ -42,7 +42,7 @@ export default function Index() {
   const [groups, setGroups] = useState<any[]>([]);
   const [contacts, setContacts] = useState<ChatUser[]>([]);
 
-  const chatsHook = useChats();
+  const chatsHook = useChats(user);
   const storiesHook = useStories(user);
   const touchStartX = useRef<number>(0);
   const touchCurrentX = useRef<number>(0);

@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { chatsApi } from '@/lib/chats';
-import type { Chat, Message, ChatUser } from '@/types';
+import type { Chat, Message, ChatUser, User } from '@/types';
 import { useRealtime } from './useRealtime';
 
-export function useChats() {
+export function useChats(currentUser?: User | null) {
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -39,8 +39,23 @@ export function useChats() {
   }, [selectedChat, loadMessages]);
 
   const handleSendMessage = async () => {
-    if (messageText.trim() && selectedChat) {
+    if (messageText.trim() && selectedChat && currentUser) {
       const currentText = messageText;
+      const tempId = -Date.now();
+      
+      const optimisticMessage: Message = {
+        id: tempId,
+        chat_id: selectedChat.id,
+        sender_id: currentUser.id,
+        username: currentUser.username,
+        avatar: currentUser.avatar,
+        text: currentText,
+        created_at: new Date().toISOString(),
+        reaction: null,
+        reactions: []
+      };
+      
+      setMessages(prev => [...prev, optimisticMessage]);
       setMessageText('');
 
       try {
@@ -49,6 +64,7 @@ export function useChats() {
         await loadChats();
       } catch (err) {
         console.error('Failed to send message:', err);
+        setMessages(prev => prev.filter(m => m.id !== tempId));
         setMessageText(currentText);
       }
     }

@@ -47,7 +47,7 @@ export default function ChatMessages({
             >
               <div className={`max-w-[75%] md:max-w-[65%] ${isCurrentUser ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
                 {!isCurrentUser && (
-                  <span className="text-xs text-muted-foreground px-3">{message.sender_username}</span>
+                  <span className="text-xs text-muted-foreground px-3">{message.username}</span>
                 )}
                 <div className="relative">
                   {message.media_url && message.media_type && (
