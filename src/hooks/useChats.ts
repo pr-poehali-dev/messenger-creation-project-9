@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { chatsApi } from '@/lib/chats';
 import type { Chat, Message, ChatUser } from '@/types';
+import { useRealtime } from './useRealtime';
 
 export function useChats() {
   const [chats, setChats] = useState<Chat[]>([]);
@@ -10,6 +11,8 @@ export function useChats() {
   const [showStickers, setShowStickers] = useState(false);
   const [chatSearchQuery, setChatSearchQuery] = useState('');
   const [messageSearchQuery, setMessageSearchQuery] = useState('');
+  const [isRealtimeEnabled, setIsRealtimeEnabled] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const loadChats = useCallback(async () => {
     try {
@@ -88,6 +91,37 @@ export function useChats() {
     }
   };
 
+  const reloadChats = useCallback(async () => {
+    try {
+      const data = await chatsApi.getChats();
+      setChats(data);
+    } catch (err) {
+      console.error('Failed to reload chats:', err);
+    }
+  }, []);
+
+  const reloadMessages = useCallback(async () => {
+    if (!selectedChat) return;
+    try {
+      const data = await chatsApi.getMessages(selectedChat.id);
+      setMessages(data);
+    } catch (err) {
+      console.error('Failed to reload messages:', err);
+    }
+  }, [selectedChat]);
+
+  useRealtime({ 
+    onUpdate: reloadChats, 
+    enabled: isRealtimeEnabled,
+    interval: 3000 
+  });
+
+  useRealtime({ 
+    onUpdate: reloadMessages, 
+    enabled: isRealtimeEnabled && !!selectedChat,
+    interval: 2000 
+  });
+
   return {
     chats,
     selectedChat,
@@ -106,5 +140,8 @@ export function useChats() {
     handleStickerClick,
     addReaction,
     handleCreateChat,
+    isRealtimeEnabled,
+    setIsRealtimeEnabled,
+    messagesEndRef,
   };
 }

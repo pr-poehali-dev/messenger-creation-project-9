@@ -1,10 +1,12 @@
 import { useState, useCallback } from 'react';
 import type { Story, User } from '@/types';
+import { useRealtime } from './useRealtime';
 
 export function useStories(user: User | null) {
   const [stories, setStories] = useState<Story[]>([]);
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+  const [isRealtimeEnabled, setIsRealtimeEnabled] = useState(true);
 
   const loadStories = useCallback(async () => {
     const mockStories: Story[] = [
@@ -100,6 +102,16 @@ export function useStories(user: User | null) {
     setShowStoryViewer(false);
   };
 
+  const reloadStories = useCallback(async () => {
+    await loadStories();
+  }, [loadStories]);
+
+  useRealtime({ 
+    onUpdate: reloadStories, 
+    enabled: isRealtimeEnabled,
+    interval: 5000 
+  });
+
   return {
     stories,
     showStoryViewer,
@@ -109,5 +121,7 @@ export function useStories(user: User | null) {
     handleStoryClick,
     handleCreateStory,
     handleDeleteStory,
+    isRealtimeEnabled,
+    setIsRealtimeEnabled,
   };
 }

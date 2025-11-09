@@ -146,8 +146,9 @@ export default function ChatSection({
         {activeSection === 'chats' && (
           <ChatList
             chats={filteredChats}
-            selectedChat={selectedChat}
-            onChatSelect={onChatSelect}
+            selectedChatId={selectedChat?.id || null}
+            onSelectChat={onChatSelect}
+            searchQuery={chatSearchQuery}
           />
         )}
 
