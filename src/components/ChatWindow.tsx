@@ -51,6 +51,9 @@ export default function ChatWindow({
   const [activeCall, setActiveCall] = useState<{ type: 'video' | 'audio', user: { id: number, name: string, avatar?: string } } | null>(null);
   const [messageMenuId, setMessageMenuId] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingUsername, setTypingUsername] = useState('');
+  const typingTimeoutRef = useRef<number>();
 
   const matchedIndices = useMemo(() => {
     if (!messageSearchQuery.trim()) return [];
@@ -197,6 +200,55 @@ export default function ChatWindow({
       fileInputRef.current.value = '';
     }
   };
+
+  useEffect(() => {
+    if (!selectedChat) return;
+
+    const checkTypingStatus = async () => {
+      try {
+        const status = await chatsApi.getTypingStatus(selectedChat.id);
+        if (status.isTyping && status.userId !== currentUser.id) {
+          setIsTyping(true);
+          setTypingUsername(status.username || 'Собеседник');
+        } else {
+          setIsTyping(false);
+          setTypingUsername('');
+        }
+      } catch (error) {
+        console.error('Failed to check typing status:', error);
+      }
+    };
+
+    const interval = setInterval(checkTypingStatus, 1000);
+    return () => clearInterval(interval);
+  }, [selectedChat, currentUser.id]);
+
+  const handleMessageTextChange = (value: string) => {
+    onMessageTextChange(value);
+    
+    if (!selectedChat) return;
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    if (value.trim().length > 0) {
+      chatsApi.setTyping(selectedChat.id, true).catch(err => 
+        console.error('Failed to set typing status:', err)
+      );
+
+      typingTimeoutRef.current = window.setTimeout(() => {
+        chatsApi.setTyping(selectedChat.id, false).catch(err => 
+          console.error('Failed to clear typing status:', err)
+        );
+      }, 3000);
+    } else {
+      chatsApi.setTyping(selectedChat.id, false).catch(err => 
+        console.error('Failed to clear typing status:', err)
+      );
+    }
+  };
+
   if (!selectedChat) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -228,7 +280,18 @@ export default function ChatWindow({
           <div>
             <h2 className="font-bold text-base md:text-lg">{selectedChat.name}</h2>
             <p className="text-xs md:text-sm text-muted-foreground">
-              {selectedChat.online ? 'в сети' : 'был(а) недавно'}
+              {isTyping ? (
+                <span className="text-primary flex items-center gap-1">
+                  печатает
+                  <span className="flex gap-0.5">
+                    <span className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </span>
+                </span>
+              ) : (
+                selectedChat.online ? 'в сети' : 'был(а) недавно'
+              )}
             </p>
           </div>
         </div>
@@ -447,7 +510,7 @@ export default function ChatWindow({
                 <Input
                   placeholder="Написать сообщение..."
                   value={messageText}
-                  onChange={(e) => onMessageTextChange(e.target.value)}
+                  onChange={(e) => handleMessageTextChange(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && onSendMessage()}
                   className="rounded-full bg-muted border-0 pr-12 h-12 md:h-10 text-base md:text-sm"
                 />

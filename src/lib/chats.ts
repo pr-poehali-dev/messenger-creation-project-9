@@ -125,5 +125,27 @@ export const chatsApi = {
     
     const data = await response.json();
     return data.contacts || [];
+  },
+
+  async setTyping(chatId: number, isTyping: boolean): Promise<void> {
+    const response = await fetch(CHATS_API_URL, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ action: 'set_typing', chatId, isTyping })
+    });
+    
+    if (!response.ok) throw new Error('Failed to set typing status');
+  },
+
+  async getTypingStatus(chatId: number): Promise<{ isTyping: boolean; userId?: number; username?: string }> {
+    const response = await fetch(`${CHATS_API_URL}?action=typing_status&chatId=${chatId}`, {
+      method: 'GET',
+      headers: getAuthHeaders()
+    });
+    
+    if (!response.ok) throw new Error('Failed to get typing status');
+    
+    const data = await response.json();
+    return data;
   }
 };
