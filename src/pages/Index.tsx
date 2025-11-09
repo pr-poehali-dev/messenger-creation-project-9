@@ -1,6 +1,3 @@
-import { useState, useEffect, useRef } from 'react';
-import { auth } from '@/lib/auth';
-import { chatsApi } from '@/lib/chats';
 import AuthForm from '@/components/AuthForm';
 import ProfileView from '@/components/ProfileView';
 import SettingsView from '@/components/SettingsView';
@@ -9,319 +6,48 @@ import ChatSection from '@/components/ChatSection';
 import NewChatDialog from '@/components/NewChatDialog';
 import StoryViewer from '@/components/StoryViewer';
 import CreateStoryDialog from '@/components/CreateStoryDialog';
-import CreateChannelDialog, { type ChannelData } from '@/components/CreateChannelDialog';
-import CreateGroupDialog, { type GroupData } from '@/components/CreateGroupDialog';
+import CreateChannelDialog from '@/components/CreateChannelDialog';
+import CreateGroupDialog from '@/components/CreateGroupDialog';
 import ChannelInfoDialog from '@/components/ChannelInfoDialog';
 import GroupInfoDialog from '@/components/GroupInfoDialog';
 import UserProfileView from '@/components/UserProfileView';
-import { useChats } from '@/hooks/useChats';
-import { useStories } from '@/hooks/useStories';
 import Icon from '@/components/ui/icon';
-import type { User, ChatUser, Section, AuthMode } from '@/types';
+import { useAppState } from '@/hooks/useAppState';
+import { useAppHandlers } from '@/hooks/useAppHandlers';
+import { useTouchGestures } from '@/hooks/useTouchGestures';
 
 export default function Index() {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [authMode, setAuthMode] = useState<AuthMode>('login');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [error, setError] = useState('');
-  const [activeSection, setActiveSection] = useState<Section>('chats');
-  const [showNewChatDialog, setShowNewChatDialog] = useState(false);
-  const [userSearch, setUserSearch] = useState('');
-  const [searchResults, setSearchResults] = useState<ChatUser[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [showCreateStory, setShowCreateStory] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [showSwipeHint, setShowSwipeHint] = useState(false);
-  const [showCreateChannel, setShowCreateChannel] = useState(false);
-  const [showCreateGroup, setShowCreateGroup] = useState(false);
-  const [showChannelInfo, setShowChannelInfo] = useState(false);
-  const [showGroupInfo, setShowGroupInfo] = useState(false);
-  const [channels, setChannels] = useState<any[]>([]);
-  const [groups, setGroups] = useState<any[]>([]);
-  const [contacts, setContacts] = useState<ChatUser[]>([]);
-  const [allUsers, setAllUsers] = useState<ChatUser[]>([]);
-  const [selectedUserProfile, setSelectedUserProfile] = useState<ChatUser | null>(null);
+  const state = useAppState();
+  
+  const handlers = useAppHandlers({
+    chatsHook: state.chatsHook,
+    storiesHook: state.storiesHook,
+    setShowNewChatDialog: state.setShowNewChatDialog,
+    setUserSearch: state.setUserSearch,
+    setSearchResults: state.setSearchResults,
+    setActiveSection: state.setActiveSection,
+    setIsSidebarOpen: state.setIsSidebarOpen,
+    setError: state.setError,
+    setUser: state.setUser,
+    setSelectedUserProfile: state.setSelectedUserProfile,
+    setChannels: state.setChannels,
+    setGroups: state.setGroups,
+    setShowCreateChannel: state.setShowCreateChannel,
+    setShowCreateGroup: state.setShowCreateGroup,
+    authMode: state.authMode,
+    email: state.email,
+    password: state.password,
+    username: state.username,
+    activeSection: state.activeSection,
+    user: state.user,
+  });
 
-  const chatsHook = useChats(user);
-  const storiesHook = useStories(user);
-  const touchStartX = useRef<number>(0);
-  const touchCurrentX = useRef<number>(0);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const currentUser = await auth.verifyToken();
-      setUser(currentUser);
-      setIsLoading(false);
-    };
-    checkAuth();
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      const loadContacts = async () => {
-        try {
-          const contactsList = await chatsApi.getContacts();
-          setContacts(contactsList);
-        } catch (err) {
-          console.error('Failed to load contacts:', err);
-        }
-      };
-      loadContacts();
-
-      const loadAllUsers = async () => {
-        try {
-          const usersList = await chatsApi.searchUsers('');
-          setAllUsers(usersList);
-        } catch (err) {
-          console.error('Failed to load users:', err);
-        }
-      };
-      loadAllUsers();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user && !isLoading) {
-      const hasSeenHint = localStorage.getItem('hasSeenSwipeHint');
-      const isMobile = window.innerWidth < 768;
-      
-      if (!hasSeenHint && isMobile) {
-        setTimeout(() => {
-          setShowSwipeHint(true);
-          setTimeout(() => {
-            setShowSwipeHint(false);
-            localStorage.setItem('hasSeenSwipeHint', 'true');
-          }, 3000);
-        }, 1000);
-      }
-    }
-  }, [user, isLoading]);
-
-  useEffect(() => {
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartX.current = e.touches[0].clientX;
-      touchCurrentX.current = e.touches[0].clientX;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      touchCurrentX.current = e.touches[0].clientX;
-    };
-
-    const handleTouchEnd = () => {
-      const diff = touchCurrentX.current - touchStartX.current;
-      
-      if (touchStartX.current < 50 && diff > 80) {
-        setIsSidebarOpen(true);
-      }
-      
-      if (isSidebarOpen && diff < -80) {
-        setIsSidebarOpen(false);
-      }
-    };
-
-    document.addEventListener('touchstart', handleTouchStart);
-    document.addEventListener('touchmove', handleTouchMove);
-    document.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      document.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [isSidebarOpen]);
-
-  useEffect(() => {
-    if (user) {
-      chatsHook.loadChats();
-      storiesHook.loadStories();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (userSearch.trim()) {
-        searchUsers();
-      } else {
-        setSearchResults([]);
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [userSearch]);
-
-  const searchUsers = async () => {
-    setIsSearching(true);
-    try {
-      const data = await chatsApi.searchUsers(userSearch);
-      setSearchResults(data);
-    } catch (err) {
-      console.error('Failed to search users:', err);
-    }
-    setIsSearching(false);
-  };
-
-  const handleCreateChat = async (otherUser: ChatUser) => {
-    try {
-      await chatsHook.handleCreateChat(otherUser);
-      setShowNewChatDialog(false);
-      setUserSearch('');
-      setSearchResults([]);
-    } catch (err) {
-      console.error('Failed to create chat:', err);
-    }
-  };
-
-  const handleReplyToStory = async (userId: number, username: string, message: string) => {
-    try {
-      const existingChat = chatsHook.chats.find(
-        chat => !chat.is_group && chat.other_user_id === userId
-      );
-
-      let chatId: number;
-      
-      if (existingChat) {
-        chatId = existingChat.id;
-      } else {
-        chatId = await chatsHook.handleCreateChat({ id: userId, username, email: '', avatar: username.slice(0, 2).toUpperCase() });
-      }
-
-      if (chatId) {
-        await chatsApi.sendMessage(chatId, `Ответ на историю: ${message}`);
-        await chatsHook.loadChats();
-        
-        const targetChat = chatsHook.chats.find(c => c.id === chatId);
-        if (targetChat) {
-          chatsHook.setSelectedChat(targetChat);
-          setActiveSection('chats');
-        }
-      }
-    } catch (err) {
-      console.error('Failed to reply to story:', err);
-    }
-  };
-
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    
-    try {
-      if (authMode === 'register') {
-        const { user: newUser } = await auth.register(email, password, username);
-        setUser(newUser);
-      } else {
-        const { user: loggedUser } = await auth.login(email, password);
-        setUser(loggedUser);
-      }
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
-
-  const handleLogout = () => {
-    auth.logout();
-    setUser(null);
-  };
-
-  const handleContactClick = async (contact: ChatUser) => {
-    try {
-      const existingChat = chatsHook.chats.find(
-        chat => !chat.is_group && chat.other_user_id === contact.id
-      );
-
-      if (existingChat) {
-        chatsHook.setSelectedChat(existingChat);
-        setActiveSection('chats');
-      } else {
-        const newChat = await chatsHook.handleCreateChat(contact);
-        if (newChat) {
-          chatsHook.setSelectedChat(newChat);
-          setActiveSection('chats');
-        }
-      }
-      
-      setIsSidebarOpen(false);
-    } catch (err) {
-      console.error('Failed to open chat with contact:', err);
-    }
-  };
-
-  const handleUserClick = (clickedUser: ChatUser) => {
-    setSelectedUserProfile(clickedUser);
-  };
-
-  const handleSendMessageToUser = async (clickedUser: ChatUser) => {
-    try {
-      const existingChat = chatsHook.chats.find(
-        chat => !chat.is_group && chat.other_user_id === clickedUser.id
-      );
-
-      if (existingChat) {
-        chatsHook.setSelectedChat(existingChat);
-      } else {
-        const newChat = await chatsHook.handleCreateChat(clickedUser);
-        if (newChat) {
-          chatsHook.setSelectedChat(newChat);
-        }
-      }
-      
-      setSelectedUserProfile(null);
-      setActiveSection('chats');
-      setIsSidebarOpen(false);
-    } catch (err) {
-      console.error('Failed to open chat with user:', err);
-    }
-  };
-
-  const handleCreateChannel = (data: ChannelData) => {
-    const newChannel = {
-      id: Date.now(),
-      name: data.name,
-      description: data.description,
-      avatar: data.avatar || '',
-      is_group: true,
-      is_channel: true,
-      is_public: data.isPublic,
-      members_count: 1,
-      creator_id: user?.id,
-      is_admin: true,
-      last_message: null,
-      last_message_time: null,
-      unread_count: 0,
-      invite_link: `https://app.com/join/${Date.now()}`
-    };
-    setChannels(prev => [...prev, newChannel]);
-  };
-
-  const handleCreateGroup = (data: GroupData) => {
-    const newGroup = {
-      id: Date.now(),
-      name: data.name,
-      description: data.description,
-      avatar: data.avatar || '',
-      is_group: true,
-      is_channel: false,
-      members_count: data.members.length + 1,
-      creator_id: user?.id,
-      is_admin: true,
-      last_message: null,
-      last_message_time: null,
-      unread_count: 0,
-      invite_link: `https://app.com/join/${Date.now()}`
-    };
-    setGroups(prev => [...prev, newGroup]);
-  };
-
-  const handleNewChatClick = () => {
-    if (activeSection === 'channels') {
-      setShowCreateChannel(true);
-    } else if (activeSection === 'groups') {
-      setShowCreateGroup(true);
-    } else {
-      setShowNewChatDialog(true);
-    }
-  };
+  useTouchGestures({
+    touchStartX: state.touchStartX,
+    touchCurrentX: state.touchCurrentX,
+    isSidebarOpen: state.isSidebarOpen,
+    setIsSidebarOpen: state.setIsSidebarOpen,
+  });
 
   const stickers = [
     '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', 
@@ -369,7 +95,7 @@ export default function Index() {
   ];
   const reactions = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
 
-  if (isLoading) {
+  if (state.isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center space-y-4">
@@ -380,21 +106,21 @@ export default function Index() {
     );
   }
 
-  if (!user) {
+  if (!state.user) {
     return (
       <AuthForm
-        authMode={authMode}
-        email={email}
-        password={password}
-        username={username}
-        error={error}
-        onEmailChange={setEmail}
-        onPasswordChange={setPassword}
-        onUsernameChange={setUsername}
-        onSubmit={handleAuth}
+        authMode={state.authMode}
+        email={state.email}
+        password={state.password}
+        username={state.username}
+        error={state.error}
+        onEmailChange={state.setEmail}
+        onPasswordChange={state.setPassword}
+        onUsernameChange={state.setUsername}
+        onSubmit={handlers.handleAuth}
         onToggleMode={() => {
-          setAuthMode(authMode === 'login' ? 'register' : 'login');
-          setError('');
+          state.setAuthMode(state.authMode === 'login' ? 'register' : 'login');
+          state.setError('');
         }}
       />
     );
@@ -403,131 +129,133 @@ export default function Index() {
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       <AppSidebar
-        activeSection={activeSection}
+        activeSection={state.activeSection}
         onSectionChange={(section) => {
-          setActiveSection(section);
-          setIsSidebarOpen(false);
+          state.setActiveSection(section);
+          state.setIsSidebarOpen(false);
         }}
-        user={user}
-        isMobileOpen={isSidebarOpen}
-        onMobileClose={() => setIsSidebarOpen(false)}
+        user={state.user}
+        isMobileOpen={state.isSidebarOpen}
+        onMobileClose={() => state.setIsSidebarOpen(false)}
       />
 
-      {selectedUserProfile ? (
+      {state.selectedUserProfile ? (
         <UserProfileView 
-          user={selectedUserProfile}
-          onBack={() => setSelectedUserProfile(null)}
-          onSendMessage={handleSendMessageToUser}
+          user={state.selectedUserProfile}
+          onBack={() => state.setSelectedUserProfile(null)}
+          onSendMessage={handlers.handleSendMessageToUser}
         />
-      ) : activeSection === 'profile' ? (
+      ) : state.activeSection === 'profile' ? (
         <ProfileView 
-          user={user} 
-          onLogout={handleLogout} 
-          onBack={() => setActiveSection('chats')}
+          user={state.user} 
+          onLogout={handlers.handleLogout} 
+          onBack={() => state.setActiveSection('chats')}
         />
-      ) : activeSection === 'settings' ? (
+      ) : state.activeSection === 'settings' ? (
         <SettingsView
-          onBack={() => setActiveSection('chats')}
+          onBack={() => state.setActiveSection('chats')}
           onShowSwipeHint={() => {
             localStorage.removeItem('hasSeenSwipeHint');
-            setShowSwipeHint(true);
+            state.setShowSwipeHint(true);
             setTimeout(() => {
-              setShowSwipeHint(false);
+              state.setShowSwipeHint(false);
             }, 3000);
           }}
         />
       ) : (
         <>
           <ChatSection
-            activeSection={activeSection}
-            chats={chatsHook.chats}
-            selectedChat={chatsHook.selectedChat}
-            onChatSelect={chatsHook.setSelectedChat}
-            onMenuClick={() => setIsSidebarOpen(true)}
-            currentUser={user}
-            messages={chatsHook.messages}
-            messageText={chatsHook.messageText}
-            onMessageTextChange={chatsHook.setMessageText}
-            onSendMessage={chatsHook.handleSendMessage}
-            showStickers={chatsHook.showStickers}
-            onToggleStickers={() => chatsHook.setShowStickers(!chatsHook.showStickers)}
+            activeSection={state.activeSection}
+            chats={state.chatsHook.chats}
+            selectedChat={state.chatsHook.selectedChat}
+            onChatSelect={state.chatsHook.setSelectedChat}
+            onMenuClick={() => state.setIsSidebarOpen(true)}
+            currentUser={state.user}
+            messages={state.chatsHook.messages}
+            messageText={state.chatsHook.messageText}
+            onMessageTextChange={state.chatsHook.setMessageText}
+            onSendMessage={state.chatsHook.handleSendMessage}
+            showStickers={state.chatsHook.showStickers}
+            onToggleStickers={() => state.chatsHook.setShowStickers(!state.chatsHook.showStickers)}
             stickers={stickers}
             reactions={reactions}
-            onStickerClick={chatsHook.handleStickerClick}
-            onAddReaction={chatsHook.addReaction}
-            chatSearchQuery={chatsHook.chatSearchQuery}
-            onChatSearchChange={chatsHook.setChatSearchQuery}
-            messageSearchQuery={chatsHook.messageSearchQuery}
-            onMessageSearchChange={chatsHook.setMessageSearchQuery}
-            onNewChatClick={handleNewChatClick}
-            stories={storiesHook.stories}
-            currentUserId={user.id}
-            onStoryClick={storiesHook.handleStoryClick}
-            onCreateStory={() => setShowCreateStory(true)}
-            channels={channels}
-            groups={groups}
-            contacts={contacts}
-            onContactClick={handleContactClick}
-            allUsers={allUsers}
-            onUserClick={handleUserClick}
+            onStickerClick={state.chatsHook.handleStickerClick}
+            onAddReaction={state.chatsHook.addReaction}
+            chatSearchQuery={state.chatsHook.chatSearchQuery}
+            onChatSearchChange={state.chatsHook.setChatSearchQuery}
+            messageSearchQuery={state.chatsHook.messageSearchQuery}
+            onMessageSearchChange={state.chatsHook.setMessageSearchQuery}
+            onNewChatClick={handlers.handleNewChatClick}
+            stories={state.storiesHook.stories}
+            currentUserId={state.user.id}
+            onStoryClick={state.storiesHook.handleStoryClick}
+            onCreateStory={() => state.setShowCreateStory(true)}
+            channels={state.channels}
+            groups={state.groups}
+            contacts={state.contacts}
+            onContactClick={handlers.handleContactClick}
+            allUsers={state.allUsers}
+            onUserClick={handlers.handleUserClick}
           />
         </>
       )}
 
       <NewChatDialog
-        open={showNewChatDialog}
-        onOpenChange={setShowNewChatDialog}
-        userSearch={userSearch}
-        onUserSearchChange={setUserSearch}
-        searchResults={searchResults}
-        isSearching={isSearching}
-        onSelectUser={handleCreateChat}
+        open={state.showNewChatDialog}
+        onOpenChange={state.setShowNewChatDialog}
+        userSearch={state.userSearch}
+        onUserSearchChange={state.setUserSearch}
+        searchResults={state.searchResults}
+        isSearching={state.isSearching}
+        onSelectUser={handlers.handleCreateChat}
       />
 
       <CreateStoryDialog
-        open={showCreateStory}
-        onClose={() => setShowCreateStory(false)}
-        onCreateStory={storiesHook.handleCreateStory}
+        open={state.showCreateStory}
+        onClose={() => state.setShowCreateStory(false)}
+        onCreateStory={state.storiesHook.handleCreateStory}
       />
 
       <CreateChannelDialog
-        open={showCreateChannel}
-        onOpenChange={setShowCreateChannel}
-        onCreateChannel={handleCreateChannel}
+        open={state.showCreateChannel}
+        onOpenChange={state.setShowCreateChannel}
+        onCreateChannel={handlers.handleCreateChannel}
       />
 
       <CreateGroupDialog
-        open={showCreateGroup}
-        onOpenChange={setShowCreateGroup}
-        contacts={contacts}
-        onCreateGroup={handleCreateGroup}
+        open={state.showCreateGroup}
+        onOpenChange={state.setShowCreateGroup}
+        contacts={state.contacts}
+        onCreateGroup={handlers.handleCreateGroup}
       />
 
-      {storiesHook.showStoryViewer && storiesHook.stories.filter(s => s.items.length > 0).length > 0 && (
+      {state.storiesHook.showStoryViewer && state.storiesHook.stories.filter(s => s.items.length > 0).length > 0 && (
         <StoryViewer
-          stories={storiesHook.stories.filter(s => s.items.length > 0)}
-          initialStoryIndex={storiesHook.currentStoryIndex}
-          currentUserId={user.id}
-          onClose={() => storiesHook.setShowStoryViewer(false)}
-          onDeleteStory={storiesHook.handleDeleteStory}
-          onReplyToStory={handleReplyToStory}
+          stories={state.storiesHook.stories.filter(s => s.items.length > 0)}
+          currentStoryIndex={state.storiesHook.currentStoryIndex}
+          onClose={state.storiesHook.closeStoryViewer}
+          onReply={handlers.handleReplyToStory}
         />
       )}
 
-      {showSwipeHint && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none md:hidden">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 animate-pulse">
-            <div className="flex items-center gap-3 bg-primary/90 text-white px-6 py-4 rounded-r-2xl shadow-2xl backdrop-blur-sm">
-              <div className="flex items-center gap-2 animate-bounce-x">
-                <Icon name="ChevronsRight" size={32} className="text-white" />
-                <Icon name="ChevronsRight" size={32} className="text-white/60" />
-              </div>
-              <div className="text-left">
-                <div className="font-bold text-lg">Свайп вправо</div>
-                <div className="text-sm text-white/90">Чтобы открыть меню</div>
-              </div>
-            </div>
-          </div>
+      {state.showChannelInfo && state.chatsHook.selectedChat && state.chatsHook.selectedChat.is_channel && (
+        <ChannelInfoDialog
+          channel={state.chatsHook.selectedChat}
+          onClose={() => state.setShowChannelInfo(false)}
+        />
+      )}
+
+      {state.showGroupInfo && state.chatsHook.selectedChat && state.chatsHook.selectedChat.is_group && !state.chatsHook.selectedChat.is_channel && (
+        <GroupInfoDialog
+          group={state.chatsHook.selectedChat}
+          onClose={() => state.setShowGroupInfo(false)}
+        />
+      )}
+
+      {state.showSwipeHint && (
+        <div className="fixed top-4 left-4 bg-primary text-primary-foreground px-6 py-3 rounded-full shadow-lg z-50 animate-slide-in-left flex items-center gap-2">
+          <Icon name="ChevronRight" size={20} />
+          <span className="font-medium">Свайпните вправо для меню</span>
         </div>
       )}
     </div>
