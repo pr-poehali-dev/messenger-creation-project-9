@@ -61,15 +61,26 @@ export const chatsApi = {
   },
   
   async sendMessage(chatId: number, text: string): Promise<{ message: Message }> {
+    const headers = getAuthHeaders();
+    console.log('Sending message with headers:', headers);
+    console.log('ChatId:', chatId, 'Text:', text);
+    
     const response = await fetch(CHATS_API_URL, {
       method: 'POST',
-      headers: getAuthHeaders(),
+      headers,
       body: JSON.stringify({ action: 'send_message', chatId, text })
     });
     
-    if (!response.ok) throw new Error('Failed to send message');
+    console.log('Response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      throw new Error(`Failed to send message: ${response.status}`);
+    }
     
     const data = await response.json();
+    console.log('Message sent successfully:', data);
     return data;
   },
   

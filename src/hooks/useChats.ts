@@ -40,13 +40,16 @@ export function useChats() {
 
   const handleSendMessage = async () => {
     if (messageText.trim() && selectedChat) {
+      const currentText = messageText;
+      setMessageText('');
+
       try {
-        await chatsApi.sendMessage(selectedChat.id, messageText);
-        setMessageText('');
+        await chatsApi.sendMessage(selectedChat.id, currentText);
         await loadMessages(selectedChat.id);
         await loadChats();
       } catch (err) {
         console.error('Failed to send message:', err);
+        setMessageText(currentText);
       }
     }
   };
@@ -92,6 +95,9 @@ export function useChats() {
   };
 
   const reloadChats = useCallback(async () => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
+    
     try {
       const data = await chatsApi.getChats();
       setChats(data);
@@ -102,6 +108,10 @@ export function useChats() {
 
   const reloadMessages = useCallback(async () => {
     if (!selectedChat) return;
+    
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
+    
     try {
       const data = await chatsApi.getMessages(selectedChat.id);
       setMessages(data);
@@ -113,13 +123,13 @@ export function useChats() {
   useRealtime({ 
     onUpdate: reloadChats, 
     enabled: isRealtimeEnabled,
-    interval: 3000 
+    interval: 5000 
   });
 
   useRealtime({ 
     onUpdate: reloadMessages, 
     enabled: isRealtimeEnabled && !!selectedChat,
-    interval: 2000 
+    interval: 3000 
   });
 
   return {
