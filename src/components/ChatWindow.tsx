@@ -1,15 +1,10 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import Icon from '@/components/ui/icon';
-import HighlightText from '@/components/HighlightText';
-import VoiceRecorder from '@/components/VoiceRecorder';
-import MediaMessage from '@/components/MediaMessage';
-import MessageReactions from '@/components/MessageReactions';
-import CallWindow from '@/components/CallWindow';
 import { chatsApi } from '@/lib/chats';
 import { webrtc } from '@/lib/webrtc';
+import CallWindow from '@/components/CallWindow';
+import ChatHeader from '@/components/ChatWindow/ChatHeader';
+import ChatMessages from '@/components/ChatWindow/ChatMessages';
+import ChatInput from '@/components/ChatWindow/ChatInput';
 import type { Chat, Message, User } from '@/types';
 
 type ChatWindowProps = {
@@ -249,6 +244,14 @@ export default function ChatWindow({
     }
   };
 
+  const setMessageRef = (index: number, element: HTMLDivElement | null) => {
+    if (element) {
+      messageRefs.current.set(index, element);
+    } else {
+      messageRefs.current.delete(index);
+    }
+  };
+
   if (!selectedChat) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -267,283 +270,52 @@ export default function ChatWindow({
 
   return (
     <>
-      <div className="h-16 md:h-20 glass border-b border-border px-4 md:px-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <div className="w-12 h-12 md:w-12 md:h-12 rounded-full bg-muted flex items-center justify-center text-xl">
-              {selectedChat.avatar}
-            </div>
-            {selectedChat.online && (
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
-            )}
-          </div>
-          <div>
-            <h2 className="font-bold text-base md:text-lg">{selectedChat.name}</h2>
-            <p className="text-xs md:text-sm text-muted-foreground">
-              {isTyping ? (
-                <span className="text-primary flex items-center gap-1">
-                  печатает
-                  <span className="flex gap-0.5">
-                    <span className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <span className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <span className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                  </span>
-                </span>
-              ) : (
-                selectedChat.online ? 'в сети' : 'был(а) недавно'
-              )}
-            </p>
-          </div>
-        </div>
-        <div className="hidden lg:flex flex-1 max-w-md mx-4">
-          <div className="relative">
-            <Icon name="Search" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Поиск в сообщениях..."
-              value={messageSearchQuery}
-              onChange={(e) => onMessageSearchChange(e.target.value)}
-              className="pl-9 pr-32 rounded-full bg-muted border-0 h-9 text-sm"
-            />
-            {messageSearchQuery && matchedIndices.length > 0 && (
-              <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1 bg-card border border-border rounded-full px-2 py-1">
-                <span className="text-xs text-muted-foreground px-1">
-                  {currentMatchIndex + 1} / {matchedIndices.length}
-                </span>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="rounded-full h-6 w-6"
-                  onClick={handlePrevMatch}
-                >
-                  <Icon name="ChevronUp" size={14} />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="rounded-full h-6 w-6"
-                  onClick={handleNextMatch}
-                >
-                  <Icon name="ChevronDown" size={14} />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="rounded-full h-6 w-6"
-                  onClick={() => onMessageSearchChange('')}
-                >
-                  <Icon name="X" size={14} />
-                </Button>
-              </div>
-            )}
-            {messageSearchQuery && matchedIndices.length === 0 && (
-              <Button
-                size="icon"
-                variant="ghost"
-                className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full h-7 w-7"
-                onClick={() => onMessageSearchChange('')}
-              >
-                <Icon name="X" size={14} />
-              </Button>
-            )}
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button size="icon" variant="ghost" className="rounded-full h-10 w-10" onClick={() => handleStartCall('audio')}>
-            <Icon name="Phone" size={20} />
-          </Button>
-          <Button size="icon" variant="ghost" className="rounded-full h-10 w-10" onClick={() => handleStartCall('video')}>
-            <Icon name="Video" size={20} />
-          </Button>
-          <Button size="icon" variant="ghost" className="rounded-full h-10 w-10">
-            <Icon name="MoreVertical" size={20} />
-          </Button>
-        </div>
-      </div>
+      <div className="flex-1 flex flex-col">
+        <ChatHeader
+          selectedChat={selectedChat}
+          isTyping={isTyping}
+          messageSearchQuery={messageSearchQuery}
+          onMessageSearchChange={onMessageSearchChange}
+          matchedIndices={matchedIndices}
+          currentMatchIndex={currentMatchIndex}
+          onPrevMatch={handlePrevMatch}
+          onNextMatch={handleNextMatch}
+          onStartCall={handleStartCall}
+        />
 
-      <ScrollArea className="flex-1 p-4 md:p-6">
-        <div className="space-y-4 max-w-4xl mx-auto">
-          {messages.map((message, index) => {
-            const isSent = message.sender_id === currentUser.id;
-            const isMatch = matchedIndices.includes(index);
-            
-            return (
-              <div
-                key={message.id}
-                ref={(el) => {
-                  if (el && isMatch) {
-                    messageRefs.current.set(index, el);
-                  }
-                }}
-                className={`flex items-end gap-2 group ${isSent ? 'flex-row-reverse' : 'flex-row'}`}
-              >
-                {!isSent && (
-                  <div className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-muted flex items-center justify-center text-sm flex-shrink-0">
-                    {message.avatar}
-                  </div>
-                )}
-                <div className="relative max-w-[85%] md:max-w-md">
-                  <div
-                    className={`px-4 py-3 rounded-2xl animate-scale-in active:scale-95 relative ${
-                      isSent
-                        ? 'gradient-primary text-white rounded-br-md'
-                        : 'glass rounded-bl-md'
-                    }`}
-                    onClick={() => setMessageMenuId(messageMenuId === message.id ? null : message.id)}
-                  >
-                    {message.message_type ? (
-                      <MediaMessage message={message} />
-                    ) : (
-                      <HighlightText text={message.text} highlight={messageSearchQuery} className="text-sm leading-relaxed block" />
-                    )}
-                    <span
-                      className={`text-xs mt-1 block ${
-                        isSent ? 'text-white/70' : 'text-muted-foreground'
-                      }`}
-                    >
-                      {new Date(message.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                    {messageMenuId === message.id && isSent && (
-                      <div className="absolute top-full right-0 mt-1 bg-card border rounded-lg shadow-lg p-2 z-10">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteMessage(message.id);
-                          }}
-                          className="flex items-center gap-2 px-3 py-2 hover:bg-muted rounded text-sm text-red-600 w-full"
-                        >
-                          <Icon name="Trash2" size={16} />
-                          Удалить
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  {message.reactions && message.reactions.length > 0 && (
-                    <div className="mt-1">
-                      <MessageReactions
-                        reactions={message.reactions}
-                        onAddReaction={(reaction) => handleAddReactionToMessage(message.id, reaction)}
-                        onRemoveReaction={handleRemoveReaction}
-                        currentUserId={currentUser.id}
-                      />
-                    </div>
-                  )}
-                  {(!message.reactions || message.reactions.length === 0) && (
-                    <div className="mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <MessageReactions
-                        reactions={[]}
-                        onAddReaction={(reaction) => handleAddReactionToMessage(message.id, reaction)}
-                        onRemoveReaction={handleRemoveReaction}
-                        currentUserId={currentUser.id}
-                      />
-                    </div>
-                  )}
-                  <div className="absolute -right-12 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="flex gap-1 bg-card border border-border rounded-full px-2 py-1">
-                      {reactions.slice(0, 3).map(reaction => (
-                        <button
-                          key={reaction}
-                          onClick={() => onAddReaction(message.id, reaction)}
-                          className="hover:scale-125 transition-transform text-sm"
-                        >
-                          {reaction}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </ScrollArea>
+        <ChatMessages
+          messages={messages}
+          currentUser={currentUser}
+          messageSearchQuery={messageSearchQuery}
+          messageMenuId={messageMenuId}
+          onSetMessageMenuId={setMessageMenuId}
+          onDeleteMessage={handleDeleteMessage}
+          onAddReaction={handleAddReactionToMessage}
+          onRemoveReaction={handleRemoveReaction}
+          reactions={reactions}
+          setMessageRef={setMessageRef}
+        />
 
-      <div className="p-4 md:p-6 glass border-t border-border">
-        {showStickers && (
-          <div className="mb-4 p-4 bg-card rounded-2xl border border-border animate-scale-in">
-            <div className="grid grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
-              {stickers.map(sticker => (
-                <button
-                  key={sticker}
-                  onClick={() => onStickerClick(sticker)}
-                  className="text-3xl md:text-2xl p-3 md:p-2 active:scale-95 hover:scale-110 transition-transform hover:bg-muted rounded-xl"
-                >
-                  {sticker}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        <div className="flex items-center gap-3">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="rounded-full h-12 w-12 md:h-10 md:w-10"
-            onClick={onToggleStickers}
-          >
-            <Icon name="Smile" size={24} />
-          </Button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*,video/*"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-          <Button
-            size="icon"
-            variant="ghost"
-            className="rounded-full h-12 w-12 md:h-10 md:w-10"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Icon name="Image" size={24} />
-          </Button>
-          {showVoiceRecorder ? (
-            <div className="flex-1">
-              <VoiceRecorder
-                onRecordingComplete={handleVoiceRecordingComplete}
-                onCancel={() => setShowVoiceRecorder(false)}
-              />
-            </div>
-          ) : (
-            <>
-              <div className="flex-1 relative">
-                <Input
-                  placeholder="Написать сообщение..."
-                  value={messageText}
-                  onChange={(e) => handleMessageTextChange(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && onSendMessage()}
-                  className="rounded-full bg-muted border-0 pr-12 h-12 md:h-10 text-base md:text-sm"
-                />
-                {!messageText.trim() && (
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full"
-                    onClick={() => setShowVoiceRecorder(true)}
-                  >
-                    <Icon name="Mic" size={20} />
-                  </Button>
-                )}
-              </div>
-              {messageText.trim() && (
-                <Button
-                  size="icon"
-                  className="rounded-full gradient-primary border-0 h-12 w-12 md:h-10 md:w-10 active:scale-95 hover:scale-110 transition-transform"
-                  onClick={onSendMessage}
-                >
-                  <Icon name="Send" size={22} />
-                </Button>
-              )}
-            </>
-          )}
-        </div>
+        <ChatInput
+          messageText={messageText}
+          onMessageTextChange={handleMessageTextChange}
+          onSendMessage={onSendMessage}
+          showStickers={showStickers}
+          onToggleStickers={onToggleStickers}
+          stickers={stickers}
+          onStickerClick={onStickerClick}
+          showVoiceRecorder={showVoiceRecorder}
+          onToggleVoiceRecorder={() => setShowVoiceRecorder(!showVoiceRecorder)}
+          onVoiceRecordingComplete={handleVoiceRecordingComplete}
+          onFileSelect={handleFileSelect}
+          fileInputRef={fileInputRef}
+        />
       </div>
 
       {activeCall && (
         <CallWindow
           callType={activeCall.type}
-          isOutgoing={true}
-          otherUser={activeCall.user}
+          user={activeCall.user}
           onEndCall={handleEndCall}
         />
       )}
