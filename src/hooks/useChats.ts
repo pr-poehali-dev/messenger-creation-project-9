@@ -39,10 +39,13 @@ export function useChats(currentUser?: User | null) {
   }, [selectedChat, loadMessages]);
 
   const handleSendMessage = async () => {
+    console.log('handleSendMessage called!', { messageText, selectedChat: selectedChat?.id, currentUser: currentUser?.id });
+    
     if (messageText.trim() && selectedChat && currentUser) {
       const currentText = messageText;
       const tempId = -Date.now();
       
+      console.log('Creating optimistic message...');
       const optimisticMessage: Message = {
         id: tempId,
         chat_id: selectedChat.id,
@@ -55,18 +58,31 @@ export function useChats(currentUser?: User | null) {
         reactions: []
       };
       
-      setMessages(prev => [...prev, optimisticMessage]);
+      setMessages(prev => {
+        console.log('Adding optimistic message to state');
+        return [...prev, optimisticMessage];
+      });
       setMessageText('');
 
       try {
-        await chatsApi.sendMessage(selectedChat.id, currentText);
+        console.log('Sending message to backend...');
+        const result = await chatsApi.sendMessage(selectedChat.id, currentText);
+        console.log('Message sent successfully:', result);
+        
         await loadMessages(selectedChat.id);
         await loadChats();
+        console.log('Messages and chats reloaded');
       } catch (err) {
         console.error('Failed to send message:', err);
         setMessages(prev => prev.filter(m => m.id !== tempId));
         setMessageText(currentText);
       }
+    } else {
+      console.log('Cannot send message:', { 
+        hasText: messageText.trim().length > 0, 
+        hasChat: !!selectedChat, 
+        hasUser: !!currentUser 
+      });
     }
   };
 
