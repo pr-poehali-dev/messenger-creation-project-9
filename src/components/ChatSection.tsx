@@ -4,6 +4,7 @@ import Icon from '@/components/ui/icon';
 import ChatList from '@/components/ChatList';
 import ChatWindow from '@/components/ChatWindow';
 import StoriesBar from '@/components/StoriesBar';
+import UsersView from '@/components/UsersView';
 import type { Chat, Message, Section, Story, ChatUser } from '@/types';
 
 interface ChatSectionProps {
@@ -36,6 +37,8 @@ interface ChatSectionProps {
   groups?: Chat[];
   contacts?: ChatUser[];
   onContactClick?: (contact: ChatUser) => void;
+  allUsers?: ChatUser[];
+  onUserClick?: (user: ChatUser) => void;
 }
 
 export default function ChatSection({
@@ -68,6 +71,8 @@ export default function ChatSection({
   groups = [],
   contacts = [],
   onContactClick,
+  allUsers = [],
+  onUserClick,
 }: ChatSectionProps) {
   const filteredChats = chats.filter(chat => {
     if (!chatSearchQuery.trim()) return true;
@@ -111,6 +116,7 @@ export default function ChatSection({
               {activeSection === 'contacts' && 'Контакты'}
               {activeSection === 'groups' && 'Группы'}
               {activeSection === 'channels' && 'Каналы'}
+              {activeSection === 'users' && 'Пользователи'}
               {activeSection === 'settings' && 'Настройки'}
             </h1>
             <div className="flex gap-2">
@@ -229,6 +235,13 @@ export default function ChatSection({
               ))
             )}
           </div>
+        )}
+
+        {activeSection === 'users' && (
+          <UsersView 
+            users={allUsers} 
+            onUserClick={(user) => onUserClick?.(user)} 
+          />
         )}
       </div>
 

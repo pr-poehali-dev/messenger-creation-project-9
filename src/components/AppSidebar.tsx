@@ -16,6 +16,7 @@ export default function AppSidebar({ activeSection, onSectionChange, user, isMob
     { id: 'contacts' as Section, icon: 'Users', label: 'Контакты' },
     { id: 'groups' as Section, icon: 'Users2', label: 'Группы' },
     { id: 'channels' as Section, icon: 'Radio', label: 'Каналы' },
+    { id: 'users' as Section, icon: 'UserCircle2', label: 'Пользователи' },
   ];
 
   return (

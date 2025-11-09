@@ -13,6 +13,7 @@ import CreateChannelDialog, { type ChannelData } from '@/components/CreateChanne
 import CreateGroupDialog, { type GroupData } from '@/components/CreateGroupDialog';
 import ChannelInfoDialog from '@/components/ChannelInfoDialog';
 import GroupInfoDialog from '@/components/GroupInfoDialog';
+import UserProfileView from '@/components/UserProfileView';
 import { useChats } from '@/hooks/useChats';
 import { useStories } from '@/hooks/useStories';
 import Icon from '@/components/ui/icon';
@@ -41,6 +42,8 @@ export default function Index() {
   const [channels, setChannels] = useState<any[]>([]);
   const [groups, setGroups] = useState<any[]>([]);
   const [contacts, setContacts] = useState<ChatUser[]>([]);
+  const [allUsers, setAllUsers] = useState<ChatUser[]>([]);
+  const [selectedUserProfile, setSelectedUserProfile] = useState<ChatUser | null>(null);
 
   const chatsHook = useChats(user);
   const storiesHook = useStories(user);
@@ -67,6 +70,16 @@ export default function Index() {
         }
       };
       loadContacts();
+
+      const loadAllUsers = async () => {
+        try {
+          const usersList = await chatsApi.searchUsers('');
+          setAllUsers(usersList);
+        } catch (err) {
+          console.error('Failed to load users:', err);
+        }
+      };
+      loadAllUsers();
     }
   }, [user]);
 
@@ -234,6 +247,33 @@ export default function Index() {
     }
   };
 
+  const handleUserClick = (clickedUser: ChatUser) => {
+    setSelectedUserProfile(clickedUser);
+  };
+
+  const handleSendMessageToUser = async (clickedUser: ChatUser) => {
+    try {
+      const existingChat = chatsHook.chats.find(
+        chat => !chat.is_group && chat.other_user_id === clickedUser.id
+      );
+
+      if (existingChat) {
+        chatsHook.setSelectedChat(existingChat);
+      } else {
+        const newChat = await chatsHook.handleCreateChat(clickedUser);
+        if (newChat) {
+          chatsHook.setSelectedChat(newChat);
+        }
+      }
+      
+      setSelectedUserProfile(null);
+      setActiveSection('chats');
+      setIsSidebarOpen(false);
+    } catch (err) {
+      console.error('Failed to open chat with user:', err);
+    }
+  };
+
   const handleCreateChannel = (data: ChannelData) => {
     const newChannel = {
       id: Date.now(),
@@ -373,7 +413,13 @@ export default function Index() {
         onMobileClose={() => setIsSidebarOpen(false)}
       />
 
-      {activeSection === 'profile' ? (
+      {selectedUserProfile ? (
+        <UserProfileView 
+          user={selectedUserProfile}
+          onBack={() => setSelectedUserProfile(null)}
+          onSendMessage={handleSendMessageToUser}
+        />
+      ) : activeSection === 'profile' ? (
         <ProfileView 
           user={user} 
           onLogout={handleLogout} 
@@ -422,6 +468,8 @@ export default function Index() {
             groups={groups}
             contacts={contacts}
             onContactClick={handleContactClick}
+            allUsers={allUsers}
+            onUserClick={handleUserClick}
           />
         </>
       )}

@@ -70,7 +70,7 @@ export type Call = {
   duration?: number;
 };
 
-export type Section = 'chats' | 'contacts' | 'groups' | 'channels' | 'settings' | 'profile';
+export type Section = 'chats' | 'contacts' | 'groups' | 'channels' | 'users' | 'settings' | 'profile';
 
 export type AuthMode = 'login' | 'register';
 
