@@ -197,22 +197,24 @@ export default function Dating({ currentUser, onNavigateToChats }: DatingProps) 
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
-      <div className="flex justify-center gap-2 p-4 bg-white/50 backdrop-blur-sm border-b">
+      <div className="flex justify-center gap-1 sm:gap-2 p-2 sm:p-4 bg-white/50 backdrop-blur-sm border-b overflow-x-auto">
         <Button
           variant={activeTab === 'feed' ? 'default' : 'ghost'}
           className={activeTab === 'feed' ? 'bg-gradient-to-r from-pink-500 to-purple-600' : ''}
           onClick={() => setActiveTab('feed')}
         >
-          <Icon name="Heart" size={18} className="mr-2" />
-          Знакомства
+          <Icon name="Heart" size={18} className="sm:mr-2" />
+          <span className="hidden sm:inline">Знакомства</span>
         </Button>
         <Button
           variant={activeTab === 'matches' ? 'default' : 'ghost'}
           className={activeTab === 'matches' ? 'bg-gradient-to-r from-pink-500 to-purple-600' : ''}
           onClick={() => setActiveTab('matches')}
         >
-          <Icon name="Sparkles" size={18} className="mr-2" />
-          Мои матчи ({matches.length})
+          <Icon name="Sparkles" size={18} className="sm:mr-2" />
+          <span className="hidden sm:inline">Мои матчи</span>
+          <span className="sm:hidden">Матчи</span>
+          <span> ({matches.length})</span>
         </Button>
       </div>
 
@@ -223,7 +225,7 @@ export default function Dating({ currentUser, onNavigateToChats }: DatingProps) 
           onNavigateToChats={onNavigateToChats}
         />
       ) : (
-        <div className="flex-1 flex items-center justify-center p-4">
+        <div className="flex-1 flex items-center justify-center p-2 sm:p-4">
           <DatingFeed
             currentCard={currentCard}
             onSwipe={handleSwipe}

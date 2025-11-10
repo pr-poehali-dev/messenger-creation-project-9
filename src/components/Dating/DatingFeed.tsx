@@ -26,8 +26,8 @@ interface DatingFeedProps {
 export default function DatingFeed({ currentCard, onSwipe, onReload }: DatingFeedProps) {
   if (!currentCard) {
     return (
-      <div className="w-full max-w-md">
-        <Card className="text-center p-12">
+      <div className="w-full max-w-md mx-auto px-2">
+        <Card className="text-center p-6 sm:p-12">
           <Icon name="UserX" size={64} className="mx-auto mb-4 text-muted-foreground" />
           <h3 className="text-xl font-semibold mb-2">Анкеты закончились</h3>
           <p className="text-muted-foreground mb-4">Попробуй зайти позже</p>
@@ -40,9 +40,9 @@ export default function DatingFeed({ currentCard, onSwipe, onReload }: DatingFee
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-md mx-auto px-2">
       <Card className="overflow-hidden shadow-2xl">
-        <div className="relative h-96 bg-gradient-to-br from-pink-200 to-purple-200">
+        <div className="relative h-[70vh] sm:h-96 bg-gradient-to-br from-pink-200 to-purple-200">
           <Avatar className="w-full h-full rounded-none">
             <AvatarImage src={currentCard.photos?.[0]} />
             <AvatarFallback className="text-6xl rounded-none">
@@ -50,8 +50,8 @@ export default function DatingFeed({ currentCard, onSwipe, onReload }: DatingFee
             </AvatarFallback>
           </Avatar>
           
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
-            <h3 className="text-3xl font-bold mb-1">
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-6 text-white">
+            <h3 className="text-xl sm:text-3xl font-bold mb-1">
               {currentCard.name}, {currentCard.age}
             </h3>
             {currentCard.location && (
@@ -75,31 +75,31 @@ export default function DatingFeed({ currentCard, onSwipe, onReload }: DatingFee
           </div>
         </div>
 
-        <CardContent className="p-6">
-          <div className="flex justify-center gap-4">
+        <CardContent className="p-3 sm:p-6">
+          <div className="flex justify-center gap-2 sm:gap-4">
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full w-16 h-16 border-2 hover:bg-red-50 hover:border-red-500"
+              className="rounded-full w-14 h-14 sm:w-16 sm:h-16 border-2 hover:bg-red-50 hover:border-red-500"
               onClick={() => onSwipe('dislike')}
             >
-              <Icon name="X" size={28} className="text-red-500" />
+              <Icon name="X" size={24} className="text-red-500 sm:w-7 sm:h-7" />
             </Button>
             
             <Button
               size="lg"
-              className="rounded-full w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600"
+              className="rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600"
               onClick={() => onSwipe('superlike')}
             >
-              <Icon name="Star" size={28} className="text-white" />
+              <Icon name="Star" size={24} className="text-white sm:w-7 sm:h-7" />
             </Button>
             
             <Button
               size="lg"
-              className="rounded-full w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+              className="rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
               onClick={() => onSwipe('like')}
             >
-              <Icon name="Heart" size={28} className="text-white" />
+              <Icon name="Heart" size={24} className="text-white sm:w-7 sm:h-7" />
             </Button>
           </div>
         </CardContent>

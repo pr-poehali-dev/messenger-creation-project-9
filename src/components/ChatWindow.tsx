@@ -254,12 +254,12 @@ export default function ChatWindow({
 
   if (!selectedChat) {
     return (
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center p-4">
         <div className="text-center space-y-4 max-w-md">
-          <div className="w-32 h-32 mx-auto gradient-primary rounded-full flex items-center justify-center text-6xl">
+          <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto gradient-primary rounded-full flex items-center justify-center text-4xl sm:text-6xl">
             💬
           </div>
-          <h2 className="text-3xl font-bold gradient-text">Добро пожаловать, {currentUser.username}!</h2>
+          <h2 className="text-xl sm:text-3xl font-bold gradient-text">Добро пожаловать, {currentUser.username}!</h2>
           <p className="text-muted-foreground">
             Выберите чат слева или создайте новый
           </p>

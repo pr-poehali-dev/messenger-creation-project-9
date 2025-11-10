@@ -25,11 +25,11 @@ export default function DatingProfileForm({
   onClose 
 }: DatingProfileFormProps) {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 p-4">
-      <Card className="w-full max-w-2xl">
-        <CardContent className="pt-6">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 p-2 sm:p-4">
+      <Card className="w-full max-w-2xl mx-2">
+        <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Создание анкеты</h2>
+            <h2 className="text-xl sm:text-2xl font-bold">Создание анкеты</h2>
             <Button variant="ghost" size="icon" onClick={onClose}>
               <Icon name="X" size={20} />
             </Button>

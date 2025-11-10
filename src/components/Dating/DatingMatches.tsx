@@ -26,9 +26,9 @@ interface DatingMatchesProps {
 export default function DatingMatches({ matches, onNavigateToFeed, onNavigateToChats }: DatingMatchesProps) {
   if (matches.length === 0) {
     return (
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-2 sm:p-4">
         <div className="max-w-4xl mx-auto">
-          <Card className="text-center p-12">
+          <Card className="text-center p-6 sm:p-12">
             <Icon name="HeartCrack" size={64} className="mx-auto mb-4 text-muted-foreground" />
             <h3 className="text-xl font-semibold mb-2">Пока нет матчей</h3>
             <p className="text-muted-foreground mb-4">Начни знакомиться, чтобы найти совпадения!</p>
@@ -42,12 +42,12 @@ export default function DatingMatches({ matches, onNavigateToFeed, onNavigateToC
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4">
+    <div className="flex-1 overflow-y-auto p-2 sm:p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           {matches.map((match) => (
             <Card key={match.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-              <div className="relative h-64 bg-gradient-to-br from-pink-200 to-purple-200">
+              <div className="relative h-48 sm:h-64 bg-gradient-to-br from-pink-200 to-purple-200">
                 <Avatar className="w-full h-full rounded-none">
                   <AvatarImage src={match.photos?.[0]} />
                   <AvatarFallback className="text-4xl rounded-none">
