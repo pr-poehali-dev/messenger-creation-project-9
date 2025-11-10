@@ -164,7 +164,10 @@ export default function Index() {
           }}
         />
       ) : state.activeSection === 'dating' ? (
-        <Dating currentUser={state.user} />
+        <Dating 
+          currentUser={state.user}
+          onNavigateToChats={() => state.setActiveSection('chats')}
+        />
       ) : (
         <>
           <ChatSection

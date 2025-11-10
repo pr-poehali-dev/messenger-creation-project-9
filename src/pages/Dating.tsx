@@ -23,14 +23,17 @@ interface DatingProfile {
 
 interface DatingProps {
   currentUser: User;
+  onNavigateToChats?: () => void;
 }
 
-export default function Dating({ currentUser }: DatingProps) {
+export default function Dating({ currentUser, onNavigateToChats }: DatingProps) {
   const [hasProfile, setHasProfile] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [currentProfile, setCurrentProfile] = useState<DatingProfile | null>(null);
   const [profiles, setProfiles] = useState<DatingProfile[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [matchedProfile, setMatchedProfile] = useState<DatingProfile | null>(null);
+  const [showMatchModal, setShowMatchModal] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     age: '',
@@ -140,7 +143,8 @@ export default function Dating({ currentUser }: DatingProps) {
       if (response.ok) {
         const result = await response.json();
         if (result.matched) {
-          alert(`🎉 Это взаимность! Вы понравились друг другу с ${profile.name}`);
+          setMatchedProfile(profile);
+          setShowMatchModal(true);
         }
         setCurrentIndex(prev => prev + 1);
       }
@@ -342,6 +346,71 @@ export default function Dating({ currentUser }: DatingProps) {
           </Card>
         )}
       </div>
+
+      {showMatchModal && matchedProfile && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-md overflow-hidden">
+            <CardContent className="p-0">
+              <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 p-8 text-center text-white">
+                <div className="mb-4 animate-bounce">
+                  <Icon name="Heart" size={64} className="mx-auto" />
+                </div>
+                <h2 className="text-3xl font-bold mb-2">Это взаимность! 🎉</h2>
+                <p className="text-lg opacity-90">
+                  Вы понравились друг другу с {matchedProfile.name}
+                </p>
+              </div>
+              
+              <div className="p-6 text-center space-y-4">
+                <Avatar className="w-24 h-24 mx-auto border-4 border-white shadow-lg -mt-16">
+                  <AvatarImage src={matchedProfile.photos?.[0]} />
+                  <AvatarFallback className="text-3xl bg-gradient-to-br from-pink-200 to-purple-200">
+                    {matchedProfile.name[0]}
+                  </AvatarFallback>
+                </Avatar>
+                
+                <div>
+                  <h3 className="text-xl font-semibold mb-1">
+                    {matchedProfile.name}, {matchedProfile.age}
+                  </h3>
+                  {matchedProfile.location && (
+                    <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
+                      <Icon name="MapPin" size={14} />
+                      {matchedProfile.location}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => {
+                      setShowMatchModal(false);
+                      setMatchedProfile(null);
+                    }}
+                  >
+                    Продолжить смотреть
+                  </Button>
+                  <Button
+                    className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+                    onClick={() => {
+                      setShowMatchModal(false);
+                      setMatchedProfile(null);
+                      if (onNavigateToChats) {
+                        onNavigateToChats();
+                      }
+                    }}
+                  >
+                    <Icon name="MessageCircle" size={18} className="mr-2" />
+                    Написать
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
