@@ -11,6 +11,7 @@ import CreateGroupDialog from '@/components/CreateGroupDialog';
 import ChannelInfoDialog from '@/components/ChannelInfoDialog';
 import GroupInfoDialog from '@/components/GroupInfoDialog';
 import UserProfileView from '@/components/UserProfileView';
+import Dating from '@/pages/Dating';
 import Icon from '@/components/ui/icon';
 import { useAppState } from '@/hooks/useAppState';
 import { useAppHandlers } from '@/hooks/useAppHandlers';
@@ -162,6 +163,8 @@ export default function Index() {
             }, 3000);
           }}
         />
+      ) : state.activeSection === 'dating' ? (
+        <Dating currentUser={state.user} />
       ) : (
         <>
           <ChatSection

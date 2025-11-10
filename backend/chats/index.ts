@@ -345,6 +345,116 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({ status: 'call_ended' })
       };
     }
+    
+    if (action === 'dating_profile_get') {
+      const profiles = await queryDB(
+        `SELECT * FROM dating_profiles WHERE user_id = ${userId}`
+      );
+      
+      if (profiles.length === 0) {
+        return {
+          statusCode: 404,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+          body: JSON.stringify({ error: 'Profile not found' })
+        };
+      }
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify(profiles[0])
+      };
+    }
+    
+    if (action === 'dating_profile_create') {
+      const { name, age, gender, bio, interests, location } = body;
+      const nameEscaped = (name || '').replace(/'/g, "''");
+      const genderEscaped = (gender || '').replace(/'/g, "''");
+      const bioEscaped = (bio || '').replace(/'/g, "''");
+      const locationEscaped = (location || '').replace(/'/g, "''");
+      const interestsArray = Array.isArray(interests) ? interests.map(i => `'${i.replace(/'/g, "''")}'`).join(',') : '';
+      
+      const result = await queryDB(
+        `INSERT INTO dating_profiles 
+         (user_id, name, age, gender, bio, interests, location)
+         VALUES (${userId}, '${nameEscaped}', ${age}, '${genderEscaped}', '${bioEscaped}', ARRAY[${interestsArray}], '${locationEscaped}')
+         ON CONFLICT (user_id) DO UPDATE SET
+           name = EXCLUDED.name,
+           age = EXCLUDED.age,
+           gender = EXCLUDED.gender,
+           bio = EXCLUDED.bio,
+           interests = EXCLUDED.interests,
+           location = EXCLUDED.location,
+           updated_at = CURRENT_TIMESTAMP
+         RETURNING *`
+      );
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify(result[0])
+      };
+    }
+    
+    if (action === 'dating_feed') {
+      const profiles = await queryDB(
+        `SELECT dp.* 
+         FROM dating_profiles dp
+         WHERE dp.user_id != ${userId}
+         AND dp.is_active = true
+         AND dp.user_id NOT IN (
+           SELECT to_user_id FROM dating_swipes WHERE from_user_id = ${userId}
+         )
+         ORDER BY RANDOM()
+         LIMIT 50`
+      );
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify(profiles)
+      };
+    }
+    
+    if (action === 'dating_swipe') {
+      const { to_user_id, swipe_action } = body;
+      const actionEscaped = (swipe_action || '').replace(/'/g, "''");
+      
+      await queryDB(
+        `INSERT INTO dating_swipes (from_user_id, to_user_id, action)
+         VALUES (${userId}, ${to_user_id}, '${actionEscaped}')
+         ON CONFLICT (from_user_id, to_user_id) DO UPDATE SET action = EXCLUDED.action`
+      );
+      
+      let matched = false;
+      
+      if (swipe_action === 'like' || swipe_action === 'superlike') {
+        const mutualLikes = await queryDB(
+          `SELECT 1 FROM dating_swipes 
+           WHERE from_user_id = ${to_user_id} AND to_user_id = ${userId} 
+           AND action IN ('like', 'superlike')`
+        );
+        
+        if (mutualLikes.length > 0) {
+          const user1 = Math.min(userId, to_user_id);
+          const user2 = Math.max(userId, to_user_id);
+          
+          await queryDB(
+            `INSERT INTO dating_matches (user1_id, user2_id)
+             VALUES (${user1}, ${user2})
+             ON CONFLICT DO NOTHING`
+          );
+          
+          matched = true;
+        }
+      }
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ success: true, matched })
+      };
+    }
   }
   
   return {
