@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
+  const navigate = useNavigate();
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
@@ -192,7 +194,7 @@ export default function Home() {
                   Ваши пожертвования идут на корм, лечение и содержание приютов
                 </p>
               </div>
-              <div className="border rounded-xl p-6 space-y-4 hover:border-primary transition-colors">
+              <div className="border rounded-xl p-6 space-y-4 hover:border-primary transition-colors cursor-pointer" onClick={() => navigate('/volunteer')}>
                 <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
                   <Icon name="Users" size={24} className="text-amber-600" />
                 </div>
@@ -200,6 +202,10 @@ export default function Home() {
                 <p className="text-muted-foreground">
                   Помогайте с уходом за животными, выгулом и организацией мероприятий
                 </p>
+                <Button variant="outline" size="sm" className="w-full gap-2">
+                  <Icon name="ArrowRight" size={16} />
+                  Стать волонтёром
+                </Button>
               </div>
               <div className="border rounded-xl p-6 space-y-4 hover:border-primary transition-colors">
                 <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
