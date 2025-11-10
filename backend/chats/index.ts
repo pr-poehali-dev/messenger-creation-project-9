@@ -489,6 +489,24 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({ success: true, matched })
       };
     }
+    
+    if (action === 'dating_matches') {
+      const matchesData = await queryDB(
+        `SELECT dp.* FROM dating_matches dm
+         JOIN dating_profiles dp ON (
+           (dm.user1_id = ${userId} AND dp.user_id = dm.user2_id) OR
+           (dm.user2_id = ${userId} AND dp.user_id = dm.user1_id)
+         )
+         WHERE dm.user1_id = ${userId} OR dm.user2_id = ${userId}
+         ORDER BY dm.matched_at DESC`
+      );
+      
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify(matchesData)
+      };
+    }
   }
   
   return {
