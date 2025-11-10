@@ -364,6 +364,41 @@ export default function Home() {
                     Любая сумма важна и помогает спасать жизни
                   </p>
                 </div>
+
+                <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-6 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Собрано в этом месяце</p>
+                      <p className="text-3xl font-bold text-primary">427 500 ₽</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-muted-foreground mb-1">Цель</p>
+                      <p className="text-2xl font-semibold">500 000 ₽</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="w-full bg-white rounded-full h-3 overflow-hidden shadow-inner">
+                      <div className="bg-gradient-to-r from-orange-500 to-amber-500 h-full rounded-full transition-all duration-500" style={{ width: '85.5%' }}></div>
+                    </div>
+                    <p className="text-xs text-center text-muted-foreground">
+                      Осталось собрать 72 500 ₽ до цели месяца
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 pt-2">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-orange-600">143</p>
+                      <p className="text-xs text-muted-foreground">Донатера</p>
+                    </div>
+                    <div className="text-center border-x">
+                      <p className="text-2xl font-bold text-amber-600">12</p>
+                      <p className="text-xs text-muted-foreground">Дней до цели</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-yellow-600">2 993 ₽</p>
+                      <p className="text-xs text-muted-foreground">Средний донат</p>
+                    </div>
+                  </div>
+                </div>
                 
                 <div className="grid grid-cols-3 gap-3">
                   <Button variant="outline" size="lg" className="text-lg font-semibold">500₽</Button>
