@@ -445,6 +445,40 @@ exports.handler = async (event, context) => {
              ON CONFLICT DO NOTHING`
           );
           
+          const existingChats = await queryDB(
+            `SELECT c.id FROM chats c
+             JOIN chat_members cm1 ON c.id = cm1.chat_id AND cm1.user_id = ${userId}
+             JOIN chat_members cm2 ON c.id = cm2.chat_id AND cm2.user_id = ${to_user_id}
+             WHERE c.is_group = false
+             LIMIT 1`
+          );
+          
+          let chatId = null;
+          
+          if (existingChats.length === 0) {
+            const newChats = await queryDB(
+              `INSERT INTO chats (is_group) VALUES (false) RETURNING id`
+            );
+            
+            chatId = newChats[0].id;
+            
+            await queryDB(
+              `INSERT INTO chat_members (chat_id, user_id) VALUES (${chatId}, ${userId}), (${chatId}, ${to_user_id})`
+            );
+            
+            const profiles = await queryDB(
+              `SELECT name FROM dating_profiles WHERE user_id = ${userId} LIMIT 1`
+            );
+            const userName = profiles.length > 0 ? profiles[0].name : 'Пользователь';
+            
+            await queryDB(
+              `INSERT INTO messages (chat_id, sender_id, text) 
+               VALUES (${chatId}, ${userId}, '🎉 Привет! Мы совпали!')`
+            );
+          } else {
+            chatId = existingChats[0].id;
+          }
+          
           matched = true;
         }
       }
