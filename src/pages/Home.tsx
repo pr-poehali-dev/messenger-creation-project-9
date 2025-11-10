@@ -236,6 +236,121 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="py-16 md:py-24 bg-muted/30">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mx-auto text-center space-y-4 mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold">Истории счастья</h2>
+              <p className="text-lg text-muted-foreground">
+                Они нашли дом благодаря вашей поддержке
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              <div className="bg-card rounded-xl p-6 space-y-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-4">
+                  <img 
+                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
+                    alt="Анна"
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="flex-1">
+                    <h3 className="font-semibold">Анна Петрова</h3>
+                    <p className="text-xs text-muted-foreground">Взяла Мурку 6 месяцев назад</p>
+                  </div>
+                  <div className="text-yellow-500">
+                    ⭐⭐⭐⭐⭐
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  "Мурка стала частью нашей семьи! Каждый день она дарит нам столько радости и любви. 
+                  Спасибо фонду за возможность подарить этой кошечке дом. Теперь мы не представляем жизнь без неё!"
+                </p>
+                <div className="flex gap-2">
+                  <img 
+                    src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=150&h=150&fit=crop"
+                    alt="Мурка"
+                    className="w-20 h-20 rounded-lg object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-card rounded-xl p-6 space-y-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-4">
+                  <img 
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"
+                    alt="Дмитрий"
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="flex-1">
+                    <h3 className="font-semibold">Дмитрий Соколов</h3>
+                    <p className="text-xs text-muted-foreground">Взял Шарика 1 год назад</p>
+                  </div>
+                  <div className="text-yellow-500">
+                    ⭐⭐⭐⭐⭐
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  "Шарик — лучший друг! Он изменил мою жизнь к лучшему. Теперь я каждый день гуляю на свежем воздухе, 
+                  познакомился с другими владельцами собак. Рекомендую всем взять питомца из приюта!"
+                </p>
+                <div className="flex gap-2">
+                  <img 
+                    src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=150&h=150&fit=crop"
+                    alt="Шарик"
+                    className="w-20 h-20 rounded-lg object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-card rounded-xl p-6 space-y-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-4">
+                  <img 
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
+                    alt="Мария"
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="flex-1">
+                    <h3 className="font-semibold">Мария Иванова</h3>
+                    <p className="text-xs text-muted-foreground">Взяла Рыжика 3 месяца назад</p>
+                  </div>
+                  <div className="text-yellow-500">
+                    ⭐⭐⭐⭐⭐
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  "Рыжик невероятно активный и добрый! Мои дети в восторге от него. Он стал настоящим членом семьи. 
+                  Благодарю команду приюта за профессионализм и любовь к животным!"
+                </p>
+                <div className="flex gap-2">
+                  <img 
+                    src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=150&h=150&fit=crop"
+                    alt="Рыжик"
+                    className="w-20 h-20 rounded-lg object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-12 text-center">
+              <div className="inline-flex items-center gap-3 bg-card px-6 py-4 rounded-full shadow-sm border">
+                <div className="flex -space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-amber-400 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
+                    🐕
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-yellow-400 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
+                    🐈
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
+                    🐕
+                  </div>
+                </div>
+                <p className="text-sm font-medium">
+                  <span className="text-primary font-bold">5000+</span> питомцев нашли дом за 10 лет
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="donate" className="py-16 md:py-24 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-2xl mx-auto">
