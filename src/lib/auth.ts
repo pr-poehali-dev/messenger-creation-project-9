@@ -1,7 +1,7 @@
 import type { User, AuthState } from '@/types/chat';
 
 const AUTH_KEY = 'chat_auth';
-const API_URL = 'https://functions.yandexcloud.net/d4e6bshlnmvdj7vdg6d5';
+const API_URL = 'https://functions.poehali.dev/a314e807-6e5b-4f06-8089-b94fc502bbb6';
 
 export const authService = {
   getAuthState(): AuthState {
@@ -27,7 +27,7 @@ export const authService = {
   },
 
   async register(username: string, email: string, password: string, fullName?: string) {
-    const response = await fetch(`${API_URL}/auth/register`, {
+    const response = await fetch(`${API_URL}?action=register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password, full_name: fullName })
@@ -44,7 +44,7 @@ export const authService = {
   },
 
   async login(email: string, password: string) {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    const response = await fetch(`${API_URL}?action=login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
