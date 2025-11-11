@@ -1,0 +1,22 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS request returns CORS headers",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Get messages requires authentication",
+      "method": "GET",
+      "path": "/?action=messages",
+      "expectedStatus": 401
+    },
+    {
+      "name": "Get users list requires authentication",
+      "method": "GET",
+      "path": "/?action=users",
+      "expectedStatus": 401
+    }
+  ]
+}

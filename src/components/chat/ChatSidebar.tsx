@@ -1,0 +1,134 @@
+import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import Icon from '@/components/ui/icon';
+import type { Chat } from '@/types/chat';
+import { formatDistanceToNow } from 'date-fns';
+import { ru } from 'date-fns/locale';
+
+interface ChatSidebarProps {
+  chats: Chat[];
+  selectedChat: Chat | null;
+  onSelectChat: (chat: Chat) => void;
+  onShowProfile: () => void;
+}
+
+export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowProfile }: ChatSidebarProps) {
+  const { user, logout } = useAuth();
+  const [search, setSearch] = useState('');
+
+  const filteredChats = chats.filter(chat => 
+    chat.name?.toLowerCase().includes(search.toLowerCase()) ||
+    chat.other_user?.username.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const getChatName = (chat: Chat) => {
+    if (chat.is_group) return chat.name || 'Группа';
+    return chat.other_user?.username || 'Пользователь';
+  };
+
+  const getChatAvatar = (chat: Chat) => {
+    if (chat.is_group) return chat.avatar_url;
+    return chat.other_user?.avatar_url;
+  };
+
+  return (
+    <div className="w-80 border-r flex flex-col bg-background">
+      <div className="p-4 border-b space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={onShowProfile}>
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={user?.avatar_url || undefined} />
+              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                {user?.username[0]?.toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <p className="font-semibold text-sm">{user?.username}</p>
+              <p className="text-xs text-muted-foreground">Онлайн</p>
+            </div>
+          </div>
+          <Button variant="ghost" size="icon" onClick={logout}>
+            <Icon name="LogOut" size={18} />
+          </Button>
+        </div>
+
+        <div className="relative">
+          <Icon name="Search" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Поиск чатов..."
+            className="pl-10"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <Button className="w-full gap-2">
+          <Icon name="Plus" size={18} />
+          Новый чат
+        </Button>
+      </div>
+
+      <ScrollArea className="flex-1">
+        {filteredChats.length === 0 ? (
+          <div className="p-8 text-center">
+            <div className="w-16 h-16 mx-auto rounded-full bg-muted flex items-center justify-center mb-4">
+              <Icon name="MessageSquare" size={24} className="text-muted-foreground" />
+            </div>
+            <p className="text-sm text-muted-foreground">Нет чатов</p>
+            <p className="text-xs text-muted-foreground mt-1">Начните новый разговор</p>
+          </div>
+        ) : (
+          <div className="divide-y">
+            {filteredChats.map((chat) => (
+              <div
+                key={chat.id}
+                className={`p-4 cursor-pointer transition-colors hover:bg-muted/50 ${
+                  selectedChat?.id === chat.id ? 'bg-muted' : ''
+                }`}
+                onClick={() => onSelectChat(chat)}
+              >
+                <div className="flex items-start gap-3">
+                  <Avatar className="h-12 w-12 shrink-0">
+                    <AvatarImage src={getChatAvatar(chat) || undefined} />
+                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                      {getChatName(chat)[0]?.toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline justify-between mb-1">
+                      <p className="font-semibold text-sm truncate">{getChatName(chat)}</p>
+                      {chat.last_message && (
+                        <span className="text-xs text-muted-foreground ml-2 shrink-0">
+                          {formatDistanceToNow(new Date(chat.last_message.created_at), { 
+                            addSuffix: true, 
+                            locale: ru 
+                          })}
+                        </span>
+                      )}
+                    </div>
+                    {chat.last_message && (
+                      <p className="text-sm text-muted-foreground truncate">
+                        {chat.last_message.content}
+                      </p>
+                    )}
+                    {chat.unread_count && chat.unread_count > 0 && (
+                      <div className="mt-1">
+                        <span className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-white bg-blue-600 rounded-full">
+                          {chat.unread_count}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </ScrollArea>
+    </div>
+  );
+}
