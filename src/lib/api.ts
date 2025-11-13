@@ -94,3 +94,26 @@ export async function updateProfile(data: { username?: string; avatar_url?: stri
   
   return response.json();
 }
+
+export async function getUnreadCounts() {
+  const token = getToken();
+  const users = await getUsers();
+  
+  const counts: Record<number, number> = {};
+  
+  for (const user of users) {
+    const messages = await getMessages(user.id);
+    const unread = messages.filter((m: any) => m.receiver_id === getUserIdFromToken() && !m.is_read).length;
+    if (unread > 0) {
+      counts[user.id] = unread;
+    }
+  }
+  
+  return counts;
+}
+
+function getUserIdFromToken(): number | null {
+  const token = getToken();
+  if (!token) return null;
+  return parseInt(token.split(':')[0]);
+}

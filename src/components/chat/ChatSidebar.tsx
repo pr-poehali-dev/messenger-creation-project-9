@@ -24,6 +24,8 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
     chat.username?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const totalUnread = chats.reduce((sum, chat) => sum + (chat.unread_count || 0), 0);
+
   const getChatName = (chat: Chat) => {
     return chat.username || 'Пользователь';
   };
@@ -37,12 +39,19 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
       <div className="p-4 border-b space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={onShowProfile}>
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user?.avatar_url || undefined} />
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                {user?.username[0]?.toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user?.avatar_url || undefined} />
+                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                  {user?.username[0]?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              {totalUnread > 0 && (
+                <div className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-white">{totalUnread > 9 ? '9+' : totalUnread}</span>
+                </div>
+              )}
+            </div>
             <div className="flex-1">
               <p className="font-semibold text-sm">{user?.username}</p>
               <p className="text-xs text-muted-foreground">Онлайн</p>

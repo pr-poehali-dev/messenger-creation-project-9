@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import ChatSidebar from '@/components/chat/ChatSidebar';
 import ChatWindow from '@/components/chat/ChatWindow';
 import ProfilePanel from '@/components/chat/ProfilePanel';
-import { getUsers } from '@/lib/api';
+import { getUsers, getUnreadCounts } from '@/lib/api';
+import { useNotifications } from '@/hooks/useNotifications';
 import type { Chat } from '@/types/chat';
 
 export default function Chat() {
@@ -11,20 +12,81 @@ export default function Chat() {
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [unreadCounts, setUnreadCounts] = useState<Record<number, number>>({});
+  const { showNotification, requestPermission } = useNotifications();
+  const prevUnreadRef = useRef<Record<number, number>>({});
+
+  useEffect(() => {
+    requestPermission();
+    loadChats();
+    checkUnreadMessages();
+    
+    const chatsInterval = setInterval(loadChats, 5000);
+    const unreadInterval = setInterval(checkUnreadMessages, 3000);
+    
+    return () => {
+      clearInterval(chatsInterval);
+      clearInterval(unreadInterval);
+    };
+  }, []);
 
   useEffect(() => {
     loadChats();
-    const interval = setInterval(loadChats, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  }, [unreadCounts]);
+
+  useEffect(() => {
+    const totalUnread = Object.values(unreadCounts).reduce((sum, count) => sum + count, 0);
+    if (totalUnread > 0) {
+      document.title = `(${totalUnread}) Peeky — Онлайн чат`;
+    } else {
+      document.title = 'Peeky — Онлайн чат';
+    }
+  }, [unreadCounts]);
 
   const loadChats = async () => {
     try {
       const users = await getUsers();
-      setChats(users);
+      const chatsWithUnread = users.map((user: Chat) => ({
+        ...user,
+        unread_count: unreadCounts[user.id] || 0
+      }));
+      setChats(chatsWithUnread);
     } catch (error) {
       console.error('Failed to load users:', error);
     }
+  };
+
+  const checkUnreadMessages = async () => {
+    try {
+      const counts = await getUnreadCounts();
+      setUnreadCounts(counts);
+      
+      Object.entries(counts).forEach(([userId, count]) => {
+        const prevCount = prevUnreadRef.current[Number(userId)] || 0;
+        if (count > prevCount) {
+          const chat = chats.find(c => c.id === Number(userId));
+          if (chat && selectedChat?.id !== Number(userId)) {
+            showNotification(
+              `Новое сообщение от ${chat.username}`,
+              `У вас ${count} новых сообщений`,
+              chat.avatar_url || undefined
+            );
+          }
+        }
+      });
+      
+      prevUnreadRef.current = counts;
+    } catch (error) {
+      console.error('Failed to check unread:', error);
+    }
+  };
+
+  const handleSelectChat = (chat: Chat) => {
+    setSelectedChat(chat);
+    setUnreadCounts(prev => ({
+      ...prev,
+      [chat.id]: 0
+    }));
   };
 
   return (
@@ -32,7 +94,7 @@ export default function Chat() {
       <ChatSidebar
         chats={chats}
         selectedChat={selectedChat}
-        onSelectChat={setSelectedChat}
+        onSelectChat={handleSelectChat}
         onShowProfile={() => setShowProfile(true)}
       />
       
