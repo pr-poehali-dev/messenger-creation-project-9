@@ -24,6 +24,9 @@ export interface Message {
   sender_id: number;
   receiver_id: number;
   content: string;
+  file_url?: string | null;
+  file_name?: string | null;
+  file_type?: string | null;
   created_at: string;
   sender_name?: string;
   sender_avatar?: string;

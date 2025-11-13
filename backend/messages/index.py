@@ -56,7 +56,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             cur.execute(
                 f"""
-                SELECT m.id, m.sender_id, m.receiver_id, m.text as content, m.created_at,
+                SELECT m.id, m.sender_id, m.receiver_id, m.text as content, m.file_url, m.file_name, m.file_type, m.created_at,
                        u.username as sender_name, u.avatar_url as sender_avatar
                 FROM t_p59162637_messenger_creation_p.messages m
                 JOIN t_p59162637_messenger_creation_p.users u ON m.sender_id = u.id
@@ -82,23 +82,33 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         elif method == 'POST':
             body_data = json.loads(event.get('body', '{}'))
             receiver_id = body_data.get('receiver_id')
-            content = body_data.get('content')
+            content = body_data.get('content', '')
+            file_url = body_data.get('file_url')
+            file_name = body_data.get('file_name')
+            file_type = body_data.get('file_type')
             
-            if not receiver_id or not content:
+            if not receiver_id or (not content and not file_url):
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'error': 'receiver_id и content обязательны'})
+                    'body': json.dumps({'error': 'receiver_id и content или file_url обязательны'})
                 }
             
-            content_escaped = content.replace("'", "''")
+            content_escaped = content.replace("'", "''") if content else ''
+            file_url_escaped = file_url.replace("'", "''") if file_url else 'NULL'
+            file_name_escaped = file_name.replace("'", "''") if file_name else 'NULL'
+            file_type_escaped = file_type.replace("'", "''") if file_type else 'NULL'
             
             cur.execute(
                 f"""
                 INSERT INTO t_p59162637_messenger_creation_p.messages 
-                (sender_id, receiver_id, text, created_at, is_read)
-                VALUES ({user_id}, {receiver_id}, '{content_escaped}', NOW(), false)
-                RETURNING id, sender_id, receiver_id, text as content, created_at
+                (sender_id, receiver_id, text, file_url, file_name, file_type, created_at, is_read)
+                VALUES ({user_id}, {receiver_id}, '{content_escaped}', 
+                        {f"'{file_url_escaped}'" if file_url else 'NULL'}, 
+                        {f"'{file_name_escaped}'" if file_name else 'NULL'}, 
+                        {f"'{file_type_escaped}'" if file_type else 'NULL'}, 
+                        NOW(), false)
+                RETURNING id, sender_id, receiver_id, text as content, file_url, file_name, file_type, created_at
                 """
             )
             message = cur.fetchone()

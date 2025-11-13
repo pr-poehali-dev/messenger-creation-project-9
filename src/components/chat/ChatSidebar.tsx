@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Icon from '@/components/ui/icon';
+import NewChatDialog from './NewChatDialog';
 import type { Chat } from '@/types/chat';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -19,6 +20,7 @@ interface ChatSidebarProps {
 export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowProfile }: ChatSidebarProps) {
   const { user, logout } = useAuth();
   const [search, setSearch] = useState('');
+  const [showNewChatDialog, setShowNewChatDialog] = useState(false);
 
   const filteredChats = chats.filter(chat => 
     chat.username?.toLowerCase().includes(search.toLowerCase())
@@ -72,7 +74,7 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
           />
         </div>
 
-        <Button className="w-full gap-2">
+        <Button className="w-full gap-2" onClick={() => setShowNewChatDialog(true)}>
           <Icon name="Plus" size={18} />
           Новый чат
         </Button>
@@ -135,6 +137,13 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
           </div>
         )}
       </ScrollArea>
+
+      <NewChatDialog
+        open={showNewChatDialog}
+        onClose={() => setShowNewChatDialog(false)}
+        onSelectUser={onSelectChat}
+        existingChats={chats}
+      />
     </div>
   );
 }
