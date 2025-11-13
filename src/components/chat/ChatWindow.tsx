@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Icon from '@/components/ui/icon';
-import { getMessages, sendMessage, uploadFile } from '@/lib/api';
+import MessageMenu from './MessageMenu';
+import { getMessages, sendMessage, uploadFile, editMessage, deleteMessage } from '@/lib/api';
 import { toast } from 'sonner';
 import type { Chat, Message } from '@/types/chat';
 import { format } from 'date-fns';
@@ -21,6 +22,8 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
+  const [editingContent, setEditingContent] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -97,6 +100,46 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
     }
   };
 
+  const handleEditMessage = (messageId: number, content: string) => {
+    setEditingMessageId(messageId);
+    setEditingContent(content);
+  };
+
+  const handleSaveEdit = async (messageId: number) => {
+    if (!editingContent.trim()) return;
+
+    try {
+      await editMessage(messageId, editingContent);
+      setMessages(messages.map(m => 
+        m.id === messageId 
+          ? { ...m, content: editingContent, is_edited: true }
+          : m
+      ));
+      setEditingMessageId(null);
+      setEditingContent('');
+      toast.success('Сообщение изменено');
+    } catch (error) {
+      console.error('Failed to edit message:', error);
+      toast.error('Ошибка редактирования');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+    setEditingContent('');
+  };
+
+  const handleDeleteMessage = async (messageId: number) => {
+    try {
+      await deleteMessage(messageId);
+      setMessages(messages.filter(m => m.id !== messageId));
+      toast.success('Сообщение удалено');
+    } catch (error) {
+      console.error('Failed to delete message:', error);
+      toast.error('Ошибка удаления');
+    }
+  };
+
   const getChatName = () => {
     return chat.username || 'Пользователь';
   };
@@ -158,10 +201,12 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
           <div className="space-y-4">
             {messages.map((message) => {
               const isOwn = message.sender_id === user?.id;
+              const isEditing = editingMessageId === message.id;
+              
               return (
                 <div
                   key={message.id}
-                  className={`flex gap-3 ${isOwn ? 'flex-row-reverse' : ''}`}
+                  className={`flex gap-3 group ${isOwn ? 'flex-row-reverse' : ''}`}
                 >
                   {!isOwn && (
                     <Avatar className="h-8 w-8 shrink-0">
@@ -171,12 +216,20 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
                       </AvatarFallback>
                     </Avatar>
                   )}
-                  <div className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'} max-w-md`}>
-                    {!isOwn && (
-                      <span className="text-xs font-medium mb-1 px-1">
-                        {message.sender_name}
-                      </span>
-                    )}
+                  <div className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'} max-w-md flex-1`}>
+                    <div className="flex items-center gap-2 mb-1">
+                      {!isOwn && (
+                        <span className="text-xs font-medium px-1">
+                          {message.sender_name}
+                        </span>
+                      )}
+                      {isOwn && !message.file_url && (
+                        <MessageMenu
+                          onEdit={() => handleEditMessage(message.id, message.content)}
+                          onDelete={() => handleDeleteMessage(message.id)}
+                        />
+                      )}
+                    </div>
                     <div
                       className={`rounded-2xl px-4 py-2 ${
                         isOwn
@@ -204,13 +257,35 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
                           )}
                         </div>
                       )}
-                      {message.content && (
-                        <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                      {isEditing ? (
+                        <div className="space-y-2 w-full">
+                          <Input
+                            value={editingContent}
+                            onChange={(e) => setEditingContent(e.target.value)}
+                            className="text-sm"
+                            autoFocus
+                          />
+                          <div className="flex gap-2">
+                            <Button size="sm" onClick={() => handleSaveEdit(message.id)}>
+                              Сохранить
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={handleCancelEdit}>
+                              Отмена
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        message.content && (
+                          <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                        )
                       )}
                     </div>
-                    <span className="text-xs text-muted-foreground mt-1 px-1">
-                      {format(new Date(message.created_at), 'HH:mm', { locale: ru })}
-                    </span>
+                    {!isEditing && (
+                      <span className="text-xs text-muted-foreground mt-1 px-1">
+                        {format(new Date(message.created_at), 'HH:mm', { locale: ru })}
+                        {message.is_edited && ' (изменено)'}
+                      </span>
+                    )}
                   </div>
                 </div>
               );

@@ -72,6 +72,43 @@ export async function sendMessage(
   return response.json();
 }
 
+export async function editMessage(messageId: number, content: string) {
+  const token = getToken();
+  const response = await fetch(`${API_BASE}/${ENDPOINTS.messages}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Auth-Token': token || '',
+    },
+    body: JSON.stringify({
+      message_id: messageId,
+      content,
+    }),
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to edit message');
+  }
+  
+  return response.json();
+}
+
+export async function deleteMessage(messageId: number) {
+  const token = getToken();
+  const response = await fetch(`${API_BASE}/${ENDPOINTS.messages}?message_id=${messageId}`, {
+    method: 'DELETE',
+    headers: {
+      'X-Auth-Token': token || '',
+    },
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to delete message');
+  }
+  
+  return response.json();
+}
+
 export async function getProfile() {
   const token = getToken();
   const response = await fetch(`${API_BASE}/${ENDPOINTS.profile}`, {

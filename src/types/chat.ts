@@ -27,6 +27,9 @@ export interface Message {
   file_url?: string | null;
   file_name?: string | null;
   file_type?: string | null;
+  is_edited?: boolean;
+  is_removed?: boolean;
+  edited_at?: string | null;
   created_at: string;
   sender_name?: string;
   sender_avatar?: string;

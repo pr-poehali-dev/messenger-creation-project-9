@@ -20,7 +20,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, X-Auth-Token',
                 'Access-Control-Max-Age': '86400'
             },
@@ -56,12 +56,14 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             cur.execute(
                 f"""
-                SELECT m.id, m.sender_id, m.receiver_id, m.text as content, m.file_url, m.file_name, m.file_type, m.created_at,
+                SELECT m.id, m.sender_id, m.receiver_id, m.text as content, m.file_url, m.file_name, m.file_type, 
+                       m.created_at, m.is_edited, m.is_removed, m.edited_at,
                        u.username as sender_name, u.avatar_url as sender_avatar
                 FROM t_p59162637_messenger_creation_p.messages m
                 JOIN t_p59162637_messenger_creation_p.users u ON m.sender_id = u.id
-                WHERE (m.sender_id = {user_id} AND m.receiver_id = {other_user_id})
-                   OR (m.sender_id = {other_user_id} AND m.receiver_id = {user_id})
+                WHERE ((m.sender_id = {user_id} AND m.receiver_id = {other_user_id})
+                   OR (m.sender_id = {other_user_id} AND m.receiver_id = {user_id}))
+                   AND m.is_removed = false
                 ORDER BY m.created_at ASC
                 """
             )
@@ -119,6 +121,84 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
                 'isBase64Encoded': False,
                 'body': json.dumps(dict(message), default=str)
+            }
+        
+        elif method == 'PUT':
+            body_data = json.loads(event.get('body', '{}'))
+            message_id = body_data.get('message_id')
+            new_content = body_data.get('content')
+            
+            if not message_id or not new_content:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'message_id и content обязательны'})
+                }
+            
+            cur.execute(
+                f"SELECT sender_id FROM t_p59162637_messenger_creation_p.messages WHERE id = {message_id}"
+            )
+            message = cur.fetchone()
+            
+            if not message or message['sender_id'] != user_id:
+                return {
+                    'statusCode': 403,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Нет прав на редактирование'})
+                }
+            
+            content_escaped = new_content.replace("'", "''")
+            cur.execute(
+                f"""
+                UPDATE t_p59162637_messenger_creation_p.messages 
+                SET text = '{content_escaped}', is_edited = true, edited_at = NOW()
+                WHERE id = {message_id}
+                RETURNING id, sender_id, receiver_id, text as content, file_url, file_name, file_type, created_at, is_edited, edited_at
+                """
+            )
+            updated_message = cur.fetchone()
+            conn.commit()
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'isBase64Encoded': False,
+                'body': json.dumps(dict(updated_message), default=str)
+            }
+        
+        elif method == 'DELETE':
+            query_params = event.get('queryStringParameters', {})
+            message_id = query_params.get('message_id')
+            
+            if not message_id:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'message_id обязателен'})
+                }
+            
+            cur.execute(
+                f"SELECT sender_id FROM t_p59162637_messenger_creation_p.messages WHERE id = {message_id}"
+            )
+            message = cur.fetchone()
+            
+            if not message or message['sender_id'] != user_id:
+                return {
+                    'statusCode': 403,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Нет прав на удаление'})
+                }
+            
+            cur.execute(
+                f"UPDATE t_p59162637_messenger_creation_p.messages SET is_removed = true WHERE id = {message_id}"
+            )
+            conn.commit()
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'isBase64Encoded': False,
+                'body': json.dumps({'success': True})
             }
         
         return {
