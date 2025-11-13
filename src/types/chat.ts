@@ -1,34 +1,32 @@
 export interface User {
   id: number;
   username: string;
-  email: string;
-  full_name: string | null;
+  email?: string;
   avatar_url: string | null;
   bio: string | null;
-  is_online: boolean;
+  status: string;
   last_seen: string;
   created_at: string;
 }
 
 export interface Chat {
   id: number;
-  name: string | null;
-  is_group: boolean;
+  username: string;
   avatar_url: string | null;
-  created_at: string;
-  last_message?: Message;
+  status: string;
+  last_seen: string;
   unread_count?: number;
-  other_user?: User;
+  last_message?: Message;
 }
 
 export interface Message {
   id: number;
-  chat_id: number;
-  user_id: number;
+  sender_id: number;
+  receiver_id: number;
   content: string;
   created_at: string;
-  is_edited: boolean;
-  user?: User;
+  sender_name?: string;
+  sender_avatar?: string;
 }
 
 export interface AuthState {

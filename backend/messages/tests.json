@@ -1,0 +1,20 @@
+{
+  "tests": [
+    {
+      "name": "Get messages without token",
+      "method": "GET",
+      "path": "/?user_id=1",
+      "expectedStatus": 401
+    },
+    {
+      "name": "Send message without token",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "receiver_id": 1,
+        "content": "Test"
+      },
+      "expectedStatus": 401
+    }
+  ]
+}

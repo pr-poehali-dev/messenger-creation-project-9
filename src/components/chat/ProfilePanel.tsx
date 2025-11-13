@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
+import { updateProfile } from '@/lib/api';
 
 interface ProfilePanelProps {
   onClose: () => void;
@@ -19,7 +20,6 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
 
   const [formData, setFormData] = useState({
     username: user?.username || '',
-    full_name: user?.full_name || '',
     bio: user?.bio || '',
     avatar_url: user?.avatar_url || ''
   });
@@ -27,7 +27,12 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
   const handleSave = async () => {
     setLoading(true);
     try {
-      // Здесь будет обновление через API
+      const updated = await updateProfile({
+        username: formData.username,
+        avatar_url: formData.avatar_url,
+        bio: formData.bio
+      });
+      updateUser(updated);
       toast.success('Профиль обновлён!');
       setIsEditing(false);
     } catch (error) {
@@ -74,17 +79,6 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               disabled={!isEditing}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="full_name">Полное имя</Label>
-            <Input
-              id="full_name"
-              value={formData.full_name}
-              onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-              disabled={!isEditing}
-              placeholder="Не указано"
             />
           </div>
 
@@ -136,7 +130,6 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
                 setIsEditing(false);
                 setFormData({
                   username: user?.username || '',
-                  full_name: user?.full_name || '',
                   bio: user?.bio || '',
                   avatar_url: user?.avatar_url || ''
                 });

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Icon from '@/components/ui/icon';
+import { getMessages, sendMessage } from '@/lib/api';
 import type { Chat, Message } from '@/types/chat';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -22,6 +23,8 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
 
   useEffect(() => {
     loadMessages();
+    const interval = setInterval(loadMessages, 2000);
+    return () => clearInterval(interval);
   }, [chat.id]);
 
   useEffect(() => {
@@ -30,8 +33,12 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
 
   const loadMessages = async () => {
     setLoading(true);
-    // Заглушка - будем загружать сообщения из API
-    setMessages([]);
+    try {
+      const data = await getMessages(chat.id);
+      setMessages(data);
+    } catch (error) {
+      console.error('Failed to load messages:', error);
+    }
     setLoading(false);
   };
 
@@ -45,23 +52,25 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    // Здесь будет отправка через API
-    setNewMessage('');
+    try {
+      const message = await sendMessage(chat.id, newMessage);
+      setMessages([...messages, message]);
+      setNewMessage('');
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    }
   };
 
   const getChatName = () => {
-    if (chat.is_group) return chat.name || 'Группа';
-    return chat.other_user?.full_name || chat.other_user?.username || 'Пользователь';
+    return chat.username || 'Пользователь';
   };
 
   const getChatAvatar = () => {
-    if (chat.is_group) return chat.avatar_url;
-    return chat.other_user?.avatar_url;
+    return chat.avatar_url;
   };
 
   const getOnlineStatus = () => {
-    if (chat.is_group) return null;
-    return chat.other_user?.is_online ? 'Онлайн' : 'Не в сети';
+    return chat.status === 'online' ? 'Онлайн' : 'Не в сети';
   };
 
   return (
@@ -112,7 +121,7 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
         ) : (
           <div className="space-y-4">
             {messages.map((message) => {
-              const isOwn = message.user_id === user?.id;
+              const isOwn = message.sender_id === user?.id;
               return (
                 <div
                   key={message.id}
@@ -120,16 +129,16 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
                 >
                   {!isOwn && (
                     <Avatar className="h-8 w-8 shrink-0">
-                      <AvatarImage src={message.user?.avatar_url || undefined} />
+                      <AvatarImage src={message.sender_avatar || undefined} />
                       <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs">
-                        {message.user?.username[0]?.toUpperCase()}
+                        {message.sender_name?.[0]?.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                   )}
                   <div className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'} max-w-md`}>
                     {!isOwn && (
                       <span className="text-xs font-medium mb-1 px-1">
-                        {message.user?.username}
+                        {message.sender_name}
                       </span>
                     )}
                     <div
@@ -143,7 +152,6 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
                     </div>
                     <span className="text-xs text-muted-foreground mt-1 px-1">
                       {format(new Date(message.created_at), 'HH:mm', { locale: ru })}
-                      {message.is_edited && ' (изменено)'}
                     </span>
                   </div>
                 </div>

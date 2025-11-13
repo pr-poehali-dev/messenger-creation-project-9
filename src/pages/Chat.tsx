@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import ChatSidebar from '@/components/chat/ChatSidebar';
 import ChatWindow from '@/components/chat/ChatWindow';
 import ProfilePanel from '@/components/chat/ProfilePanel';
+import { getUsers } from '@/lib/api';
 import type { Chat } from '@/types/chat';
 
 export default function Chat() {
@@ -13,11 +14,17 @@ export default function Chat() {
 
   useEffect(() => {
     loadChats();
+    const interval = setInterval(loadChats, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const loadChats = async () => {
-    // Заглушка - будем загружать чаты из API
-    setChats([]);
+    try {
+      const users = await getUsers();
+      setChats(users);
+    } catch (error) {
+      console.error('Failed to load users:', error);
+    }
   };
 
   return (

@@ -21,18 +21,15 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
   const [search, setSearch] = useState('');
 
   const filteredChats = chats.filter(chat => 
-    chat.name?.toLowerCase().includes(search.toLowerCase()) ||
-    chat.other_user?.username.toLowerCase().includes(search.toLowerCase())
+    chat.username?.toLowerCase().includes(search.toLowerCase())
   );
 
   const getChatName = (chat: Chat) => {
-    if (chat.is_group) return chat.name || 'Группа';
-    return chat.other_user?.username || 'Пользователь';
+    return chat.username || 'Пользователь';
   };
 
   const getChatAvatar = (chat: Chat) => {
-    if (chat.is_group) return chat.avatar_url;
-    return chat.other_user?.avatar_url;
+    return chat.avatar_url;
   };
 
   return (

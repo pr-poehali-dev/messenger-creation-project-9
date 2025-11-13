@@ -83,9 +83,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             cur.execute(
                 f"""
                 INSERT INTO t_p59162637_messenger_creation_p.users 
-                (username, email, password_hash, full_name, is_online, last_seen, created_at)
-                VALUES ('{username_escaped}', '{email_escaped}', '{password_hash}', {'NULL' if not full_name else f"'{full_name_escaped}'"},  true, NOW(), NOW())
-                RETURNING id, username, email, full_name, avatar_url, bio, is_online, last_seen, created_at
+                (username, email, password_hash, status, last_seen, created_at)
+                VALUES ('{username_escaped}', '{email_escaped}', '{password_hash}', 'online', NOW(), NOW())
+                RETURNING id, username, email, avatar_url, bio, status, last_seen, created_at
                 """
             )
             user = cur.fetchone()
@@ -119,7 +119,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             cur.execute(
                 f"""
-                SELECT id, username, email, full_name, avatar_url, bio, is_online, last_seen, created_at
+                SELECT id, username, email, avatar_url, bio, status, last_seen, created_at
                 FROM t_p59162637_messenger_creation_p.users 
                 WHERE email = '{email_escaped}' AND password_hash = '{password_hash}'
                 """
@@ -134,7 +134,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 }
             
             cur.execute(
-                f"UPDATE t_p59162637_messenger_creation_p.users SET is_online = true, last_seen = NOW() WHERE id = {user['id']}"
+                f"UPDATE t_p59162637_messenger_creation_p.users SET status = 'online', last_seen = NOW() WHERE id = {user['id']}"
             )
             conn.commit()
             
