@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,33 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [search, setSearch] = useState('');
+  const [invitationsCount, setInvitationsCount] = useState(0);
+
+  useEffect(() => {
+    loadInvitationsCount();
+    const interval = setInterval(loadInvitationsCount, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadInvitationsCount = async () => {
+    try {
+      const token = localStorage.getItem('chat_auth');
+      if (!token) return;
+
+      const authData = JSON.parse(token);
+      const response = await fetch('https://functions.poehali.dev/39372316-affa-49c6-8682-2d9a8d564b70', {
+        method: 'GET',
+        headers: { 'X-Auth-Token': authData.token }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setInvitationsCount(data.invitations?.length || 0);
+      }
+    } catch (error) {
+      console.error('Failed to load invitations count:', error);
+    }
+  };
 
   const filteredChats = chats.filter(chat => 
     chat.username?.toLowerCase().includes(search.toLowerCase())
@@ -74,10 +101,25 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
           />
         </div>
 
-        <Button className="w-full gap-2 h-10 md:h-9 touch-manipulation" onClick={() => navigate('/contacts')}>
-          <Icon name="Users" size={18} />
-          Контакты
-        </Button>
+        <div className="flex gap-2">
+          <Button className="flex-1 gap-2 h-10 md:h-9 touch-manipulation" onClick={() => navigate('/contacts')}>
+            <Icon name="Users" size={18} />
+            Контакты
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-10 md:h-9 w-10 md:w-9 shrink-0 relative" 
+            onClick={() => navigate('/invitations')}
+          >
+            <Icon name="Mail" size={18} />
+            {invitationsCount > 0 && (
+              <div className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-[10px] font-bold text-white">{invitationsCount > 9 ? '9+' : invitationsCount}</span>
+              </div>
+            )}
+          </Button>
+        </div>
       </div>
 
       <ScrollArea className="flex-1">

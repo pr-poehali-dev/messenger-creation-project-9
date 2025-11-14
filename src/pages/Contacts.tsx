@@ -5,10 +5,13 @@ import Icon from '@/components/ui/icon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import ProfilePanel from '@/components/chat/ProfilePanel';
+import { toast } from 'sonner';
 import type { Chat } from '@/types/chat';
 
 const CONTACTS_URL = 'https://functions.poehali.dev/dc4f8ac2-d067-46b8-80c9-abff712dc2a7';
+const INVITATIONS_URL = 'https://functions.poehali.dev/39372316-affa-49c6-8682-2d9a8d564b70';
 
 export default function Contacts() {
   const navigate = useNavigate();
@@ -16,6 +19,9 @@ export default function Contacts() {
   const [search, setSearch] = useState('');
   const [showProfile, setShowProfile] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showInviteDialog, setShowInviteDialog] = useState(false);
+  const [invitePhone, setInvitePhone] = useState('');
+  const [inviting, setInviting] = useState(false);
 
   useEffect(() => {
     loadContacts();
@@ -49,6 +55,48 @@ export default function Contacts() {
     navigate('/chat', { state: { selectedUserId: contact.id } });
   };
 
+  const handleInvite = async () => {
+    if (!invitePhone.trim()) {
+      toast.error('Введите номер телефона');
+      return;
+    }
+
+    if (!invitePhone.match(/^\+?[1-9]\d{1,14}$/)) {
+      toast.error('Введите корректный номер');
+      return;
+    }
+
+    setInviting(true);
+    try {
+      const token = localStorage.getItem('chat_auth');
+      if (!token) return;
+
+      const authData = JSON.parse(token);
+      const response = await fetch(INVITATIONS_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Auth-Token': authData.token
+        },
+        body: JSON.stringify({ phone: invitePhone })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success('Приглашение отправлено!');
+        setShowInviteDialog(false);
+        setInvitePhone('');
+      } else {
+        toast.error(data.error || 'Ошибка отправки');
+      }
+    } catch (error) {
+      toast.error('Ошибка сети');
+    } finally {
+      setInviting(false);
+    }
+  };
+
   const filteredContacts = contacts.filter(contact =>
     contact.username?.toLowerCase().includes(search.toLowerCase()) ||
     contact.phone?.includes(search)
@@ -73,14 +121,24 @@ export default function Contacts() {
             </p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setShowProfile(true)}
-          className="shrink-0"
-        >
-          <Icon name="User" size={20} />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowInviteDialog(true)}
+            className="shrink-0"
+          >
+            <Icon name="UserPlus" size={20} />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowProfile(true)}
+            className="shrink-0"
+          >
+            <Icon name="User" size={20} />
+          </Button>
+        </div>
       </header>
 
       <div className="p-4 border-b">
@@ -152,6 +210,72 @@ export default function Contacts() {
       {showProfile && (
         <div className="fixed inset-0 z-50 bg-background">
           <ProfilePanel onClose={() => setShowProfile(false)} />
+        </div>
+      )}
+
+      {showInviteDialog && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-background rounded-lg shadow-lg max-w-md w-full p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold">Пригласить друга</h2>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setShowInviteDialog(false);
+                  setInvitePhone('');
+                }}
+              >
+                <Icon name="X" size={20} />
+              </Button>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="invite-phone">Номер телефона</Label>
+              <div className="relative">
+                <Icon name="Phone" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="invite-phone"
+                  type="tel"
+                  placeholder="+79001234567"
+                  className="pl-10"
+                  value={invitePhone}
+                  onChange={(e) => setInvitePhone(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleInvite()}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Введите номер в международном формате. Когда друг зарегистрируется, он увидит ваше приглашение.
+              </p>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setShowInviteDialog(false);
+                  setInvitePhone('');
+                }}
+              >
+                Отмена
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={handleInvite}
+                disabled={inviting}
+              >
+                {inviting ? (
+                  <>
+                    <Icon name="Loader2" size={18} className="animate-spin mr-2" />
+                    Отправка...
+                  </>
+                ) : (
+                  'Пригласить'
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

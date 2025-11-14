@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/context/AuthContext";
 import Auth from "./pages/Auth";
 import Chat from "./pages/Chat";
 import Contacts from "./pages/Contacts";
+import Invitations from "./pages/Invitations";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
             <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
             <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
+            <Route path="/invitations" element={<ProtectedRoute><Invitations /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/chat" replace />} />
           </Routes>
         </AuthProvider>
