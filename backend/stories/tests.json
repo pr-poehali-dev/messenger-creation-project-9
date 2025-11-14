@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "name": "Get all stories",
+      "method": "GET",
+      "path": "/?action=all",
+      "headers": {
+        "X-Auth-Token": "1:test-token"
+      },
+      "expectedStatus": 200
+    }
+  ]
+}

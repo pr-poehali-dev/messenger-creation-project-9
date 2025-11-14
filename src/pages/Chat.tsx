@@ -4,6 +4,9 @@ import { useLocation } from 'react-router-dom';
 import ChatSidebar from '@/components/chat/ChatSidebar';
 import ChatWindow from '@/components/chat/ChatWindow';
 import ProfilePanel from '@/components/chat/ProfilePanel';
+import StoriesBar from '@/components/stories/StoriesBar';
+import StoryViewer from '@/components/stories/StoryViewer';
+import StoryCreator from '@/components/stories/StoryCreator';
 import { getUsers, getUnreadCounts } from '@/lib/api';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useSwipe } from '@/hooks/useSwipe';
@@ -17,6 +20,9 @@ export default function Chat() {
   const [showProfile, setShowProfile] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [unreadCounts, setUnreadCounts] = useState<Record<number, number>>({});
+  const [showStoryViewer, setShowStoryViewer] = useState(false);
+  const [storyUserId, setStoryUserId] = useState<number | null>(null);
+  const [showStoryCreator, setShowStoryCreator] = useState(false);
   const { showNotification, requestPermission } = useNotifications();
   const prevUnreadRef = useRef<Record<number, number>>({});
 
@@ -108,6 +114,19 @@ export default function Chat() {
     setShowSidebar(true);
   };
 
+  const handleStoryClick = (userId: number) => {
+    setStoryUserId(userId);
+    setShowStoryViewer(true);
+  };
+
+  const handleAddStory = () => {
+    setShowStoryCreator(true);
+  };
+
+  const handleStoryCreated = () => {
+    // Обновить список историй
+  };
+
   const handleNextChat = () => {
     if (!selectedChat) return;
     const currentIndex = chats.findIndex(c => c.id === selectedChat.id);
@@ -142,7 +161,7 @@ export default function Chat() {
     >
       <div className={`${
         showSidebar ? 'flex' : 'hidden'
-      } md:flex w-full md:w-auto`}>
+      } md:flex w-full md:w-auto flex-col`}>
         <ChatSidebar
           chats={chats}
           selectedChat={selectedChat}
@@ -154,6 +173,8 @@ export default function Chat() {
       <div className={`${
         showSidebar ? 'hidden' : 'flex'
       } md:flex flex-1 flex-col w-full`}>
+        <StoriesBar onStoryClick={handleStoryClick} onAddStory={handleAddStory} />
+        
         {selectedChat ? (
           <ChatWindow chat={selectedChat} onBack={handleBackToChats} />
         ) : (
@@ -175,6 +196,29 @@ export default function Chat() {
         <div className="fixed inset-0 md:relative md:inset-auto z-50">
           <ProfilePanel onClose={() => setShowProfile(false)} />
         </div>
+      )}
+
+      {showStoryViewer && storyUserId && (
+        <StoryViewer
+          userId={storyUserId}
+          onClose={() => {
+            setShowStoryViewer(false);
+            setStoryUserId(null);
+          }}
+          onNext={() => {
+            // TODO: Переключение на следующую историю
+          }}
+          onPrev={() => {
+            // TODO: Переключение на предыдущую историю
+          }}
+        />
+      )}
+
+      {showStoryCreator && (
+        <StoryCreator
+          onClose={() => setShowStoryCreator(false)}
+          onCreated={handleStoryCreated}
+        />
       )}
     </div>
   );
