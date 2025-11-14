@@ -1,40 +1,51 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
-import Icon from '@/components/ui/icon';
-import UserGrid from '@/components/chat/UserGrid';
+import { useLocation } from 'react-router-dom';
+import ChatSidebar from '@/components/chat/ChatSidebar';
 import ChatWindow from '@/components/chat/ChatWindow';
 import ProfilePanel from '@/components/chat/ProfilePanel';
 import { getUsers, getUnreadCounts } from '@/lib/api';
 import { useNotifications } from '@/hooks/useNotifications';
-import type { Chat } from '@/types/chat';
+import { useSwipe } from '@/hooks/useSwipe';
+import type { Chat as ChatType } from '@/types/chat';
 
 export default function Chat() {
   const { user } = useAuth();
-  const [users, setUsers] = useState<Chat[]>([]);
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const location = useLocation();
+  const [chats, setChats] = useState<ChatType[]>([]);
+  const [selectedChat, setSelectedChat] = useState<ChatType | null>(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   const [unreadCounts, setUnreadCounts] = useState<Record<number, number>>({});
   const { showNotification, requestPermission } = useNotifications();
   const prevUnreadRef = useRef<Record<number, number>>({});
 
   useEffect(() => {
     requestPermission();
-    loadUsers();
+    loadChats();
     checkUnreadMessages();
     
-    const usersInterval = setInterval(loadUsers, 5000);
+    const chatsInterval = setInterval(loadChats, 5000);
     const unreadInterval = setInterval(checkUnreadMessages, 3000);
     
     return () => {
-      clearInterval(usersInterval);
+      clearInterval(chatsInterval);
       clearInterval(unreadInterval);
     };
   }, []);
 
   useEffect(() => {
-    loadUsers();
+    loadChats();
   }, [unreadCounts]);
+
+  useEffect(() => {
+    if (location.state?.selectedUserId) {
+      const user = chats.find(c => c.id === location.state.selectedUserId);
+      if (user) {
+        handleSelectChat(user);
+      }
+    }
+  }, [location.state, chats]);
 
   useEffect(() => {
     const totalUnread = Object.values(unreadCounts).reduce((sum, count) => sum + count, 0);
@@ -45,14 +56,14 @@ export default function Chat() {
     }
   }, [unreadCounts]);
 
-  const loadUsers = async () => {
+  const loadChats = async () => {
     try {
-      const usersData = await getUsers();
-      const usersWithUnread = usersData.map((user: Chat) => ({
+      const users = await getUsers();
+      const chatsWithUnread = users.map((user: ChatType) => ({
         ...user,
         unread_count: unreadCounts[user.id] || 0
       }));
-      setUsers(usersWithUnread);
+      setChats(chatsWithUnread);
     } catch (error) {
       console.error('Failed to load users:', error);
     }
@@ -66,12 +77,12 @@ export default function Chat() {
       Object.entries(counts).forEach(([userId, count]) => {
         const prevCount = prevUnreadRef.current[Number(userId)] || 0;
         if (count > prevCount) {
-          const user = users.find(u => u.id === Number(userId));
-          if (user && selectedChat?.id !== Number(userId)) {
+          const chat = chats.find(c => c.id === Number(userId));
+          if (chat && selectedChat?.id !== Number(userId)) {
             showNotification(
-              `Новое сообщение от ${user.username}`,
+              `Новое сообщение от ${chat.username}`,
               `У вас ${count} новых сообщений`,
-              user.avatar_url || undefined
+              chat.avatar_url || undefined
             );
           }
         }
@@ -83,47 +94,85 @@ export default function Chat() {
     }
   };
 
-  const handleSelectUser = (user: Chat) => {
-    setSelectedChat(user);
+  const handleSelectChat = (chat: ChatType) => {
+    setSelectedChat(chat);
+    setShowSidebar(false);
     setUnreadCounts(prev => ({
       ...prev,
-      [user.id]: 0
+      [chat.id]: 0
     }));
   };
 
-  const handleBackToUsers = () => {
+  const handleBackToChats = () => {
     setSelectedChat(null);
+    setShowSidebar(true);
   };
 
-  return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
-      {selectedChat ? (
-        <ChatWindow chat={selectedChat} onBack={handleBackToUsers} />
-      ) : (
-        <>
-          <header className="border-b p-4 flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">Peeky</h1>
-              <p className="text-sm text-muted-foreground">Выберите человека для общения</p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowProfile(true)}
-              className="shrink-0"
-            >
-              <Icon name="User" size={20} />
-            </Button>
-          </header>
+  const handleNextChat = () => {
+    if (!selectedChat) return;
+    const currentIndex = chats.findIndex(c => c.id === selectedChat.id);
+    if (currentIndex < chats.length - 1) {
+      handleSelectChat(chats[currentIndex + 1]);
+    }
+  };
 
-          <div className="flex-1 overflow-y-auto">
-            <UserGrid users={users} onSelectUser={handleSelectUser} />
+  const handlePrevChat = () => {
+    if (!selectedChat) return;
+    const currentIndex = chats.findIndex(c => c.id === selectedChat.id);
+    if (currentIndex > 0) {
+      handleSelectChat(chats[currentIndex - 1]);
+    }
+  };
+
+  const swipeHandlers = useSwipe({
+    onSwipeRight: () => {
+      if (selectedChat && !showSidebar) {
+        handleBackToChats();
+      }
+    },
+    onSwipeLeft: handleNextChat,
+  });
+
+  return (
+    <div 
+      className="h-screen flex bg-background overflow-hidden"
+      onTouchStart={swipeHandlers.onTouchStart}
+      onTouchMove={swipeHandlers.onTouchMove}
+      onTouchEnd={swipeHandlers.onTouchEnd}
+    >
+      <div className={`${
+        showSidebar ? 'flex' : 'hidden'
+      } md:flex w-full md:w-auto`}>
+        <ChatSidebar
+          chats={chats}
+          selectedChat={selectedChat}
+          onSelectChat={handleSelectChat}
+          onShowProfile={() => setShowProfile(true)}
+        />
+      </div>
+      
+      <div className={`${
+        showSidebar ? 'hidden' : 'flex'
+      } md:flex flex-1 flex-col w-full`}>
+        {selectedChat ? (
+          <ChatWindow chat={selectedChat} onBack={handleBackToChats} />
+        ) : (
+          <div className="hidden md:flex flex-1 items-center justify-center bg-muted/20">
+            <div className="text-center space-y-4">
+              <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-5xl">
+                💬
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold mb-2">Добро пожаловать, {user?.username}!</h2>
+                <p className="text-muted-foreground">Выберите чат или создайте новый</p>
+              </div>
+            </div>
           </div>
-        </>
-      )}
+        )}
+      </div>
 
       {showProfile && (
-        <div className="fixed inset-0 z-50 bg-background">
+        <div className="fixed inset-0 md:relative md:inset-auto z-50">
           <ProfilePanel onClose={() => setShowProfile(false)} />
         </div>
       )}

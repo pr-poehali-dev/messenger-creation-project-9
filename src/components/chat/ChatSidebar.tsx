@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Icon from '@/components/ui/icon';
-import NewChatDialog from './NewChatDialog';
 import type { Chat } from '@/types/chat';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -18,9 +18,9 @@ interface ChatSidebarProps {
 }
 
 export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowProfile }: ChatSidebarProps) {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [search, setSearch] = useState('');
-  const [showNewChatDialog, setShowNewChatDialog] = useState(false);
 
   const filteredChats = chats.filter(chat => 
     chat.username?.toLowerCase().includes(search.toLowerCase())
@@ -74,9 +74,9 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
           />
         </div>
 
-        <Button className="w-full gap-2 h-10 md:h-9 touch-manipulation" onClick={() => setShowNewChatDialog(true)}>
-          <Icon name="Plus" size={18} />
-          Новый чат
+        <Button className="w-full gap-2 h-10 md:h-9 touch-manipulation" onClick={() => navigate('/people')}>
+          <Icon name="Users" size={18} />
+          Люди
         </Button>
       </div>
 
@@ -138,12 +138,7 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
         )}
       </ScrollArea>
 
-      <NewChatDialog
-        open={showNewChatDialog}
-        onClose={() => setShowNewChatDialog(false)}
-        onSelectUser={onSelectChat}
-        existingChats={chats}
-      />
+
     </div>
   );
 }
