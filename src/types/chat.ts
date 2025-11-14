@@ -2,6 +2,7 @@ export interface User {
   id: number;
   username: string;
   email?: string;
+  phone?: string;
   avatar_url: string | null;
   bio: string | null;
   status: string;
@@ -13,7 +14,9 @@ export interface User {
 export interface Chat {
   id: number;
   username: string;
+  phone?: string;
   avatar_url: string | null;
+  bio?: string | null;
   status: string;
   last_seen: string;
   unread_count?: number;

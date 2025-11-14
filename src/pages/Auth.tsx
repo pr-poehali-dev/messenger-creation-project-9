@@ -13,9 +13,8 @@ export default function Auth() {
 
   const [formData, setFormData] = useState({
     username: '',
-    email: '',
-    password: '',
-    fullName: ''
+    phone: '',
+    password: ''
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,10 +23,14 @@ export default function Auth() {
 
     try {
       if (isLogin) {
-        await login(formData.email, formData.password);
+        await login(formData.phone, formData.password);
         toast.success('Добро пожаловать!');
       } else {
-        await register(formData.username, formData.email, formData.password, formData.fullName);
+        if (!formData.phone.match(/^\+?[1-9]\d{1,14}$/)) {
+          toast.error('Введите корректный номер телефона');
+          return;
+        }
+        await register(formData.username, formData.phone, formData.password);
         toast.success('Регистрация успешна!');
       }
     } catch (error) {
@@ -53,53 +56,40 @@ export default function Auth() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
-              <>
-                <div className="space-y-2">
-                  <Label htmlFor="username">Имя пользователя</Label>
-                  <div className="relative">
-                    <Icon name="User" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="username"
-                      type="text"
-                      placeholder="username"
-                      className="pl-10"
-                      value={formData.username}
-                      onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                      required
-                    />
-                  </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">Ваше имя</Label>
+                <div className="relative">
+                  <Icon name="User" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="Иван"
+                    className="pl-10"
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                    required
+                  />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Полное имя (необязательно)</Label>
-                  <div className="relative">
-                    <Icon name="UserCircle" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="fullName"
-                      type="text"
-                      placeholder="Иван Иванов"
-                      className="pl-10"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    />
-                  </div>
-                </div>
-              </>
+              </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="phone">Номер телефона</Label>
               <div className="relative">
-                <Icon name="Mail" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Icon name="Phone" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="example@mail.com"
+                  id="phone"
+                  type="tel"
+                  placeholder="+79001234567"
                   className="pl-10"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   required
                 />
               </div>
+              <p className="text-xs text-muted-foreground">
+                Введите телефон в международном формате
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -149,7 +139,7 @@ export default function Auth() {
             className="w-full"
             onClick={() => {
               setIsLogin(!isLogin);
-              setFormData({ username: '', email: '', password: '', fullName: '' });
+              setFormData({ username: '', phone: '', password: '' });
             }}
           >
             {isLogin ? 'Создать аккаунт' : 'Войти'}

@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "name": "Get all contacts returns empty array",
+      "method": "GET",
+      "path": "/",
+      "headers": {
+        "X-Auth-Token": "1:test-token"
+      },
+      "expectedStatus": 200
+    }
+  ]
+}

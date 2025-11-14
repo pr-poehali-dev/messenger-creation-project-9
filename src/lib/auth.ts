@@ -26,11 +26,11 @@ export const authService = {
     localStorage.removeItem(AUTH_KEY);
   },
 
-  async register(username: string, email: string, password: string, fullName?: string) {
+  async register(username: string, phone: string, password: string) {
     const response = await fetch(`${API_URL}?action=register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password, full_name: fullName })
+      body: JSON.stringify({ username, phone, password })
     });
     
     if (!response.ok) {
@@ -43,11 +43,11 @@ export const authService = {
     return data;
   },
 
-  async login(email: string, password: string) {
+  async login(phone: string, password: string) {
     const response = await fetch(`${API_URL}?action=login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ phone, password })
     });
     
     if (!response.ok) {

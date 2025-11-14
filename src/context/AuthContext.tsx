@@ -3,8 +3,8 @@ import type { User, AuthState } from '@/types/chat';
 import { authService } from '@/lib/auth';
 
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string, fullName?: string) => Promise<void>;
+  login: (phone: string, password: string) => Promise<void>;
+  register: (username: string, phone: string, password: string) => Promise<void>;
   logout: () => void;
   updateUser: (user: User) => void;
 }
@@ -19,13 +19,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthState(state);
   }, []);
 
-  const login = async (email: string, password: string) => {
-    const data = await authService.login(email, password);
+  const login = async (phone: string, password: string) => {
+    const data = await authService.login(phone, password);
     setAuthState({ user: data.user, token: data.token, isAuthenticated: true });
   };
 
-  const register = async (username: string, email: string, password: string, fullName?: string) => {
-    const data = await authService.register(username, email, password, fullName);
+  const register = async (username: string, phone: string, password: string) => {
+    const data = await authService.register(username, phone, password);
     setAuthState({ user: data.user, token: data.token, isAuthenticated: true });
   };
 

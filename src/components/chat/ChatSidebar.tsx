@@ -74,9 +74,9 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
           />
         </div>
 
-        <Button className="w-full gap-2 h-10 md:h-9 touch-manipulation" onClick={() => navigate('/people')}>
+        <Button className="w-full gap-2 h-10 md:h-9 touch-manipulation" onClick={() => navigate('/contacts')}>
           <Icon name="Users" size={18} />
-          Люди
+          Контакты
         </Button>
       </div>
 

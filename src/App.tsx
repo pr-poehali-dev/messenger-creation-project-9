@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import Auth from "./pages/Auth";
 import Chat from "./pages/Chat";
-import People from "./pages/People";
+import Contacts from "./pages/Contacts";
 
 const queryClient = new QueryClient();
 
@@ -41,7 +41,7 @@ const App = () => (
             <Route path="/" element={<Navigate to="/chat" replace />} />
             <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
             <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
-            <Route path="/people" element={<ProtectedRoute><People /></ProtectedRoute>} />
+            <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/chat" replace />} />
           </Routes>
         </AuthProvider>

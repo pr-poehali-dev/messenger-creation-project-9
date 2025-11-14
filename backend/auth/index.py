@@ -54,38 +54,36 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     try:
         if path == 'register':
             username = body_data.get('username')
-            email = body_data.get('email')
+            phone = body_data.get('phone')
             password = body_data.get('password')
-            full_name = body_data.get('full_name')
             
-            if not username or not email or not password:
+            if not username or not phone or not password:
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'error': 'Username, email и password обязательны'})
+                    'body': json.dumps({'error': 'Username, phone и password обязательны'})
                 }
             
-            email_escaped = email.replace("'", "''")
+            phone_escaped = phone.replace("'", "''")
             username_escaped = username.replace("'", "''")
             cur.execute(
-                f"SELECT id FROM t_p59162637_messenger_creation_p.users WHERE email = '{email_escaped}' OR username = '{username_escaped}'"
+                f"SELECT id FROM t_p59162637_messenger_creation_p.users WHERE phone = '{phone_escaped}'"
             )
             if cur.fetchone():
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'error': 'Email или username уже используется'})
+                    'body': json.dumps({'error': 'Телефон уже зарегистрирован'})
                 }
             
             password_hash = hash_password(password)
-            full_name_escaped = full_name.replace("'", "''") if full_name else ''
             
             cur.execute(
                 f"""
                 INSERT INTO t_p59162637_messenger_creation_p.users 
-                (username, email, password_hash, status, last_seen, created_at)
-                VALUES ('{username_escaped}', '{email_escaped}', '{password_hash}', 'online', NOW(), NOW())
-                RETURNING id, username, email, avatar_url, bio, status, last_seen, created_at
+                (username, phone, email, password_hash, status, last_seen, created_at)
+                VALUES ('{username_escaped}', '{phone_escaped}', '', '{password_hash}', 'online', NOW(), NOW())
+                RETURNING id, username, phone, email, avatar_url, bio, status, last_seen, created_at
                 """
             )
             user = cur.fetchone()
@@ -104,24 +102,24 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             }
         
         else:
-            email = body_data.get('email')
+            phone = body_data.get('phone')
             password = body_data.get('password')
             
-            if not email or not password:
+            if not phone or not password:
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'error': 'Email и password обязательны'})
+                    'body': json.dumps({'error': 'Phone и password обязательны'})
                 }
             
             password_hash = hash_password(password)
-            email_escaped = email.replace("'", "''")
+            phone_escaped = phone.replace("'", "''")
             
             cur.execute(
                 f"""
-                SELECT id, username, email, avatar_url, bio, status, last_seen, created_at
+                SELECT id, username, phone, email, avatar_url, bio, status, last_seen, created_at
                 FROM t_p59162637_messenger_creation_p.users 
-                WHERE email = '{email_escaped}' AND password_hash = '{password_hash}'
+                WHERE phone = '{phone_escaped}' AND password_hash = '{password_hash}'
                 """
             )
             user = cur.fetchone()
@@ -130,7 +128,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 return {
                     'statusCode': 401,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'error': 'Неверный email или пароль'})
+                    'body': json.dumps({'error': 'Неверный телефон или пароль'})
                 }
             
             cur.execute(
