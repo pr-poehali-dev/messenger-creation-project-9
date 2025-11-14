@@ -49,7 +49,7 @@ export default function NewChatDialog({ open, onClose, onSelectUser, existingCha
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md w-[95vw] max-h-[85vh]">
         <DialogHeader>
           <DialogTitle>Новый чат</DialogTitle>
         </DialogHeader>

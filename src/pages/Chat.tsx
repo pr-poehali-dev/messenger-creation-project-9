@@ -12,6 +12,7 @@ export default function Chat() {
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   const [unreadCounts, setUnreadCounts] = useState<Record<number, number>>({});
   const { showNotification, requestPermission } = useNotifications();
   const prevUnreadRef = useRef<Record<number, number>>({});
@@ -83,26 +84,38 @@ export default function Chat() {
 
   const handleSelectChat = (chat: Chat) => {
     setSelectedChat(chat);
+    setShowSidebar(false);
     setUnreadCounts(prev => ({
       ...prev,
       [chat.id]: 0
     }));
   };
 
+  const handleBackToChats = () => {
+    setSelectedChat(null);
+    setShowSidebar(true);
+  };
+
   return (
     <div className="h-screen flex bg-background overflow-hidden">
-      <ChatSidebar
-        chats={chats}
-        selectedChat={selectedChat}
-        onSelectChat={handleSelectChat}
-        onShowProfile={() => setShowProfile(true)}
-      />
+      <div className={`${
+        showSidebar ? 'flex' : 'hidden'
+      } md:flex w-full md:w-auto`}>
+        <ChatSidebar
+          chats={chats}
+          selectedChat={selectedChat}
+          onSelectChat={handleSelectChat}
+          onShowProfile={() => setShowProfile(true)}
+        />
+      </div>
       
-      <div className="flex-1 flex flex-col">
+      <div className={`${
+        showSidebar ? 'hidden' : 'flex'
+      } md:flex flex-1 flex-col w-full`}>
         {selectedChat ? (
-          <ChatWindow chat={selectedChat} />
+          <ChatWindow chat={selectedChat} onBack={handleBackToChats} />
         ) : (
-          <div className="flex-1 flex items-center justify-center bg-muted/20">
+          <div className="hidden md:flex flex-1 items-center justify-center bg-muted/20">
             <div className="text-center space-y-4">
               <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-5xl">
                 💬
@@ -117,7 +130,9 @@ export default function Chat() {
       </div>
 
       {showProfile && (
-        <ProfilePanel onClose={() => setShowProfile(false)} />
+        <div className="fixed inset-0 md:relative md:inset-auto z-50">
+          <ProfilePanel onClose={() => setShowProfile(false)} />
+        </div>
       )}
     </div>
   );

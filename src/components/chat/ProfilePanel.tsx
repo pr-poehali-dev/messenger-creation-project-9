@@ -46,8 +46,8 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
   };
 
   return (
-    <div className="w-96 border-l bg-background flex flex-col">
-      <div className="p-4 border-b flex items-center justify-between">
+    <div className="w-full md:w-96 border-l bg-background flex flex-col h-screen">
+      <div className="p-3 md:p-4 border-b flex items-center justify-between shrink-0">
         <h2 className="font-semibold">Профиль</h2>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <Icon name="X" size={20} />

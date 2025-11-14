@@ -14,9 +14,10 @@ import { ru } from 'date-fns/locale';
 
 interface ChatWindowProps {
   chat: Chat;
+  onBack?: () => void;
 }
 
-export default function ChatWindow({ chat }: ChatWindowProps) {
+export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -201,17 +202,22 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
-      <div className="h-16 border-b px-6 flex items-center justify-between bg-background">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
+    <div className="flex-1 flex flex-col h-screen md:h-auto">
+      <div className="h-14 md:h-16 border-b px-3 md:px-6 flex items-center justify-between bg-background shrink-0">
+        {onBack && (
+          <Button variant="ghost" size="icon" onClick={onBack} className="md:hidden mr-2">
+            <Icon name="ArrowLeft" size={20} />
+          </Button>
+        )}
+        <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+          <Avatar className="h-9 w-9 md:h-10 md:w-10 shrink-0">
             <AvatarImage src={getChatAvatar() || undefined} />
             <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
               {getChatName()[0]?.toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div>
-            <p className="font-semibold">{getChatName()}</p>
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-sm md:text-base truncate">{getChatName()}</p>
             {isTyping ? (
               <p className="text-xs text-blue-500">печатает...</p>
             ) : getOnlineStatus() ? (
@@ -219,20 +225,20 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
             ) : null}
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="ghost" size="icon">
+        <div className="flex gap-1 md:gap-2 shrink-0">
+          <Button variant="ghost" size="icon" className="hidden md:flex">
             <Icon name="Phone" size={20} />
           </Button>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="hidden md:flex">
             <Icon name="Video" size={20} />
           </Button>
-          <Button variant="ghost" size="icon">
-            <Icon name="MoreVertical" size={20} />
+          <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10">
+            <Icon name="MoreVertical" size={18} />
           </Button>
         </div>
       </div>
 
-      <ScrollArea className="flex-1 p-6">
+      <ScrollArea className="flex-1 p-3 md:p-6">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <Icon name="Loader2" size={32} className="animate-spin text-muted-foreground" />
@@ -345,8 +351,8 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
         )}
       </ScrollArea>
 
-      <div className="border-t p-4 bg-background">
-        <form onSubmit={handleSend} className="flex gap-2">
+      <div className="border-t p-3 md:p-4 bg-background shrink-0 safe-area-bottom">
+        <form onSubmit={handleSend} className="flex gap-2 items-center">
           <input
             ref={fileInputRef}
             type="file"
@@ -358,6 +364,7 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
             type="button" 
             variant="ghost" 
             size="icon"
+            className="h-10 w-10 shrink-0"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
           >
@@ -368,7 +375,7 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
             )}
           </Button>
           <Input
-            placeholder="Написать сообщение..."
+            placeholder="Сообщение..."
             value={newMessage}
             onChange={(e) => {
               setNewMessage(e.target.value);
@@ -390,10 +397,10 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
             className="flex-1"
             disabled={uploading}
           />
-          <Button type="button" variant="ghost" size="icon">
+          <Button type="button" variant="ghost" size="icon" className="hidden md:flex h-10 w-10 shrink-0">
             <Icon name="Smile" size={20} />
           </Button>
-          <Button type="submit" size="icon" disabled={!newMessage.trim() || uploading}>
+          <Button type="submit" size="icon" className="h-10 w-10 shrink-0" disabled={!newMessage.trim() || uploading}>
             <Icon name="Send" size={20} />
           </Button>
         </form>

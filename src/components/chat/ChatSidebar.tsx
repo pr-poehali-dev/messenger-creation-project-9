@@ -37,12 +37,12 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
   };
 
   return (
-    <div className="w-80 border-r flex flex-col bg-background">
-      <div className="p-4 border-b space-y-4">
+    <div className="w-full md:w-80 border-r flex flex-col bg-background h-screen md:h-auto">
+      <div className="p-3 md:p-4 border-b space-y-3 md:space-y-4 shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={onShowProfile}>
-            <div className="relative">
-              <Avatar className="h-10 w-10">
+          <div className="flex items-center gap-2 md:gap-3 cursor-pointer flex-1 min-w-0" onClick={onShowProfile}>
+            <div className="relative shrink-0">
+              <Avatar className="h-9 w-9 md:h-10 md:w-10">
                 <AvatarImage src={user?.avatar_url || undefined} />
                 <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                   {user?.username[0]?.toUpperCase()}
@@ -54,27 +54,27 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
                 </div>
               )}
             </div>
-            <div className="flex-1">
-              <p className="font-semibold text-sm">{user?.username}</p>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm truncate">{user?.username}</p>
               <p className="text-xs text-muted-foreground">Онлайн</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={logout}>
+          <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10 shrink-0" onClick={logout}>
             <Icon name="LogOut" size={18} />
           </Button>
         </div>
 
-        <div className="relative">
+        <div className="relative touch-manipulation">
           <Icon name="Search" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Поиск чатов..."
-            className="pl-10"
+            className="pl-10 h-10 text-base md:text-sm"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        <Button className="w-full gap-2" onClick={() => setShowNewChatDialog(true)}>
+        <Button className="w-full gap-2 h-10 md:h-9 touch-manipulation" onClick={() => setShowNewChatDialog(true)}>
           <Icon name="Plus" size={18} />
           Новый чат
         </Button>
@@ -94,13 +94,13 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
             {filteredChats.map((chat) => (
               <div
                 key={chat.id}
-                className={`p-4 cursor-pointer transition-colors hover:bg-muted/50 ${
+                className={`p-3 md:p-4 cursor-pointer transition-colors hover:bg-muted/50 active:bg-muted/70 touch-manipulation ${
                   selectedChat?.id === chat.id ? 'bg-muted' : ''
                 }`}
                 onClick={() => onSelectChat(chat)}
               >
-                <div className="flex items-start gap-3">
-                  <Avatar className="h-12 w-12 shrink-0">
+                <div className="flex items-start gap-2 md:gap-3">
+                  <Avatar className="h-11 w-11 md:h-12 md:w-12 shrink-0">
                     <AvatarImage src={getChatAvatar(chat) || undefined} />
                     <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                       {getChatName(chat)[0]?.toUpperCase()}
