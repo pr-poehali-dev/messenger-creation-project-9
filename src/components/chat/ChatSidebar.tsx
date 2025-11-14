@@ -22,10 +22,15 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
   const { user, logout } = useAuth();
   const [search, setSearch] = useState('');
   const [invitationsCount, setInvitationsCount] = useState(0);
+  const [mentionsCount, setMentionsCount] = useState(0);
 
   useEffect(() => {
     loadInvitationsCount();
-    const interval = setInterval(loadInvitationsCount, 10000);
+    loadMentionsCount();
+    const interval = setInterval(() => {
+      loadInvitationsCount();
+      loadMentionsCount();
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -49,11 +54,32 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
     }
   };
 
+  const loadMentionsCount = async () => {
+    try {
+      const token = localStorage.getItem('chat_auth');
+      if (!token) return;
+
+      const authData = JSON.parse(token);
+      const response = await fetch('https://functions.poehali.dev/17805d36-3b7d-454a-a234-d68790671878?action=mentions', {
+        method: 'GET',
+        headers: { 'X-Auth-Token': authData.token }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMentionsCount(data.stories?.length || 0);
+      }
+    } catch (error) {
+      console.error('Failed to load mentions count:', error);
+    }
+  };
+
   const filteredChats = chats.filter(chat => 
     chat.username?.toLowerCase().includes(search.toLowerCase())
   );
 
   const totalUnread = chats.reduce((sum, chat) => sum + (chat.unread_count || 0), 0);
+  const totalNotifications = invitationsCount + mentionsCount;
 
   const getChatName = (chat: Chat) => {
     return chat.username || 'Пользователь';
@@ -75,9 +101,11 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
                   {user?.username[0]?.toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              {totalUnread > 0 && (
+              {(totalUnread > 0 || totalNotifications > 0) && (
                 <div className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-white">{totalUnread > 9 ? '9+' : totalUnread}</span>
+                  <span className="text-[10px] font-bold text-white">
+                    {(totalUnread + totalNotifications) > 9 ? '9+' : (totalUnread + totalNotifications)}
+                  </span>
                 </div>
               )}
             </div>
@@ -116,6 +144,19 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
             {invitationsCount > 0 && (
               <div className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full flex items-center justify-center">
                 <span className="text-[10px] font-bold text-white">{invitationsCount > 9 ? '9+' : invitationsCount}</span>
+              </div>
+            )}
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-10 md:h-9 w-10 md:w-9 shrink-0 relative" 
+            onClick={() => navigate('/mentions')}
+          >
+            <Icon name="AtSign" size={18} />
+            {mentionsCount > 0 && (
+              <div className="absolute -top-1 -right-1 h-5 w-5 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-[10px] font-bold text-white">{mentionsCount > 9 ? '9+' : mentionsCount}</span>
               </div>
             )}
           </Button>

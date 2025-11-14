@@ -67,6 +67,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 background_color = body_data.get('background_color')
                 font_style = body_data.get('font_style')
                 duration = body_data.get('duration', 5)
+                mentions = body_data.get('mentions', [])
                 
                 if not media_url:
                     return {
@@ -95,6 +96,22 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     """
                 )
                 story = cur.fetchone()
+                story_id = story['id']
+                
+                if mentions and isinstance(mentions, list):
+                    for user_id in mentions:
+                        try:
+                            cur.execute(
+                                f"""
+                                INSERT INTO t_p59162637_messenger_creation_p.story_mentions 
+                                (story_id, mentioned_user_id)
+                                VALUES ({story_id}, {int(user_id)})
+                                ON CONFLICT (story_id, mentioned_user_id) DO NOTHING
+                                """
+                            )
+                        except Exception:
+                            pass
+                
                 conn.commit()
                 
                 return {
@@ -170,6 +187,30 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         if method == 'GET':
             action = event.get('queryStringParameters', {}).get('action', 'all')
+            
+            if action == 'mentions':
+                cur.execute(
+                    f"""
+                    SELECT s.id, s.user_id, s.media_url, s.media_type, s.caption,
+                           s.background_color, s.font_style, s.duration, s.views_count,
+                           s.created_at, s.expires_at,
+                           u.username, u.avatar_url
+                    FROM t_p59162637_messenger_creation_p.story_mentions sm
+                    JOIN t_p59162637_messenger_creation_p.stories s ON s.id = sm.story_id
+                    JOIN t_p59162637_messenger_creation_p.users u ON u.id = s.user_id
+                    WHERE sm.mentioned_user_id = {current_user_id} 
+                      AND s.expires_at > NOW()
+                    ORDER BY s.created_at DESC
+                    """
+                )
+                stories = cur.fetchall()
+                
+                return {
+                    'statusCode': 200,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'isBase64Encoded': False,
+                    'body': json.dumps({'stories': [dict(s) for s in stories]}, default=str)
+                }
             
             if action == 'all':
                 cur.execute(

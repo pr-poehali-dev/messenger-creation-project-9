@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Chat from "./pages/Chat";
 import Contacts from "./pages/Contacts";
 import Invitations from "./pages/Invitations";
+import Mentions from "./pages/Mentions";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
             <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
             <Route path="/invitations" element={<ProtectedRoute><Invitations /></ProtectedRoute>} />
+            <Route path="/mentions" element={<ProtectedRoute><Mentions /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/chat" replace />} />
           </Routes>
         </AuthProvider>
