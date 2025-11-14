@@ -3,18 +3,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { getUsers } from '@/lib/api';
 import type { Chat } from '@/types/chat';
 
-interface NewChatDialogProps {
+interface ForwardDialogProps {
   open: boolean;
   onClose: () => void;
   onSelectUser: (user: Chat) => void;
-  existingChats: Chat[];
 }
 
-export default function NewChatDialog({ open, onClose, onSelectUser, existingChats }: NewChatDialogProps) {
+export default function ForwardDialog({ open, onClose, onSelectUser }: ForwardDialogProps) {
   const [search, setSearch] = useState('');
   const [users, setUsers] = useState<Chat[]>([]);
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ export default function NewChatDialog({ open, onClose, onSelectUser, existingCha
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md w-[95vw] max-h-[85vh]">
         <DialogHeader>
-          <DialogTitle>Новый чат</DialogTitle>
+          <DialogTitle>Переслать сообщение</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
@@ -76,7 +76,7 @@ export default function NewChatDialog({ open, onClose, onSelectUser, existingCha
                     <Icon name="Users" size={24} className="text-muted-foreground" />
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    {search ? 'Пользователи не найдены' : 'Нет новых пользователей'}
+                    {search ? 'Пользователи не найдены' : 'Нет пользователей'}
                   </p>
                 </div>
               </div>
@@ -100,6 +100,9 @@ export default function NewChatDialog({ open, onClose, onSelectUser, existingCha
                         {user.status === 'online' ? 'Онлайн' : 'Не в сети'}
                       </p>
                     </div>
+                    <Button size="sm" variant="ghost">
+                      <Icon name="Send" size={16} />
+                    </Button>
                   </div>
                 ))}
               </div>

@@ -8,6 +8,7 @@ import Icon from '@/components/ui/icon';
 import MessageMenu from './MessageMenu';
 import VoiceRecorder from './VoiceRecorder';
 import VoicePlayer from './VoicePlayer';
+import ForwardDialog from './ForwardDialog';
 import { getMessages, sendMessage, uploadFile, uploadVoice, editMessage, deleteMessage, setTypingStatus, getTypingStatus } from '@/lib/api';
 import { toast } from 'sonner';
 import type { Chat, Message } from '@/types/chat';
@@ -29,6 +30,7 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
   const [editingContent, setEditingContent] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [forwardingMessage, setForwardingMessage] = useState<Message | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -223,6 +225,31 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
     }
   };
 
+  const handleForwardMessage = (message: Message) => {
+    setForwardingMessage(message);
+  };
+
+  const handleForwardComplete = async (forwardUser: Chat) => {
+    if (!forwardingMessage) return;
+
+    try {
+      await sendMessage(
+        forwardUser.id,
+        forwardingMessage.content,
+        forwardingMessage.file_url || undefined,
+        forwardingMessage.file_name || undefined,
+        forwardingMessage.file_type || undefined,
+        forwardingMessage.voice_url || undefined,
+        forwardingMessage.voice_duration || undefined
+      );
+      toast.success(`Сообщение переслано пользователю ${forwardUser.username}`);
+      setForwardingMessage(null);
+    } catch (error) {
+      console.error('Failed to forward message:', error);
+      toast.error('Ошибка пересылки');
+    }
+  };
+
   const getChatName = () => {
     return chat.username || 'Пользователь';
   };
@@ -313,12 +340,12 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
                           {message.sender_name}
                         </span>
                       )}
-                      {isOwn && !message.file_url && (
-                        <MessageMenu
-                          onEdit={() => handleEditMessage(message.id, message.content)}
-                          onDelete={() => handleDeleteMessage(message.id)}
-                        />
-                      )}
+                      <MessageMenu
+                        onEdit={() => handleEditMessage(message.id, message.content)}
+                        onDelete={() => handleDeleteMessage(message.id)}
+                        onForward={() => handleForwardMessage(message)}
+                        isOwnMessage={isOwn}
+                      />
                     </div>
                     <div
                       className={`rounded-2xl px-4 py-2 ${
@@ -390,6 +417,12 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
           </div>
         )}
       </ScrollArea>
+
+      <ForwardDialog
+        open={!!forwardingMessage}
+        onClose={() => setForwardingMessage(null)}
+        onSelectUser={handleForwardComplete}
+      />
 
       <div className="border-t p-3 md:p-4 bg-background shrink-0 safe-area-bottom">
         {isRecording ? (
