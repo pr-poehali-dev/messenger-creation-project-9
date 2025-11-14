@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Icon from '@/components/ui/icon';
 import MessageMenu from './MessageMenu';
-import { getMessages, sendMessage, uploadFile, editMessage, deleteMessage } from '@/lib/api';
+import { getMessages, sendMessage, uploadFile, editMessage, deleteMessage, setTypingStatus, getTypingStatus } from '@/lib/api';
 import { toast } from 'sonner';
 import type { Chat, Message } from '@/types/chat';
 import { format } from 'date-fns';
@@ -24,13 +24,39 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
   const [uploading, setUploading] = useState(false);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editingContent, setEditingContent] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     loadMessages();
     const interval = setInterval(loadMessages, 2000);
     return () => clearInterval(interval);
+  }, [chat.id]);
+
+  useEffect(() => {
+    const checkTyping = async () => {
+      try {
+        const status = await getTypingStatus(chat.id);
+        setIsTyping(status.is_typing);
+      } catch (error) {
+        console.error('Failed to check typing status:', error);
+      }
+    };
+
+    checkTyping();
+    const interval = setInterval(checkTyping, 1000);
+    return () => clearInterval(interval);
+  }, [chat.id]);
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      setTypingStatus(chat.id, false).catch(console.error);
+    };
   }, [chat.id]);
 
   useEffect(() => {
@@ -164,9 +190,11 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
           </Avatar>
           <div>
             <p className="font-semibold">{getChatName()}</p>
-            {getOnlineStatus() && (
+            {isTyping ? (
+              <p className="text-xs text-blue-500">печатает...</p>
+            ) : getOnlineStatus() ? (
               <p className="text-xs text-muted-foreground">{getOnlineStatus()}</p>
-            )}
+            ) : null}
           </div>
         </div>
         <div className="flex gap-2">
@@ -320,7 +348,23 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
           <Input
             placeholder="Написать сообщение..."
             value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            onChange={(e) => {
+              setNewMessage(e.target.value);
+              
+              if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+              }
+              
+              if (e.target.value.trim()) {
+                setTypingStatus(chat.id, true).catch(console.error);
+                
+                typingTimeoutRef.current = setTimeout(() => {
+                  setTypingStatus(chat.id, false).catch(console.error);
+                }, 3000);
+              } else {
+                setTypingStatus(chat.id, false).catch(console.error);
+              }
+            }}
             className="flex-1"
             disabled={uploading}
           />

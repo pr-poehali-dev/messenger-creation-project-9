@@ -6,6 +6,7 @@ const ENDPOINTS = {
   users: '00ed3702-3b94-4509-98b4-7e00e9c0cdc7',
   messages: '7be37ffa-612b-4b3a-be7e-f913adcff7b7',
   upload: 'f8e8749d-0a77-41ab-8723-b5bfc696ef38',
+  typing: '3685a409-05d1-4aca-b247-270945cf79b3',
 };
 
 function getToken(): string | null {
@@ -200,4 +201,40 @@ export async function uploadFile(file: File) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+export async function setTypingStatus(receiverId: number, isTyping: boolean) {
+  const token = getToken();
+  const response = await fetch(`${API_BASE}/${ENDPOINTS.typing}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Auth-Token': token || '',
+    },
+    body: JSON.stringify({
+      receiver_id: receiverId,
+      is_typing: isTyping,
+    }),
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to set typing status');
+  }
+  
+  return response.json();
+}
+
+export async function getTypingStatus(userId: number) {
+  const token = getToken();
+  const response = await fetch(`${API_BASE}/${ENDPOINTS.typing}?user_id=${userId}`, {
+    headers: {
+      'X-Auth-Token': token || '',
+    },
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to get typing status');
+  }
+  
+  return response.json();
 }
