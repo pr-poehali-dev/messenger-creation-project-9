@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Switch } from '@/components/ui/switch';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { updateProfile } from '@/lib/api';
@@ -21,7 +22,8 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
   const [formData, setFormData] = useState({
     username: user?.username || '',
     bio: user?.bio || '',
-    avatar_url: user?.avatar_url || ''
+    avatar_url: user?.avatar_url || '',
+    sound_enabled: user?.sound_enabled ?? true
   });
 
   const handleSave = async () => {
@@ -30,7 +32,8 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
       const updated = await updateProfile({
         username: formData.username,
         avatar_url: formData.avatar_url,
-        bio: formData.bio
+        bio: formData.bio,
+        sound_enabled: formData.sound_enabled
       });
       updateUser(updated);
       toast.success('Профиль обновлён!');
@@ -100,7 +103,28 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
           </div>
         </div>
 
-        <div className="border-t pt-6 space-y-3">
+        <div className="border-t pt-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label className="text-base">Звуковые уведомления</Label>
+              <p className="text-sm text-muted-foreground">Звук при получении сообщений</p>
+            </div>
+            <Switch
+              checked={formData.sound_enabled}
+              onCheckedChange={(checked) => {
+                setFormData({ ...formData, sound_enabled: checked });
+                if (!isEditing) {
+                  updateProfile({ sound_enabled: checked })
+                    .then(updated => {
+                      updateUser(updated);
+                      toast.success(checked ? 'Зву включён' : 'Звук выключен');
+                    })
+                    .catch(() => toast.error('Ошибка обновления'));
+                }
+              }}
+            />
+          </div>
+          
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Дата регистрации</span>
             <span className="font-medium">
@@ -131,7 +155,8 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
                 setFormData({
                   username: user?.username || '',
                   bio: user?.bio || '',
-                  avatar_url: user?.avatar_url || ''
+                  avatar_url: user?.avatar_url || '',
+                  sound_enabled: user?.sound_enabled ?? true
                 });
               }}
             >

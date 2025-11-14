@@ -82,7 +82,7 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
           (msg: Message) => msg.sender_id !== user?.id
         );
         
-        if (hasNewMessageFromOther && audioRef.current) {
+        if (hasNewMessageFromOther && audioRef.current && user?.sound_enabled !== false) {
           audioRef.current.currentTime = 0;
           audioRef.current.play().catch(err => console.log('Audio play failed:', err));
         }

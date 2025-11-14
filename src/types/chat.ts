@@ -7,6 +7,7 @@ export interface User {
   status: string;
   last_seen: string;
   created_at: string;
+  sound_enabled?: boolean;
 }
 
 export interface Chat {

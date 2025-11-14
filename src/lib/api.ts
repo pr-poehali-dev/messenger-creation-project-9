@@ -125,7 +125,7 @@ export async function getProfile() {
   return response.json();
 }
 
-export async function updateProfile(data: { username?: string; avatar_url?: string; bio?: string }) {
+export async function updateProfile(data: { username?: string; avatar_url?: string; bio?: string; sound_enabled?: boolean }) {
   const token = getToken();
   const response = await fetch(`${API_BASE}/${ENDPOINTS.profile}`, {
     method: 'PUT',

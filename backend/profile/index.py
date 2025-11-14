@@ -15,7 +15,7 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 def get_user_from_token(token: str, cur) -> Dict:
     user_id = int(token.split(':')[0])
     cur.execute(
-        f"SELECT id, username, email, avatar_url, bio, status, last_seen, created_at FROM t_p59162637_messenger_creation_p.users WHERE id = {user_id}"
+        f"SELECT id, username, email, avatar_url, bio, status, last_seen, created_at, sound_enabled FROM t_p59162637_messenger_creation_p.users WHERE id = {user_id}"
     )
     return cur.fetchone()
 
@@ -70,6 +70,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             username = body_data.get('username')
             avatar_url = body_data.get('avatar_url')
             bio = body_data.get('bio')
+            sound_enabled = body_data.get('sound_enabled')
             
             updates = []
             if username:
@@ -81,11 +82,13 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             if bio is not None:
                 bio_escaped = bio.replace("'", "''")
                 updates.append(f"bio = '{bio_escaped}'")
+            if sound_enabled is not None:
+                updates.append(f"sound_enabled = {str(sound_enabled).upper()}")
             
             if updates:
                 update_str = ', '.join(updates)
                 cur.execute(
-                    f"UPDATE t_p59162637_messenger_creation_p.users SET {update_str} WHERE id = {user['id']} RETURNING id, username, email, avatar_url, bio, status, last_seen, created_at"
+                    f"UPDATE t_p59162637_messenger_creation_p.users SET {update_str} WHERE id = {user['id']} RETURNING id, username, email, avatar_url, bio, status, last_seen, created_at, sound_enabled"
                 )
                 updated_user = cur.fetchone()
                 conn.commit()
