@@ -28,8 +28,16 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const prevMessagesLengthRef = useRef<number>(0);
 
   useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(
+        'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAASAAAeMwAUFBQUFCIiIiIiIjAwMDAwPj4+Pj4+TExMTExZWVlZWVlnZ2dnZ3V1dXV1dYODg4ODkZGRkZGRn5+fn5+frKysrKy6urq6urrIyMjIyNbW1tbW1uTk5OTk8vLy8vLy//////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAQKAAAAAAAAHjOZTf9/AAAAAAAAAAAAAAAAAAAAAP/7UMQAAAGkAimlBIAImYtNqyUnwAACmQJAQACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA//NExGQPkPIMAAwYAP////////////5EAQBQIAAAD/////////////////////////////////5//NExH0P2M4EABhEAP////////////////////////////////////////////5//NExIsPeKngAABMAP////////////////////////////////////////////5AAAH/2U='
+      );
+    }
+    
     loadMessages();
     const interval = setInterval(loadMessages, 2000);
     return () => clearInterval(interval);
@@ -67,6 +75,20 @@ export default function ChatWindow({ chat }: ChatWindowProps) {
     setLoading(true);
     try {
       const data = await getMessages(chat.id);
+      
+      if (prevMessagesLengthRef.current > 0 && data.length > prevMessagesLengthRef.current) {
+        const newMessages = data.slice(prevMessagesLengthRef.current);
+        const hasNewMessageFromOther = newMessages.some(
+          (msg: Message) => msg.sender_id !== user?.id
+        );
+        
+        if (hasNewMessageFromOther && audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(err => console.log('Audio play failed:', err));
+        }
+      }
+      
+      prevMessagesLengthRef.current = data.length;
       setMessages(data);
     } catch (error) {
       console.error('Failed to load messages:', error);
