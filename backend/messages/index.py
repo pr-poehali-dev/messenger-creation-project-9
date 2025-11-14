@@ -88,29 +88,34 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             file_url = body_data.get('file_url')
             file_name = body_data.get('file_name')
             file_type = body_data.get('file_type')
+            voice_url = body_data.get('voice_url')
+            voice_duration = body_data.get('voice_duration')
             
-            if not receiver_id or (not content and not file_url):
+            if not receiver_id or (not content and not file_url and not voice_url):
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'error': 'receiver_id и content или file_url обязательны'})
+                    'body': json.dumps({'error': 'receiver_id и content, file_url или voice_url обязательны'})
                 }
             
             content_escaped = content.replace("'", "''") if content else ''
             file_url_escaped = file_url.replace("'", "''") if file_url else 'NULL'
             file_name_escaped = file_name.replace("'", "''") if file_name else 'NULL'
             file_type_escaped = file_type.replace("'", "''") if file_type else 'NULL'
+            voice_url_escaped = voice_url.replace("'", "''") if voice_url else 'NULL'
             
             cur.execute(
                 f"""
                 INSERT INTO t_p59162637_messenger_creation_p.messages 
-                (sender_id, receiver_id, text, file_url, file_name, file_type, created_at, is_read)
+                (sender_id, receiver_id, text, file_url, file_name, file_type, voice_url, voice_duration, created_at, is_read)
                 VALUES ({user_id}, {receiver_id}, '{content_escaped}', 
                         {f"'{file_url_escaped}'" if file_url else 'NULL'}, 
                         {f"'{file_name_escaped}'" if file_name else 'NULL'}, 
-                        {f"'{file_type_escaped}'" if file_type else 'NULL'}, 
+                        {f"'{file_type_escaped}'" if file_type else 'NULL'},
+                        {f"'{voice_url_escaped}'" if voice_url else 'NULL'},
+                        {voice_duration if voice_duration else 'NULL'}, 
                         NOW(), false)
-                RETURNING id, sender_id, receiver_id, text as content, file_url, file_name, file_type, created_at
+                RETURNING id, sender_id, receiver_id, text as content, file_url, file_name, file_type, voice_url, voice_duration, created_at
                 """
             )
             message = cur.fetchone()

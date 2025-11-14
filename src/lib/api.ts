@@ -48,7 +48,9 @@ export async function sendMessage(
   content: string, 
   fileUrl?: string, 
   fileName?: string, 
-  fileType?: string
+  fileType?: string,
+  voiceUrl?: string,
+  voiceDuration?: number
 ) {
   const token = getToken();
   const response = await fetch(`${API_BASE}/${ENDPOINTS.messages}`, {
@@ -63,6 +65,8 @@ export async function sendMessage(
       file_url: fileUrl,
       file_name: fileName,
       file_type: fileType,
+      voice_url: voiceUrl,
+      voice_duration: voiceDuration,
     }),
   });
   
@@ -164,6 +168,43 @@ function getUserIdFromToken(): number | null {
   const token = getToken();
   if (!token) return null;
   return parseInt(token.split(':')[0]);
+}
+
+export async function uploadVoice(audioBlob: Blob) {
+  const token = getToken();
+  
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const base64 = (reader.result as string).split(',')[1];
+        
+        const response = await fetch(`${API_BASE}/${ENDPOINTS.upload}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': token || '',
+          },
+          body: JSON.stringify({
+            file: base64,
+            fileName: `voice_${Date.now()}.webm`,
+            fileType: 'audio/webm',
+          }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to upload voice');
+        }
+        
+        const data = await response.json();
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(audioBlob);
+  });
 }
 
 export async function uploadFile(file: File) {

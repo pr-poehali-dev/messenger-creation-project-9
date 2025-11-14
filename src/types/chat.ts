@@ -28,6 +28,8 @@ export interface Message {
   file_url?: string | null;
   file_name?: string | null;
   file_type?: string | null;
+  voice_url?: string | null;
+  voice_duration?: number | null;
   is_edited?: boolean;
   is_removed?: boolean;
   edited_at?: string | null;

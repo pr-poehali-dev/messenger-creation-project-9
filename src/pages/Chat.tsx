@@ -5,6 +5,7 @@ import ChatWindow from '@/components/chat/ChatWindow';
 import ProfilePanel from '@/components/chat/ProfilePanel';
 import { getUsers, getUnreadCounts } from '@/lib/api';
 import { useNotifications } from '@/hooks/useNotifications';
+import { useSwipe } from '@/hooks/useSwipe';
 import type { Chat } from '@/types/chat';
 
 export default function Chat() {
@@ -96,8 +97,38 @@ export default function Chat() {
     setShowSidebar(true);
   };
 
+  const handleNextChat = () => {
+    if (!selectedChat) return;
+    const currentIndex = chats.findIndex(c => c.id === selectedChat.id);
+    if (currentIndex < chats.length - 1) {
+      handleSelectChat(chats[currentIndex + 1]);
+    }
+  };
+
+  const handlePrevChat = () => {
+    if (!selectedChat) return;
+    const currentIndex = chats.findIndex(c => c.id === selectedChat.id);
+    if (currentIndex > 0) {
+      handleSelectChat(chats[currentIndex - 1]);
+    }
+  };
+
+  const swipeHandlers = useSwipe({
+    onSwipeRight: () => {
+      if (selectedChat && !showSidebar) {
+        handleBackToChats();
+      }
+    },
+    onSwipeLeft: handleNextChat,
+  });
+
   return (
-    <div className="h-screen flex bg-background overflow-hidden">
+    <div 
+      className="h-screen flex bg-background overflow-hidden"
+      onTouchStart={swipeHandlers.onTouchStart}
+      onTouchMove={swipeHandlers.onTouchMove}
+      onTouchEnd={swipeHandlers.onTouchEnd}
+    >
       <div className={`${
         showSidebar ? 'flex' : 'hidden'
       } md:flex w-full md:w-auto`}>

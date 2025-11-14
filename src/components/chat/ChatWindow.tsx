@@ -6,7 +6,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Icon from '@/components/ui/icon';
 import MessageMenu from './MessageMenu';
-import { getMessages, sendMessage, uploadFile, editMessage, deleteMessage, setTypingStatus, getTypingStatus } from '@/lib/api';
+import VoiceRecorder from './VoiceRecorder';
+import VoicePlayer from './VoicePlayer';
+import { getMessages, sendMessage, uploadFile, uploadVoice, editMessage, deleteMessage, setTypingStatus, getTypingStatus } from '@/lib/api';
 import { toast } from 'sonner';
 import type { Chat, Message } from '@/types/chat';
 import { format } from 'date-fns';
@@ -26,6 +28,7 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editingContent, setEditingContent] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -147,6 +150,37 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const handleVoiceRecord = () => {
+    setIsRecording(true);
+  };
+
+  const handleVoiceComplete = async (audioBlob: Blob, duration: number) => {
+    setIsRecording(false);
+    setUploading(true);
+    try {
+      const uploadResult = await uploadVoice(audioBlob) as any;
+      const message = await sendMessage(
+        chat.id,
+        '',
+        undefined,
+        undefined,
+        undefined,
+        uploadResult.url,
+        duration
+      );
+      setMessages([...messages, message]);
+      toast.success('Голосовое отправлено');
+    } catch (error) {
+      console.error('Failed to send voice:', error);
+      toast.error('Ошибка отправки голосового');
+    }
+    setUploading(false);
+  };
+
+  const handleVoiceCancel = () => {
+    setIsRecording(false);
   };
 
   const handleEditMessage = (messageId: number, content: string) => {
@@ -293,6 +327,12 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
                           : 'bg-muted'
                       }`}
                     >
+                      {message.voice_url && (
+                        <VoicePlayer 
+                          voiceUrl={message.voice_url} 
+                          duration={message.voice_duration || 0} 
+                        />
+                      )}
                       {message.file_url && (
                         <div className="mb-2">
                           {message.file_type?.startsWith('image/') ? (
@@ -352,7 +392,13 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
       </ScrollArea>
 
       <div className="border-t p-3 md:p-4 bg-background shrink-0 safe-area-bottom">
-        <form onSubmit={handleSend} className="flex gap-2 items-center">
+        {isRecording ? (
+          <VoiceRecorder 
+            onRecordComplete={handleVoiceComplete}
+            onCancel={handleVoiceCancel}
+          />
+        ) : (
+          <form onSubmit={handleSend} className="flex gap-2 items-center">
           <input
             ref={fileInputRef}
             type="file"
@@ -400,10 +446,23 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
           <Button type="button" variant="ghost" size="icon" className="hidden md:flex h-10 w-10 shrink-0">
             <Icon name="Smile" size={20} />
           </Button>
-          <Button type="submit" size="icon" className="h-10 w-10 shrink-0" disabled={!newMessage.trim() || uploading}>
-            <Icon name="Send" size={20} />
-          </Button>
+          {newMessage.trim() ? (
+            <Button type="submit" size="icon" className="h-10 w-10 shrink-0" disabled={uploading}>
+              <Icon name="Send" size={20} />
+            </Button>
+          ) : (
+            <Button 
+              type="button" 
+              size="icon" 
+              className="h-10 w-10 shrink-0" 
+              onClick={handleVoiceRecord}
+              disabled={uploading}
+            >
+              <Icon name="Mic" size={20} />
+            </Button>
+          )}
         </form>
+        )}
       </div>
     </div>
   );
