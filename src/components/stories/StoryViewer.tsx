@@ -198,6 +198,32 @@ export default function StoryViewer({ userId, onClose, onNext, onPrev }: StoryVi
     setIsPaused(false);
   };
 
+  const handleDownload = async () => {
+    const currentStory = stories[currentIndex];
+    if (!currentStory) return;
+
+    try {
+      const response = await fetch(currentStory.media_url);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      const extension = currentStory.media_type === 'video' ? 'mp4' : 'jpg';
+      link.download = `story_${currentStory.username}_${Date.now()}.${extension}`;
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('Story сохранена в галерею!');
+    } catch (error) {
+      toast.error('Ошибка сохранения');
+      console.error('Download error:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -258,6 +284,14 @@ export default function StoryViewer({ userId, onClose, onNext, onPrev }: StoryVi
             </div>
           </div>
           <div className="flex items-center gap-1 md:gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleDownload}
+              className="text-white hover:bg-white/20 h-9 w-9 md:h-10 md:w-10 touch-manipulation"
+            >
+              <Icon name="Download" size={18} className="md:w-5 md:h-5" />
+            </Button>
             <Button
               variant="ghost"
               size="icon"
