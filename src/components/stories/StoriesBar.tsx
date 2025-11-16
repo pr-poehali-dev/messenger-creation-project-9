@@ -64,13 +64,13 @@ export default function StoriesBar({ onStoryClick, onAddStory }: StoriesBarProps
   return (
     <div className="border-b bg-background">
       <ScrollArea className="w-full">
-        <div className="flex gap-4 p-4">
-          <div className="flex flex-col items-center gap-2 min-w-[72px]">
+        <div className="flex gap-3 md:gap-4 p-3 md:p-4">
+          <div className="flex flex-col items-center gap-1.5 md:gap-2 min-w-[64px] md:min-w-[72px]">
             <button
               onClick={onAddStory}
-              className="relative group"
+              className="relative group touch-manipulation"
             >
-              <div className={`w-16 h-16 rounded-full p-[3px] ${
+              <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full p-[2.5px] md:p-[3px] ${
                 myStory 
                   ? myStory.is_viewed 
                     ? 'bg-gray-300' 
@@ -80,7 +80,7 @@ export default function StoriesBar({ onStoryClick, onAddStory }: StoriesBarProps
                 <div className="w-full h-full bg-white rounded-full p-[2px]">
                   <Avatar className="w-full h-full">
                     <AvatarImage src={user?.avatar_url || undefined} />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-sm md:text-base">
                       {user?.username[0]?.toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
@@ -90,28 +90,28 @@ export default function StoriesBar({ onStoryClick, onAddStory }: StoriesBarProps
                 <Icon name="Plus" size={12} className="text-primary-foreground" />
               </div>
             </button>
-            <p className="text-xs text-center truncate w-full">
+            <p className="text-[10px] md:text-xs text-center truncate w-full">
               {myStory ? 'Моя история' : 'Добавить'}
             </p>
           </div>
 
           {loading ? (
             <div className="flex items-center justify-center flex-1 py-4">
-              <Icon name="Loader2" size={24} className="animate-spin text-muted-foreground" />
+              <Icon name="Loader2" size={20} className="animate-spin text-muted-foreground" />
             </div>
           ) : otherStories.length === 0 ? (
             <div className="flex items-center justify-center flex-1 py-4">
-              <p className="text-sm text-muted-foreground">Нет новых историй</p>
+              <p className="text-xs md:text-sm text-muted-foreground">Нет новых историй</p>
             </div>
           ) : (
             <>
               {otherStories.map((story) => (
                 <div
                   key={story.user_id}
-                  className="flex flex-col items-center gap-2 min-w-[72px] cursor-pointer"
+                  className="flex flex-col items-center gap-1.5 md:gap-2 min-w-[64px] md:min-w-[72px] cursor-pointer touch-manipulation"
                   onClick={() => onStoryClick(story.user_id)}
                 >
-                  <div className={`w-16 h-16 rounded-full p-[3px] ${
+                  <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full p-[2.5px] md:p-[3px] ${
                     story.is_viewed 
                       ? 'bg-gray-300' 
                       : 'bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600'
@@ -119,13 +119,13 @@ export default function StoriesBar({ onStoryClick, onAddStory }: StoriesBarProps
                     <div className="w-full h-full bg-white rounded-full p-[2px]">
                       <Avatar className="w-full h-full">
                         <AvatarImage src={story.avatar_url || undefined} />
-                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-sm md:text-base">
                           {story.username[0]?.toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     </div>
                   </div>
-                  <p className="text-xs text-center truncate w-full">{story.username}</p>
+                  <p className="text-[10px] md:text-xs text-center truncate w-full">{story.username}</p>
                 </div>
               ))}
             </>

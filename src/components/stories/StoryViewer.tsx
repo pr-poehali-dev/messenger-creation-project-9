@@ -225,10 +225,10 @@ export default function StoryViewer({ userId, onClose, onNext, onPrev }: StoryVi
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="relative w-full h-full max-w-md mx-auto">
-        <div className="absolute top-0 left-0 right-0 z-10 p-2 flex gap-1">
+      <div className="relative w-full h-full max-w-md md:max-w-lg lg:max-w-xl mx-auto">
+        <div className="absolute top-0 left-0 right-0 z-10 p-2 md:p-2.5 flex gap-1 safe-top">
           {stories.map((_, idx) => (
-            <div key={idx} className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
+            <div key={idx} className="flex-1 h-0.5 md:h-1 bg-white/30 rounded-full overflow-hidden">
               <div
                 className="h-full bg-white transition-all duration-50"
                 style={{
@@ -239,17 +239,17 @@ export default function StoryViewer({ userId, onClose, onNext, onPrev }: StoryVi
           ))}
         </div>
 
-        <div className="absolute top-4 left-0 right-0 z-10 px-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Avatar className="h-10 w-10 border-2 border-white">
+        <div className="absolute top-3 md:top-4 left-0 right-0 z-10 px-3 md:px-4 flex items-center justify-between safe-top">
+          <div className="flex items-center gap-2 md:gap-3">
+            <Avatar className="h-9 w-9 md:h-10 md:w-10 border-2 border-white">
               <AvatarImage src={currentStory.avatar_url || undefined} />
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs md:text-sm">
                 {currentStory.username[0]?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-white font-semibold text-sm">{currentStory.username}</p>
-              <p className="text-white/70 text-xs">
+              <p className="text-white font-semibold text-xs md:text-sm">{currentStory.username}</p>
+              <p className="text-white/70 text-[10px] md:text-xs">
                 {new Date(currentStory.created_at).toLocaleDateString('ru', { 
                   hour: '2-digit', 
                   minute: '2-digit' 
@@ -257,22 +257,22 @@ export default function StoryViewer({ userId, onClose, onNext, onPrev }: StoryVi
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsPaused(!isPaused)}
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-white/20 h-9 w-9 md:h-10 md:w-10 touch-manipulation"
             >
-              <Icon name={isPaused ? 'Play' : 'Pause'} size={20} />
+              <Icon name={isPaused ? 'Play' : 'Pause'} size={18} className="md:w-5 md:h-5" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-white/20 h-9 w-9 md:h-10 md:w-10 touch-manipulation"
             >
-              <Icon name="X" size={20} />
+              <Icon name="X" size={18} className="md:w-5 md:h-5" />
             </Button>
           </div>
         </div>
@@ -298,21 +298,21 @@ export default function StoryViewer({ userId, onClose, onNext, onPrev }: StoryVi
         </div>
 
         {currentStory.caption && (
-          <div className="absolute bottom-24 left-0 right-0 px-6">
-            <p className="text-white text-center text-sm drop-shadow-lg">
+          <div className="absolute bottom-20 md:bottom-24 left-0 right-0 px-4 md:px-6 safe-bottom">
+            <p className="text-white text-center text-xs md:text-sm drop-shadow-lg">
               {currentStory.caption}
             </p>
           </div>
         )}
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 bg-gradient-to-t from-black/60 to-transparent safe-bottom">
           {showReactions ? (
-            <div className="flex gap-3 justify-center mb-4 bg-black/80 rounded-full px-6 py-3">
+            <div className="flex gap-2 md:gap-3 justify-center mb-3 md:mb-4 bg-black/80 rounded-full px-4 md:px-6 py-2.5 md:py-3">
               {reactions.map((reaction) => (
                 <button
                   key={reaction}
                   onClick={() => handleReaction(reaction)}
-                  className="text-3xl hover:scale-125 transition-transform"
+                  className="text-2xl md:text-3xl hover:scale-125 active:scale-110 transition-transform touch-manipulation"
                 >
                   {reaction}
                 </button>
@@ -326,16 +326,16 @@ export default function StoryViewer({ userId, onClose, onNext, onPrev }: StoryVi
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowReactions(!showReactions)}
-                className="text-white hover:bg-white/20 shrink-0"
+                className="text-white hover:bg-white/20 shrink-0 h-10 w-10 md:h-11 md:w-11 touch-manipulation"
               >
-                <Icon name="Heart" size={24} />
+                <Icon name="Heart" size={20} className="md:w-6 md:h-6" />
               </Button>
               <div className="relative flex-1">
                 <Input
                   placeholder="Ответить..."
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  className="bg-white/20 border-white/30 text-white placeholder:text-white/70 pr-12"
+                  className="bg-white/20 border-white/30 text-white placeholder:text-white/70 pr-10 md:pr-12 h-10 md:h-11 text-sm md:text-base"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && replyText.trim()) {
                       toast.success('Ответ отправлен!');
@@ -352,9 +352,9 @@ export default function StoryViewer({ userId, onClose, onNext, onPrev }: StoryVi
                       setReplyText('');
                     }
                   }}
-                  className="absolute right-0 top-0 text-white hover:bg-white/20"
+                  className="absolute right-0 top-0 text-white hover:bg-white/20 h-10 w-10 md:h-11 md:w-11 touch-manipulation"
                 >
-                  <Icon name="Send" size={20} />
+                  <Icon name="Send" size={18} className="md:w-5 md:h-5" />
                 </Button>
               </div>
             </div>
