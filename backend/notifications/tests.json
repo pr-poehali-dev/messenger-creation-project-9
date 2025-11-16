@@ -1,0 +1,36 @@
+{
+  "tests": [
+    {
+      "name": "Register push token",
+      "method": "POST",
+      "path": "/?action=register",
+      "headers": {
+        "X-Auth-Token": "1:test-token"
+      },
+      "body": {
+        "push_token": "test-fcm-token-123"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Toggle push notifications",
+      "method": "POST",
+      "path": "/?action=toggle",
+      "headers": {
+        "X-Auth-Token": "1:test-token"
+      },
+      "body": {
+        "enabled": false
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

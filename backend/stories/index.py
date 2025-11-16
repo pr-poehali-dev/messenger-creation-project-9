@@ -9,8 +9,10 @@ import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import Dict, Any
+import requests
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
+NOTIFICATIONS_URL = os.environ.get('NOTIFICATIONS_URL', '')
 
 def extract_user_id(token: str) -> int:
     if not token:
@@ -113,6 +115,35 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                             pass
                 
                 conn.commit()
+                
+                if mentions and isinstance(mentions, list) and NOTIFICATIONS_URL:
+                    cur.execute(
+                        f"""
+                        SELECT username FROM t_p59162637_messenger_creation_p.users
+                        WHERE id = {current_user_id}
+                        """
+                    )
+                    author = cur.fetchone()
+                    author_name = author['username'] if author else 'Кто-то'
+                    
+                    try:
+                        requests.post(
+                            f"{NOTIFICATIONS_URL}?action=send",
+                            headers={'X-Auth-Token': f'{current_user_id}:internal'},
+                            json={
+                                'user_ids': mentions,
+                                'title': f'{author_name} упомянул вас в Stories',
+                                'body': caption if caption else 'Посмотрите новую историю',
+                                'data': {
+                                    'type': 'story_mention',
+                                    'story_id': story_id,
+                                    'user_id': current_user_id
+                                }
+                            },
+                            timeout=5
+                        )
+                    except Exception:
+                        pass
                 
                 return {
                     'statusCode': 200,

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import type { User, AuthState } from '@/types/chat';
 import { authService } from '@/lib/auth';
+import { registerPushToken } from '@/lib/pushNotifications';
 
 interface AuthContextType extends AuthState {
   login: (phone: string, password: string) => Promise<void>;
@@ -22,11 +23,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (phone: string, password: string) => {
     const data = await authService.login(phone, password);
     setAuthState({ user: data.user, token: data.token, isAuthenticated: true });
+    
+    if (data.token) {
+      registerPushToken(data.token).catch(console.error);
+    }
   };
 
   const register = async (username: string, phone: string, password: string) => {
     const data = await authService.register(username, phone, password);
     setAuthState({ user: data.user, token: data.token, isAuthenticated: true });
+    
+    if (data.token) {
+      registerPushToken(data.token).catch(console.error);
+    }
   };
 
   const logout = () => {
