@@ -38,7 +38,7 @@ export default function MessageItem({
 
   return (
     <div
-      className={`flex gap-3 group ${isOwn ? 'flex-row-reverse' : ''}`}
+      className={`flex gap-3 group animate-message-appear ${isOwn ? 'flex-row-reverse' : ''}`}
     >
       {!isOwn && (
         <Avatar className="h-8 w-8 shrink-0">
@@ -63,10 +63,10 @@ export default function MessageItem({
           />
         </div>
         <div
-          className={`rounded-2xl px-4 py-2 ${
+          className={`rounded-2xl px-4 py-2 message-bubble ${
             isOwn
-              ? 'bg-blue-600 text-white'
-              : 'bg-muted'
+              ? 'bg-blue-600 text-white message-bubble-own'
+              : 'bg-muted message-bubble-received'
           }`}
         >
           {message.voice_url && (
