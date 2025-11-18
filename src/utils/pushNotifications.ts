@@ -41,7 +41,7 @@ async function savePushSubscription(subscription: PushSubscription): Promise<voi
   const authData = JSON.parse(token);
   
   try {
-    await fetch('https://functions.poehali.dev/YOUR_PUSH_FUNCTION_ID', {
+    await fetch('https://functions.poehali.dev/349e57c3-d568-47bc-9b6a-3d8bcefee4d7', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
