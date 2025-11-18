@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import type { User, AuthState } from '@/types/chat';
 import { authService } from '@/lib/auth';
 import { registerPushToken } from '@/lib/pushNotifications';
+import { subscribeToPushNotifications } from '@/utils/pushNotifications';
 
 interface AuthContextType extends AuthState {
   login: (phone: string, password: string) => Promise<void>;
@@ -26,6 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     if (data.token) {
       registerPushToken(data.token).catch(console.error);
+      subscribeToPushNotifications().catch(console.error);
     }
   };
 
@@ -35,6 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     if (data.token) {
       registerPushToken(data.token).catch(console.error);
+      subscribeToPushNotifications().catch(console.error);
     }
   };
 

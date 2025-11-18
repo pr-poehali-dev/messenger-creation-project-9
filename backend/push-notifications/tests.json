@@ -1,0 +1,31 @@
+{
+  "tests": [
+    {
+      "name": "Test OPTIONS request for CORS",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Test send push notification",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "send",
+        "subscription": {
+          "endpoint": "https://example.com/push",
+          "keys": {
+            "p256dh": "test-key",
+            "auth": "test-auth"
+          }
+        },
+        "data": {
+          "title": "Test Message",
+          "body": "Hello from push"
+        }
+      },
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
+  ]
+}

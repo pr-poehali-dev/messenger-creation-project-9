@@ -48,3 +48,45 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+
+self.addEventListener('push', (event) => {
+  const data = event.data ? event.data.json() : {};
+  const title = data.title || 'Новое сообщение';
+  const options = {
+    body: data.body || 'У вас новое сообщение',
+    icon: '/favicon.svg',
+    badge: '/favicon.svg',
+    tag: data.tag || 'message',
+    data: {
+      url: data.url || '/',
+      chatId: data.chatId
+    },
+    vibrate: [200, 100, 200],
+    requireInteraction: false
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  
+  const urlToOpen = event.notification.data?.url || '/';
+  
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        for (let i = 0; i < clientList.length; i++) {
+          const client = clientList[i];
+          if (client.url === urlToOpen && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        if (clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+      })
+  );
+});
