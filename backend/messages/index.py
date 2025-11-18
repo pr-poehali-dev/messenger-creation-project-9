@@ -9,8 +9,47 @@ import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import Dict, Any
+import urllib.request
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
+PUSH_NOTIFICATION_URL = 'https://functions.poehali.dev/349e57c3-d568-47bc-9b6a-3d8bcefee4d7'
+
+def send_push_notification(receiver_id: int, sender_name: str, message_content: str, cur):
+    """Отправка push-уведомления получателю"""
+    try:
+        cur.execute(
+            f"SELECT push_subscription FROM t_p59162637_messenger_creation_p.users WHERE id = {receiver_id}"
+        )
+        user = cur.fetchone()
+        
+        if not user or not user.get('push_subscription'):
+            return
+        
+        subscription = json.loads(user['push_subscription'])
+        
+        notification_data = {
+            'action': 'send',
+            'subscription': subscription,
+            'data': {
+                'title': f'Сообщение от {sender_name}',
+                'body': message_content[:100],
+                'url': '/',
+                'tag': 'new-message'
+            }
+        }
+        
+        req = urllib.request.Request(
+            PUSH_NOTIFICATION_URL,
+            data=json.dumps(notification_data).encode('utf-8'),
+            headers={'Content-Type': 'application/json'},
+            method='POST'
+        )
+        
+        with urllib.request.urlopen(req, timeout=5) as response:
+            pass
+            
+    except Exception as e:
+        print(f'Failed to send push notification: {e}')
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     method: str = event.get('httpMethod', 'GET')
@@ -120,6 +159,15 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             )
             message = cur.fetchone()
             conn.commit()
+            
+            cur.execute(
+                f"SELECT username FROM t_p59162637_messenger_creation_p.users WHERE id = {user_id}"
+            )
+            sender = cur.fetchone()
+            sender_name = sender['username'] if sender else 'Пользователь'
+            
+            notification_text = content if content else ('Голосовое сообщение' if voice_url else 'Файл')
+            send_push_notification(receiver_id, sender_name, notification_text, cur)
             
             return {
                 'statusCode': 200,

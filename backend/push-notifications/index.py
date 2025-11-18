@@ -7,9 +7,12 @@ Returns: HTTP response dict with statusCode, headers, body
 
 import json
 import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from typing import Dict, Any
 from pywebpush import webpush, WebPushException
 
+DATABASE_URL = os.environ.get('DATABASE_URL', '')
 VAPID_PRIVATE_KEY = os.environ.get('VAPID_PRIVATE_KEY', '')
 VAPID_PUBLIC_KEY = os.environ.get('VAPID_PUBLIC_KEY', '')
 VAPID_CLAIMS = {
@@ -43,7 +46,53 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     body_data = json.loads(event.get('body', '{}'))
     action = body_data.get('action')
     
-    if action == 'send':
+    if action == 'subscribe':
+        headers = event.get('headers', {})
+        token = headers.get('x-auth-token') or headers.get('X-Auth-Token')
+        
+        if not token:
+            return {
+                'statusCode': 401,
+                'headers': {'Content-Type': 'application/json'},
+                'body': json.dumps({'error': 'Требуется авторизация'}),
+                'isBase64Encoded': False
+            }
+        
+        user_id = int(token.split(':')[0])
+        subscription = body_data.get('subscription')
+        
+        if not subscription:
+            return {
+                'statusCode': 400,
+                'headers': {'Content-Type': 'application/json'},
+                'body': json.dumps({'error': 'Subscription required'}),
+                'isBase64Encoded': False
+            }
+        
+        conn = psycopg2.connect(DATABASE_URL)
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        
+        try:
+            subscription_json = json.dumps(subscription).replace("'", "''")
+            cur.execute(
+                f"UPDATE t_p59162637_messenger_creation_p.users SET push_subscription = '{subscription_json}' WHERE id = {user_id}"
+            )
+            conn.commit()
+            
+            return {
+                'statusCode': 200,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                'body': json.dumps({'success': True}),
+                'isBase64Encoded': False
+            }
+        finally:
+            cur.close()
+            conn.close()
+    
+    elif action == 'send':
         subscription_info = body_data.get('subscription')
         message_data = body_data.get('data', {})
         
