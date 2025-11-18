@@ -5,8 +5,10 @@ Returns: HTTP response with generated keys
 '''
 
 import json
+import base64
 from typing import Dict, Any
-from py_vapid import Vapid
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import serialization
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     method: str = event.get('httpMethod', 'GET')
@@ -25,8 +27,20 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         }
     
     if method == 'GET':
-        vapid = Vapid()
-        vapid.generate_keys()
+        private_key = ec.generate_private_key(ec.SECP256R1())
+        public_key = private_key.public_key()
+        
+        private_pem = private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        ).decode('utf-8')
+        
+        public_numbers = public_key.public_numbers()
+        x = public_numbers.x.to_bytes(32, 'big')
+        y = public_numbers.y.to_bytes(32, 'big')
+        public_key_bytes = b'\x04' + x + y
+        public_key_b64 = base64.urlsafe_b64encode(public_key_bytes).decode('utf-8').rstrip('=')
         
         return {
             'statusCode': 200,
@@ -35,8 +49,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'Access-Control-Allow-Origin': '*'
             },
             'body': json.dumps({
-                'public_key': vapid.save_public_key(),
-                'private_key': vapid.save_key()
+                'public_key': public_key_b64,
+                'private_key': private_pem
             }),
             'isBase64Encoded': False
         }
