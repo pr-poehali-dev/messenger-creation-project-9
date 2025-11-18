@@ -1,4 +1,4 @@
-const PUBLIC_VAPID_KEY = 'BEl62iUYgUivxIkv-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const PUBLIC_VAPID_KEY = 'BNxWF_nSSh7u3mF_JKvD5y3h8VTSqZE4F8Hx7m9P4WzJ3dK2vN5tR8wQ1bC6fG9hL2kM4nP7rS0uV3xY6zA9B';
 
 export async function subscribeToPushNotifications(): Promise<PushSubscription | null> {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
