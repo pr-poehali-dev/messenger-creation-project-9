@@ -9,6 +9,7 @@ export interface User {
   last_seen: string;
   created_at: string;
   sound_enabled?: boolean;
+  vibration_enabled?: boolean;
 }
 
 export interface Chat {

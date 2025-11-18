@@ -56,7 +56,7 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
       oscillator1.stop(audioContext.currentTime + 0.5);
       oscillator2.stop(audioContext.currentTime + 0.5);
       
-      if ('vibrate' in navigator) {
+      if ('vibrate' in navigator && user?.vibration_enabled !== false) {
         navigator.vibrate([200, 100, 200]);
       }
     } catch (err) {

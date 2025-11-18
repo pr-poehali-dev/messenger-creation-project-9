@@ -23,7 +23,8 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
     username: user?.username || '',
     bio: user?.bio || '',
     avatar_url: user?.avatar_url || '',
-    sound_enabled: user?.sound_enabled ?? true
+    sound_enabled: user?.sound_enabled ?? true,
+    vibration_enabled: user?.vibration_enabled ?? true
   });
 
   const handleSave = async () => {
@@ -33,7 +34,8 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
         username: formData.username,
         avatar_url: formData.avatar_url,
         bio: formData.bio,
-        sound_enabled: formData.sound_enabled
+        sound_enabled: formData.sound_enabled,
+        vibration_enabled: formData.vibration_enabled
       });
       updateUser(updated);
       toast.success('Профиль обновлён!');
@@ -117,7 +119,28 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
                   updateProfile({ sound_enabled: checked })
                     .then(updated => {
                       updateUser(updated);
-                      toast.success(checked ? 'Зву включён' : 'Звук выключен');
+                      toast.success(checked ? 'Звук включён' : 'Звук выключен');
+                    })
+                    .catch(() => toast.error('Ошибка обновления'));
+                }
+              }}
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label className="text-base">Вибрация</Label>
+              <p className="text-sm text-muted-foreground">Вибрация при получении сообщений</p>
+            </div>
+            <Switch
+              checked={formData.vibration_enabled}
+              onCheckedChange={(checked) => {
+                setFormData({ ...formData, vibration_enabled: checked });
+                if (!isEditing) {
+                  updateProfile({ vibration_enabled: checked })
+                    .then(updated => {
+                      updateUser(updated);
+                      toast.success(checked ? 'Вибрация включена' : 'Вибрация выключена');
                     })
                     .catch(() => toast.error('Ошибка обновления'));
                 }
@@ -156,7 +179,8 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
                   username: user?.username || '',
                   bio: user?.bio || '',
                   avatar_url: user?.avatar_url || '',
-                  sound_enabled: user?.sound_enabled ?? true
+                  sound_enabled: user?.sound_enabled ?? true,
+                  vibration_enabled: user?.vibration_enabled ?? true
                 });
               }}
             >
