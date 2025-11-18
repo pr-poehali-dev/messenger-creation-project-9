@@ -259,6 +259,17 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     LEFT JOIN t_p59162637_messenger_creation_p.story_views sv 
                         ON sv.story_id = s.id AND sv.viewer_id = {current_user_id}
                     WHERE s.expires_at > NOW()
+                      AND (
+                        s.user_id = {current_user_id}
+                        OR EXISTS (
+                          SELECT 1 FROM t_p59162637_messenger_creation_p.chat_members cm1
+                          JOIN t_p59162637_messenger_creation_p.chat_members cm2 
+                            ON cm1.chat_id = cm2.chat_id
+                          WHERE cm1.user_id = {current_user_id} 
+                            AND cm2.user_id = s.user_id
+                            AND cm1.user_id != cm2.user_id
+                        )
+                      )
                     ORDER BY s.user_id, s.created_at DESC
                     """
                 )

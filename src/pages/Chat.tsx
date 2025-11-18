@@ -23,6 +23,7 @@ export default function Chat() {
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [storyUserId, setStoryUserId] = useState<number | null>(null);
   const [showStoryCreator, setShowStoryCreator] = useState(false);
+  const [storiesRefreshKey, setStoriesRefreshKey] = useState(0);
   const { showNotification, requestPermission } = useNotifications();
   const prevUnreadRef = useRef<Record<number, number>>({});
 
@@ -124,7 +125,7 @@ export default function Chat() {
   };
 
   const handleStoryCreated = () => {
-    // Обновить список историй
+    setStoriesRefreshKey(prev => prev + 1);
   };
 
   const handleNextChat = () => {
@@ -173,7 +174,7 @@ export default function Chat() {
       <div className={`${
         showSidebar ? 'hidden' : 'flex'
       } md:flex flex-1 flex-col w-full`}>
-        <StoriesBar onStoryClick={handleStoryClick} onAddStory={handleAddStory} />
+        <StoriesBar key={storiesRefreshKey} onStoryClick={handleStoryClick} onAddStory={handleAddStory} />
         
         {selectedChat ? (
           <ChatWindow chat={selectedChat} onBack={handleBackToChats} />
