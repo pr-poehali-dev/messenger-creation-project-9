@@ -55,6 +55,10 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
       oscillator2.start(audioContext.currentTime);
       oscillator1.stop(audioContext.currentTime + 0.5);
       oscillator2.stop(audioContext.currentTime + 0.5);
+      
+      if ('vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200]);
+      }
     } catch (err) {
       console.log('Audio play failed:', err);
     }
