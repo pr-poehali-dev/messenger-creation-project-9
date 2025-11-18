@@ -1,19 +1,20 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Left bubble with pink dots -->
-  <path d="M170 85 Q85 85 85 170 Q85 230 85 275 Q85 300 76 306 L76 290 Q85 280 85 260 Q85 220 85 180 Q85 110 162 110 Q204 110 238 144 Q272 178 272 225 Q272 265 272 290 Q272 320 238 320 L162 320 Q128 320 128 286 L145 286 Q145 302 162 302 L238 302 Q256 302 256 284 Q256 265 256 220 Q256 178 226 148 Q196 118 162 118 Q102 118 102 178 Q102 220 102 260 Q102 298 85 315 Q68 332 51 315 Q43 307 43 290 L43 260 Q43 220 43 180 Q43 85 128 85 Z" fill="#0A3D4A" stroke="#0A3D4A" stroke-width="16" stroke-linejoin="round"/>
+  <!-- Background -->
+  <rect width="512" height="512" fill="white"/>
   
-  <circle cx="136" cy="192" r="15" fill="#E91E8C"/>
-  <circle cx="179" cy="192" r="15" fill="#E91E8C"/>
-  <circle cx="222" cy="192" r="15" fill="#E91E8C"/>
+  <!-- Left chat bubble -->
+  <path d="M140 180 C140 150 165 125 195 125 L265 125 C295 125 320 150 320 180 L320 260 C320 290 295 315 265 315 L210 315 L170 345 L170 315 L195 315 C165 315 140 290 140 260 Z" fill="#1B4D5C" stroke="#1B4D5C" stroke-width="4"/>
   
-  <!-- Connection segments -->
-  <rect x="272" y="162" width="26" height="34" fill="#00B4D8" rx="4"/>
-  <rect x="272" y="306" width="26" height="34" fill="#E91E8C" rx="4"/>
+  <!-- Pink dots in left bubble -->
+  <circle cx="195" cy="205" r="10" fill="#E91E63"/>
+  <circle cx="230" cy="205" r="10" fill="#E91E63"/>
+  <circle cx="265" cy="205" r="10" fill="#E91E63"/>
   
-  <!-- Right bubble with blue dots -->
-  <path d="M342 192 Q427 192 427 277 Q427 340 427 385 Q427 410 436 416 L436 400 Q427 390 427 370 Q427 330 427 290 Q427 220 350 220 Q308 220 274 254 Q240 288 240 335 Q240 375 240 400 Q240 430 274 430 L350 430 Q384 430 384 396 L367 396 Q367 412 350 412 L274 412 Q256 412 256 394 Q256 375 256 330 Q256 288 286 258 Q316 228 350 228 Q410 228 410 288 Q410 330 410 370 Q410 408 427 425 Q444 442 461 425 Q469 417 469 400 L469 370 Q469 330 469 290 Q469 192 384 192 Z" fill="#0A3D4A" stroke="#0A3D4A" stroke-width="16" stroke-linejoin="round"/>
+  <!-- Right chat bubble -->
+  <path d="M372 230 C372 200 347 175 317 175 L247 175 C217 175 192 200 192 230 L192 310 C192 340 217 365 247 365 L302 365 L342 395 L342 365 L317 365 C347 365 372 340 372 310 Z" fill="#1B4D5C" stroke="#1B4D5C" stroke-width="4"/>
   
-  <circle cx="290" cy="332" r="15" fill="#00B4D8"/>
-  <circle cx="333" cy="332" r="15" fill="#00B4D8"/>
-  <circle cx="376" cy="332" r="15" fill="#00B4D8"/>
+  <!-- Blue dots in right bubble -->
+  <circle cx="247" cy="270" r="10" fill="#00B4D8"/>
+  <circle cx="282" cy="270" r="10" fill="#00B4D8"/>
+  <circle cx="317" cy="270" r="10" fill="#00B4D8"/>
 </svg>

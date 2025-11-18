@@ -1,19 +1,17 @@
 <svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Left bubble with pink dots -->
-  <path d="M400 200 Q200 200 200 400 Q200 550 200 650 Q200 700 180 720 L180 680 Q200 660 200 620 Q200 520 200 420 Q200 250 380 250 Q480 250 560 330 Q640 410 640 530 Q640 630 640 680 Q640 750 560 750 L380 750 Q300 750 300 670 L340 670 Q340 710 380 710 L560 710 Q600 710 600 670 Q600 620 600 520 Q600 420 530 350 Q460 280 380 280 Q240 280 240 420 Q240 520 240 620 Q240 700 200 740 Q160 780 120 740 Q100 720 100 680 L100 620 Q100 520 100 420 Q100 200 300 200 Z" fill="#0A3D4A" stroke="#0A3D4A" stroke-width="40" stroke-linejoin="round"/>
+  <!-- Left chat bubble -->
+  <path d="M330 425 C330 350 390 290 465 290 L625 290 C700 290 760 350 760 425 L760 615 C760 690 700 750 625 750 L495 750 L400 820 L400 750 L465 750 C390 750 330 690 330 615 Z" fill="#1B4D5C" stroke="#1B4D5C" stroke-width="10"/>
   
-  <circle cx="320" cy="450" r="35" fill="#E91E8C"/>
-  <circle cx="420" cy="450" r="35" fill="#E91E8C"/>
-  <circle cx="520" cy="450" r="35" fill="#E91E8C"/>
+  <!-- Pink dots in left bubble -->
+  <circle cx="465" cy="485" r="25" fill="#E91E63"/>
+  <circle cx="545" cy="485" r="25" fill="#E91E63"/>
+  <circle cx="625" cy="485" r="25" fill="#E91E63"/>
   
-  <!-- Connection segments -->
-  <rect x="640" y="380" width="60" height="80" fill="#00B4D8" rx="10"/>
-  <rect x="640" y="720" width="60" height="80" fill="#E91E8C" rx="10"/>
+  <!-- Right chat bubble -->
+  <path d="M870 545 C870 470 810 410 735 410 L575 410 C500 410 440 470 440 545 L440 735 C440 810 500 870 575 870 L705 870 L800 940 L800 870 L735 870 C810 870 870 810 870 735 Z" fill="#1B4D5C" stroke="#1B4D5C" stroke-width="10"/>
   
-  <!-- Right bubble with blue dots -->
-  <path d="M800 450 Q1000 450 1000 650 Q1000 800 1000 900 Q1000 950 1020 970 L1020 930 Q1000 910 1000 870 Q1000 770 1000 670 Q1000 500 820 500 Q720 500 640 580 Q560 660 560 780 Q560 880 560 930 Q560 1000 640 1000 L820 1000 Q900 1000 900 920 L860 920 Q860 960 820 960 L640 960 Q600 960 600 920 Q600 870 600 770 Q600 670 670 600 Q740 530 820 530 Q960 530 960 670 Q960 770 960 870 Q960 950 1000 990 Q1040 1030 1080 990 Q1100 970 1100 930 L1100 870 Q1100 770 1100 670 Q1100 450 900 450 Z" fill="#0A3D4A" stroke="#0A3D4A" stroke-width="40" stroke-linejoin="round"/>
-  
-  <circle cx="680" cy="780" r="35" fill="#00B4D8"/>
-  <circle cx="780" cy="780" r="35" fill="#00B4D8"/>
-  <circle cx="880" cy="780" r="35" fill="#00B4D8"/>
+  <!-- Blue dots in right bubble -->
+  <circle cx="575" cy="640" r="25" fill="#00B4D8"/>
+  <circle cx="655" cy="640" r="25" fill="#00B4D8"/>
+  <circle cx="735" cy="640" r="25" fill="#00B4D8"/>
 </svg>
