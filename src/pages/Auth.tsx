@@ -45,10 +45,8 @@ export default function Auth() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl p-8 space-y-6">
           <div className="text-center space-y-2">
-            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-3xl mb-4">
-              💬
-            </div>
-            <h1 className="text-3xl font-bold">ChatApp</h1>
+            <img src="/logo.svg" alt="Peeky" className="w-24 h-24 mx-auto mb-4" />
+            <h1 className="text-3xl font-bold">Peeky</h1>
             <p className="text-muted-foreground">
               {isLogin ? 'Войдите в свой аккаунт' : 'Создайте новый аккаунт'}
             </p>
