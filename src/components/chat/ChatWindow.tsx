@@ -26,16 +26,41 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
   const [forwardingMessage, setForwardingMessage] = useState<Message | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
   const prevMessagesLengthRef = useRef<number>(0);
 
-  useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio(
-        'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAASAAAeMwAUFBQUFCIiIiIiIjAwMDAwPj4+Pj4+TExMTExZWVlZWVlnZ2dnZ3V1dXV1dYODg4ODkZGRkZGRn5+fn5+frKysrKy6urq6urrIyMjIyNbW1tbW1uTk5OTk8vLy8vLy//////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAQKAAAAAAAAHjOZTf9/AAAAAAAAAAAAAAAAAAAAAP/7UMQAAAGkAimlBIAImYtNqyUnwAACmQJAQACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA//NExGQPkPIMAAwYAP////////////5EAQBQIAAAD/////////////////////////////////5//NExH0P2M4EABhEAP////////////////////////////////////////////5//NExIsPeKngAABMAP////////////////////////////////////////////5AAAH/2U='
-      );
+  const playNotificationSound = () => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      
+      const oscillator1 = audioContext.createOscillator();
+      const oscillator2 = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator1.frequency.setValueAtTime(800, audioContext.currentTime);
+      oscillator2.frequency.setValueAtTime(1000, audioContext.currentTime);
+      
+      oscillator1.type = 'sine';
+      oscillator2.type = 'sine';
+      
+      oscillator1.connect(gainNode);
+      oscillator2.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      
+      oscillator1.start(audioContext.currentTime);
+      oscillator2.start(audioContext.currentTime);
+      oscillator1.stop(audioContext.currentTime + 0.5);
+      oscillator2.stop(audioContext.currentTime + 0.5);
+    } catch (err) {
+      console.log('Audio play failed:', err);
     }
-    
+  };
+
+  useEffect(() => {
     loadMessages();
     const interval = setInterval(loadMessages, 2000);
     return () => clearInterval(interval);
@@ -80,9 +105,8 @@ export default function ChatWindow({ chat, onBack }: ChatWindowProps) {
           (msg: Message) => msg.sender_id !== user?.id
         );
         
-        if (hasNewMessageFromOther && audioRef.current && user?.sound_enabled !== false) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(err => console.log('Audio play failed:', err));
+        if (hasNewMessageFromOther && user?.sound_enabled !== false) {
+          playNotificationSound();
         }
       }
       
