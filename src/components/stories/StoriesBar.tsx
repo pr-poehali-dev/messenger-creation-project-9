@@ -81,7 +81,7 @@ export default function StoriesBar({ onStoryClick, onAddStory }: StoriesBarProps
                   <Avatar className="w-full h-full">
                     <AvatarImage src={user?.avatar_url || undefined} />
                     <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-sm md:text-base">
-                      {user?.username[0]?.toUpperCase()}
+                      {user?.username?.[0]?.toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                 </div>
@@ -120,7 +120,7 @@ export default function StoriesBar({ onStoryClick, onAddStory }: StoriesBarProps
                       <Avatar className="w-full h-full">
                         <AvatarImage src={story.avatar_url || undefined} />
                         <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-sm md:text-base">
-                          {story.username[0]?.toUpperCase()}
+                          {story.username?.[0]?.toUpperCase() || 'U'}
                         </AvatarFallback>
                       </Avatar>
                     </div>
