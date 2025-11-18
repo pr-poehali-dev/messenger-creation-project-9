@@ -47,3 +47,28 @@ export interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
 }
+
+export interface Reel {
+  id: number;
+  user_id: number;
+  video_url: string;
+  thumbnail_url?: string | null;
+  description?: string | null;
+  likes_count: number;
+  comments_count: number;
+  views_count: number;
+  created_at: string;
+  username?: string;
+  avatar_url?: string | null;
+  is_liked?: boolean;
+}
+
+export interface ReelComment {
+  id: number;
+  reel_id: number;
+  user_id: number;
+  content: string;
+  created_at: string;
+  username?: string;
+  avatar_url?: string | null;
+}

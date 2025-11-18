@@ -10,6 +10,8 @@ import Contacts from "./pages/Contacts";
 import Invitations from "./pages/Invitations";
 import Mentions from "./pages/Mentions";
 import GenerateKeys from "./pages/GenerateKeys";
+import Reels from "./pages/Reels";
+import CreateReel from "./pages/CreateReel";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,8 @@ const App = () => (
             <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
             <Route path="/invitations" element={<ProtectedRoute><Invitations /></ProtectedRoute>} />
             <Route path="/mentions" element={<ProtectedRoute><Mentions /></ProtectedRoute>} />
+            <Route path="/reels" element={<ProtectedRoute><Reels /></ProtectedRoute>} />
+            <Route path="/reels/create" element={<ProtectedRoute><CreateReel /></ProtectedRoute>} />
             <Route path="/generate-keys" element={<GenerateKeys />} />
             <Route path="*" element={<Navigate to="/chat" replace />} />
           </Routes>

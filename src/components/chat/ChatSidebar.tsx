@@ -137,6 +137,14 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
           <Button 
             variant="outline" 
             size="icon" 
+            className="h-10 md:h-9 w-10 md:w-9 shrink-0" 
+            onClick={() => navigate('/reels')}
+          >
+            <Icon name="Film" size={18} />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon" 
             className="h-10 md:h-9 w-10 md:w-9 shrink-0 relative" 
             onClick={() => navigate('/invitations')}
           >
