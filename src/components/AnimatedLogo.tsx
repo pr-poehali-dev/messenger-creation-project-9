@@ -1,4 +1,39 @@
+import { useEffect } from 'react';
+
 export default function AnimatedLogo() {
+  useEffect(() => {
+    const playTypingSound = () => {
+      try {
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        
+        const timings = [0, 200, 400, 600, 800, 1000];
+        
+        timings.forEach((delay) => {
+          setTimeout(() => {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.05);
+          }, delay);
+        });
+      } catch (err) {
+        console.log('Audio playback not available');
+      }
+    };
+
+    const timer = setTimeout(playTypingSound, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="relative w-24 h-24 mx-auto">
       <svg width="100%" height="100%" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
