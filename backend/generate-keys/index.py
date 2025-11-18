@@ -30,11 +30,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         private_key = ec.generate_private_key(ec.SECP256R1())
         public_key = private_key.public_key()
         
-        private_pem = private_key.private_bytes(
-            encoding=serialization.Encoding.PEM,
+        private_der = private_key.private_bytes(
+            encoding=serialization.Encoding.DER,
             format=serialization.PrivateFormat.PKCS8,
             encryption_algorithm=serialization.NoEncryption()
-        ).decode('utf-8')
+        )
+        private_key_b64 = base64.urlsafe_b64encode(private_der).decode('utf-8').rstrip('=')
         
         public_numbers = public_key.public_numbers()
         x = public_numbers.x.to_bytes(32, 'big')
@@ -50,7 +51,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             },
             'body': json.dumps({
                 'public_key': public_key_b64,
-                'private_key': private_pem
+                'private_key': private_key_b64
             }),
             'isBase64Encoded': False
         }
