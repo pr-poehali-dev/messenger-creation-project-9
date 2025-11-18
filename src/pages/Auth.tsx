@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
+import AnimatedLogo from '@/components/AnimatedLogo';
 
 export default function Auth() {
   const { login, register } = useAuth();
@@ -45,7 +46,9 @@ export default function Auth() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl p-8 space-y-6">
           <div className="text-center space-y-2">
-            <img src="/logo.svg" alt="Peeky" className="w-24 h-24 mx-auto mb-4" />
+            <div className="mb-4">
+              <AnimatedLogo />
+            </div>
             <h1 className="text-3xl font-bold">Peeky</h1>
             <p className="text-muted-foreground">
               {isLogin ? 'Войдите в свой аккаунт' : 'Создайте новый аккаунт'}
