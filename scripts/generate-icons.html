@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate PWA Icons</title>
+</head>
+<body>
+    <h2>Generate PWA Icons from SVG</h2>
+    <p>Instructions:</p>
+    <ol>
+        <li>Open public/favicon.svg in your image editor (GIMP, Photoshop, Figma)</li>
+        <li>Export as PNG with these sizes:
+            <ul>
+                <li>192x192 → save as public/icon-192.png</li>
+                <li>512x512 → save as public/icon-512.png</li>
+            </ul>
+        </li>
+        <li>Or use online converter: https://cloudconvert.com/svg-to-png</li>
+    </ol>
+    
+    <p><strong>Alternative:</strong> Use this canvas converter</p>
+    
+    <canvas id="canvas" width="512" height="512"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const img = new Image();
+        img.onload = function() {
+            // Draw 512x512
+            ctx.drawImage(img, 0, 0, 512, 512);
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'icon-512.png';
+                a.click();
+            });
+            
+            // Draw 192x192
+            setTimeout(() => {
+                canvas.width = 192;
+                canvas.height = 192;
+                ctx.drawImage(img, 0, 0, 192, 192);
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'icon-192.png';
+                    a.click();
+                });
+            }, 1000);
+        };
+        img.src = '../public/favicon.svg';
+    </script>
+</body>
+</html>
