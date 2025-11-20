@@ -93,7 +93,12 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
     <div className="w-full md:w-80 border-r flex flex-col bg-background h-screen md:h-auto">
       <div className="p-3 md:p-4 border-b space-y-3 md:space-y-4 shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 md:gap-3 cursor-pointer flex-1 min-w-0" onClick={onShowProfile}>
+          <img 
+            src="https://cdn.poehali.dev/projects/b0613d0d-6136-4116-a054-5a5375f64c04/files/c2098d59-62fb-4807-9781-76e9eff78292.jpg" 
+            alt="Peeky" 
+            className="h-10 w-10 object-contain shrink-0"
+          />
+          <div className="flex items-center gap-2 md:gap-3 cursor-pointer flex-1 min-w-0 ml-2" onClick={onShowProfile}>
             <div className="relative shrink-0">
               <Avatar className="h-9 w-9 md:h-10 md:w-10">
                 <AvatarImage src={user?.avatar_url || undefined} />
