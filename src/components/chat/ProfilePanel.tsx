@@ -209,7 +209,6 @@ export default function ProfilePanel({ onClose }: ProfilePanelProps) {
           </div>
         )}
       </div>
-      </div>
 
       <div className="p-4 border-t space-y-2">
         {isEditing ? (
