@@ -83,5 +83,23 @@ export const authService = {
 
   logout(): void {
     this.clearAuthState();
+  },
+
+  getSessionInfo(): { hasExpiry: boolean; daysRemaining: number; expiryDate: Date | null } {
+    const expiry = localStorage.getItem(EXPIRY_KEY);
+    if (!expiry) {
+      return { hasExpiry: false, daysRemaining: 0, expiryDate: null };
+    }
+    
+    const expiryTime = parseInt(expiry, 10);
+    const now = Date.now();
+    const msRemaining = expiryTime - now;
+    const daysRemaining = Math.ceil(msRemaining / (24 * 60 * 60 * 1000));
+    
+    return {
+      hasExpiry: true,
+      daysRemaining: Math.max(0, daysRemaining),
+      expiryDate: new Date(expiryTime)
+    };
   }
 };
