@@ -11,7 +11,6 @@ from psycopg2.extras import RealDictCursor
 from typing import Dict, Any
 import hashlib
 import secrets
-from datetime import datetime, timedelta
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 JWT_SECRET = os.environ.get('JWT_SECRET', 'default-secret-key')
