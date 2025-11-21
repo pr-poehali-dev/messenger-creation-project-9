@@ -5,8 +5,8 @@ import { registerPushToken } from '@/lib/pushNotifications';
 import { subscribeToPushNotifications } from '@/utils/pushNotifications';
 
 interface AuthContextType extends AuthState {
-  login: (phone: string, password: string) => Promise<void>;
-  register: (username: string, phone: string, password: string) => Promise<void>;
+  login: (phone: string, password: string, rememberMe?: boolean) => Promise<void>;
+  register: (username: string, phone: string, password: string, rememberMe?: boolean) => Promise<void>;
   logout: () => void;
   updateUser: (user: User) => void;
 }
@@ -18,11 +18,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const state = authService.getAuthState();
-    setAuthState(state);
+    if (state.isAuthenticated && authService.isSessionExpired()) {
+      authService.logout();
+      setAuthState({ user: null, token: null, isAuthenticated: false });
+    } else {
+      setAuthState(state);
+    }
   }, []);
 
-  const login = async (phone: string, password: string) => {
-    const data = await authService.login(phone, password);
+  const login = async (phone: string, password: string, rememberMe = true) => {
+    const data = await authService.login(phone, password, rememberMe);
     setAuthState({ user: data.user, token: data.token, isAuthenticated: true });
     
     if (data.token) {
@@ -31,8 +36,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (username: string, phone: string, password: string) => {
-    const data = await authService.register(username, phone, password);
+  const register = async (username: string, phone: string, password: string, rememberMe = true) => {
+    const data = await authService.register(username, phone, password, rememberMe);
     setAuthState({ user: data.user, token: data.token, isAuthenticated: true });
     
     if (data.token) {

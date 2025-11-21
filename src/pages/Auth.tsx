@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 import AnimatedLogo from '@/components/AnimatedLogo';
@@ -17,6 +18,7 @@ export default function Auth() {
     phone: '',
     password: ''
   });
+  const [rememberMe, setRememberMe] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,14 +26,14 @@ export default function Auth() {
 
     try {
       if (isLogin) {
-        await login(formData.phone, formData.password);
+        await login(formData.phone, formData.password, rememberMe);
         toast.success('Добро пожаловать!');
       } else {
         if (!formData.phone.match(/^\+?[1-9]\d{1,14}$/)) {
           toast.error('Введите корректный номер телефона');
           return;
         }
-        await register(formData.username, formData.phone, formData.password);
+        await register(formData.username, formData.phone, formData.password, rememberMe);
         toast.success('Регистрация успешна!');
       }
     } catch (error) {
@@ -108,6 +110,22 @@ export default function Auth() {
                 />
               </div>
             </div>
+
+            {isLogin && (
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="remember"
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                />
+                <label
+                  htmlFor="remember"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                >
+                  Запомнить меня на 30 дней
+                </label>
+              </div>
+            )}
 
             <Button type="submit" className="w-full" size="lg" disabled={loading}>
               {loading ? (
