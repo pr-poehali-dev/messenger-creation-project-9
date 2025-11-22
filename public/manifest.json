@@ -9,25 +9,25 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "https://cdn.poehali.dev/projects/b0613d0d-6136-4116-a054-5a5375f64c04/files/ae1ac5a6-651b-4691-8571-c06b7f1e8303.jpg",
       "sizes": "any",
-      "type": "image/svg+xml",
+      "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "https://cdn.poehali.dev/files/5d486ee4-7637-417e-af02-1184a607930d.jpg",
+      "src": "https://cdn.poehali.dev/projects/b0613d0d-6136-4116-a054-5a5375f64c04/files/ae1ac5a6-651b-4691-8571-c06b7f1e8303.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "https://cdn.poehali.dev/files/5d486ee4-7637-417e-af02-1184a607930d.jpg",
+      "src": "https://cdn.poehali.dev/projects/b0613d0d-6136-4116-a054-5a5375f64c04/files/ae1ac5a6-651b-4691-8571-c06b7f1e8303.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "https://cdn.poehali.dev/files/5d486ee4-7637-417e-af02-1184a607930d.jpg",
+      "src": "https://cdn.poehali.dev/projects/b0613d0d-6136-4116-a054-5a5375f64c04/files/ae1ac5a6-651b-4691-8571-c06b7f1e8303.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "maskable"

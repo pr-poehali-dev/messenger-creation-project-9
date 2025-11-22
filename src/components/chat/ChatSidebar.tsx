@@ -94,7 +94,7 @@ export default function ChatSidebar({ chats, selectedChat, onSelectChat, onShowP
       <div className="p-3 md:p-4 border-b space-y-3 md:space-y-4 shrink-0">
         <div className="flex items-center justify-between">
           <img 
-            src="https://cdn.poehali.dev/projects/b0613d0d-6136-4116-a054-5a5375f64c04/files/c2098d59-62fb-4807-9781-76e9eff78292.jpg" 
+            src="https://cdn.poehali.dev/projects/b0613d0d-6136-4116-a054-5a5375f64c04/files/ae1ac5a6-651b-4691-8571-c06b7f1e8303.jpg" 
             alt="Peeky" 
             className="h-10 w-10 object-contain shrink-0"
           />
