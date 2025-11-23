@@ -165,7 +165,7 @@ export default function CategoryPage() {
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => setSortBy('default')}
-                    className={`px-4 py-2 rounded-xl font-semibold transition-all ${
+                    className={`px-3 py-2 text-sm md:px-4 md:text-base rounded-xl font-semibold transition-all ${
                       sortBy === 'default'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -175,47 +175,51 @@ export default function CategoryPage() {
                   </button>
                   <button
                     onClick={() => setSortBy('price-asc')}
-                    className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-1 ${
+                    className={`px-3 py-2 text-sm md:px-4 md:text-base rounded-xl font-semibold transition-all flex items-center gap-1 ${
                       sortBy === 'price-asc'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    <Icon name="ArrowUp" className="h-4 w-4" />
-                    Дешевле
+                    <Icon name="ArrowUp" className="h-3 w-3 md:h-4 md:w-4" />
+                    <span className="hidden xs:inline">Дешевле</span>
+                    <span className="xs:hidden">↑ Цена</span>
                   </button>
                   <button
                     onClick={() => setSortBy('price-desc')}
-                    className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-1 ${
+                    className={`px-3 py-2 text-sm md:px-4 md:text-base rounded-xl font-semibold transition-all flex items-center gap-1 ${
                       sortBy === 'price-desc'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    <Icon name="ArrowDown" className="h-4 w-4" />
-                    Дороже
+                    <Icon name="ArrowDown" className="h-3 w-3 md:h-4 md:w-4" />
+                    <span className="hidden xs:inline">Дороже</span>
+                    <span className="xs:hidden">↓ Цена</span>
                   </button>
                   <button
                     onClick={() => setSortBy('rating')}
-                    className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-1 ${
+                    className={`px-3 py-2 text-sm md:px-4 md:text-base rounded-xl font-semibold transition-all flex items-center gap-1 ${
                       sortBy === 'rating'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    <Icon name="Star" className="h-4 w-4" />
-                    По рейтингу
+                    <Icon name="Star" className="h-3 w-3 md:h-4 md:w-4" />
+                    <span className="hidden xs:inline">По рейтингу</span>
+                    <span className="xs:hidden">★</span>
                   </button>
                   <button
                     onClick={() => setSortBy('popular')}
-                    className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-1 ${
+                    className={`px-3 py-2 text-sm md:px-4 md:text-base rounded-xl font-semibold transition-all flex items-center gap-1 ${
                       sortBy === 'popular'
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    <Icon name="TrendingUp" className="h-4 w-4" />
-                    Популярные
+                    <Icon name="TrendingUp" className="h-3 w-3 md:h-4 md:w-4" />
+                    <span className="hidden xs:inline">Популярные</span>
+                    <span className="xs:hidden">🔥</span>
                   </button>
                 </div>
               </div>

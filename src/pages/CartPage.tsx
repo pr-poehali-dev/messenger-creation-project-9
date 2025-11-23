@@ -124,10 +124,11 @@ export default function CartPage() {
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Корзина</h1>
-            <Button variant="ghost" onClick={clearCart} className="hover:bg-red-100 text-red-600 font-semibold rounded-xl transition-all hover:scale-105 active:scale-95">
-              Очистить всё
+          <div className="flex items-center justify-between mb-6 md:mb-8">
+            <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Корзина</h1>
+            <Button variant="ghost" onClick={clearCart} className="text-sm md:text-base hover:bg-red-100 text-red-600 font-semibold rounded-xl transition-all hover:scale-105 active:scale-95">
+              <span className="hidden sm:inline">Очистить всё</span>
+              <span className="sm:hidden">Очистить</span>
             </Button>
           </div>
 

@@ -139,21 +139,21 @@ export default function ProductPage() {
             />
           </div>
 
-          <div className="flex flex-col bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
-            <h1 className="text-4xl font-black mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{product.name}</h1>
+          <div className="flex flex-col bg-white/80 backdrop-blur-sm rounded-3xl p-4 md:p-8 shadow-xl">
+            <h1 className="text-2xl md:text-4xl font-black mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{product.name}</h1>
 
             <div className="flex items-center gap-2 mb-6">
-              <div className="flex items-center gap-1 bg-yellow-50 rounded-full px-3 py-1.5">
-                <Icon name="Star" className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                <span className="text-lg font-bold text-yellow-700">{product.rating}</span>
+              <div className="flex items-center gap-1 bg-yellow-50 rounded-full px-2 py-1 md:px-3 md:py-1.5">
+                <Icon name="Star" className="h-4 w-4 md:h-5 md:w-5 fill-yellow-400 text-yellow-400" />
+                <span className="text-base md:text-lg font-bold text-yellow-700">{product.rating}</span>
               </div>
-              <span className="text-gray-600 font-medium">
+              <span className="text-sm md:text-base text-gray-600 font-medium">
                 {product.reviews_count} отзывов
               </span>
             </div>
 
-            <div className="flex items-baseline gap-4 mb-6">
-              <span className="text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <div className="flex items-baseline gap-2 md:gap-4 mb-6">
+              <span className="text-3xl md:text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 {parseFloat(String(product.price)).toLocaleString()} ₽
               </span>
               {product.old_price && (
