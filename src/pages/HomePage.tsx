@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import Icon from '@/components/ui/icon'
 import { useCart } from '@/contexts/CartContext'
+import { useProducts } from '@/contexts/ProductsContext'
 import { toast } from 'sonner'
 import { useSwipeable } from 'react-swipeable'
 
@@ -40,11 +41,11 @@ const categoryIcons: Record<string, string> = {
 
 export default function HomePage() {
   const [categories, setCategories] = useState<Category[]>([])
-  const [products, setProducts] = useState<Product[]>([])
   const [clickedCards, setClickedCards] = useState<Set<number>>(new Set())
   const [isLoading, setIsLoading] = useState(true)
   const [showContent, setShowContent] = useState(false)
   const { addToCart } = useCart()
+  const { products } = useProducts()
   const navigate = useNavigate()
 
   const swipeHandlers = useSwipeable({
@@ -84,7 +85,6 @@ export default function HomePage() {
       .then(res => res.json())
       .then(data => {
         setCategories(data.categories || [])
-        setProducts(data.products || [])
       })
       .catch(console.error)
       .finally(() => {

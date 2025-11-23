@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { SellerAuthProvider } from "@/contexts/SellerAuthContext";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
+import { ProductsProvider } from "@/contexts/ProductsContext";
 import HomePage from "./pages/HomePage";
 import CategoryPage from "./pages/CategoryPage";
 import ProductPage from "./pages/ProductPage";
@@ -39,9 +40,10 @@ const App = () => {
         <TooltipProvider>
           <SellerAuthProvider>
             <CustomerAuthProvider>
-              <CartProvider>
-                <Toaster />
-                <Sonner />
+              <ProductsProvider>
+                <CartProvider>
+                  <Toaster />
+                  <Sonner />
                 {isSeller ? (
                   <Routes>
                     <Route path="/" element={<Navigate to="/seller/login" replace />} />
@@ -100,7 +102,8 @@ const App = () => {
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
                 )}
-              </CartProvider>
+                </CartProvider>
+              </ProductsProvider>
             </CustomerAuthProvider>
           </SellerAuthProvider>
         </TooltipProvider>

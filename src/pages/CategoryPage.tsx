@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSwipeable } from 'react-swipeable'
 import Header from '@/components/Header'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import ProductCard from '@/components/ProductCard'
 import Icon from '@/components/ui/icon'
+import { useProducts } from '@/contexts/ProductsContext'
 
 interface Product {
   id: number
@@ -31,9 +33,20 @@ const categoryIcons: Record<string, string> = {
 export default function CategoryPage() {
   const { categoryId } = useParams<{ categoryId: string }>()
   const navigate = useNavigate()
-  const [products, setProducts] = useState<Product[]>([])
+  const { getProductsByCategory } = useProducts()
   const [category, setCategory] = useState<Category | null>(null)
   const [showContent, setShowContent] = useState(false)
+  
+  const products = getProductsByCategory(Number(categoryId)).map(p => ({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    old_price: p.old_price,
+    image: p.image_url,
+    rating: p.rating,
+    category_id: p.category_id,
+    slug: p.slug
+  }))
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
@@ -62,124 +75,6 @@ export default function CategoryPage() {
 
     const currentCategory = categories.find(c => c.id === Number(categoryId))
     setCategory(currentCategory || null)
-
-    const mockProducts: Product[] = [
-      {
-        id: 1,
-        name: 'Смартфон Galaxy S24',
-        price: 89990,
-        image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400',
-        rating: 4.8,
-        category_id: 1
-      },
-      {
-        id: 2,
-        name: 'Ноутбук MacBook Pro',
-        price: 179990,
-        image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400',
-        rating: 4.9,
-        category_id: 1
-      },
-      {
-        id: 3,
-        name: 'Беспроводные наушники',
-        price: 24990,
-        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
-        rating: 4.7,
-        category_id: 1
-      },
-      {
-        id: 4,
-        name: 'Футболка классическая',
-        price: 1990,
-        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
-        rating: 4.5,
-        category_id: 2
-      },
-      {
-        id: 5,
-        name: 'Джинсы slim fit',
-        price: 3990,
-        image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400',
-        rating: 4.6,
-        category_id: 2
-      },
-      {
-        id: 6,
-        name: 'Куртка зимняя',
-        price: 12990,
-        image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400',
-        rating: 4.8,
-        category_id: 2
-      },
-      {
-        id: 7,
-        name: 'Гарри Поттер. Полное собрание',
-        price: 4990,
-        image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400',
-        rating: 4.9,
-        category_id: 3
-      },
-      {
-        id: 8,
-        name: 'Атомные привычки',
-        price: 899,
-        image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400',
-        rating: 4.8,
-        category_id: 3
-      },
-      {
-        id: 9,
-        name: 'Набор кофейных чашек',
-        price: 2490,
-        image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400',
-        rating: 4.6,
-        category_id: 4
-      },
-      {
-        id: 10,
-        name: 'Комнатное растение',
-        price: 1290,
-        image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400',
-        rating: 4.7,
-        category_id: 4
-      },
-      {
-        id: 11,
-        name: 'Йога-коврик',
-        price: 1990,
-        image: 'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400',
-        rating: 4.5,
-        category_id: 5
-      },
-      {
-        id: 12,
-        name: 'Гантели 5кг пара',
-        price: 3490,
-        image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400',
-        rating: 4.7,
-        category_id: 5
-      },
-      {
-        id: 13,
-        name: 'Набор кистей для макияжа',
-        price: 2990,
-        image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400',
-        rating: 4.6,
-        category_id: 6
-      },
-      {
-        id: 14,
-        name: 'Увлажняющий крем',
-        price: 1790,
-        image: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400',
-        rating: 4.8,
-        category_id: 6
-      }
-    ]
-
-    const filteredProducts = mockProducts.filter(p => p.category_id === Number(categoryId))
-    setProducts(filteredProducts)
   }, [categoryId])
 
   if (!category) {
@@ -206,13 +101,11 @@ export default function CategoryPage() {
       <Header />
 
       <main {...swipeHandlers} className="container mx-auto px-4 py-8">
-        <button
-          onClick={() => navigate('/')}
-          className="mb-6 flex items-center gap-2 text-purple-600 hover:text-purple-800 font-semibold transition-colors animate-slide-in-left"
-        >
-          <Icon name="ArrowLeft" className="h-5 w-5" />
-          Назад к категориям
-        </button>
+        <Breadcrumbs 
+          items={[
+            { label: category.name }
+          ]}
+        />
 
         <div className={`transition-opacity duration-700 ${showContent ? 'opacity-100' : 'opacity-0'}`}>
           <div className="mb-8 flex items-center gap-4 animate-slide-in-left">

@@ -10,6 +10,7 @@ import Icon from '@/components/ui/icon'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { useSwipeable } from 'react-swipeable'
+import { useProducts } from '@/contexts/ProductsContext'
 import {
   Dialog,
   DialogContent,
@@ -40,7 +41,8 @@ interface Product {
 
 export default function SellerProductsPage() {
   const navigate = useNavigate()
-  const [products, setProducts] = useState<Product[]>([
+  const { products, addProduct, updateProduct, deleteProduct } = useProducts()
+  const [displayProducts] = useState<Product[]>([
     {
       id: 1,
       name: 'iPhone 15 Pro Max',
@@ -146,28 +148,23 @@ export default function SellerProductsPage() {
     e.preventDefault()
 
     if (editingProduct) {
-      setProducts(products.map(p => 
-        p.id === editingProduct.id 
-          ? {
-              ...p,
-              name: formData.name,
-              price: Number(formData.price),
-              old_price: formData.old_price ? Number(formData.old_price) : null,
-              stock: Number(formData.stock),
-              category: formData.category,
-              category_id: formData.category_id,
-              image_url: formData.image_url,
-              status: formData.status
-            }
-          : p
-      ))
+      updateProduct(editingProduct.id, {
+        name: formData.name,
+        price: Number(formData.price),
+        old_price: formData.old_price ? Number(formData.old_price) : null,
+        stock: Number(formData.stock),
+        category: formData.category,
+        category_id: formData.category_id,
+        image_url: formData.image_url,
+        status: formData.status
+      })
       toast.success('Товар обновлён!', {
         description: formData.name,
         icon: '✅',
       })
     } else {
       const newProduct: Product = {
-        id: Math.max(...products.map(p => p.id)) + 1,
+        id: Math.max(...products.map(p => p.id), 0) + 1,
         name: formData.name,
         price: Number(formData.price),
         old_price: formData.old_price ? Number(formData.old_price) : null,
@@ -175,9 +172,12 @@ export default function SellerProductsPage() {
         category: formData.category,
         category_id: formData.category_id,
         image_url: formData.image_url || 'https://picsum.photos/seed/new/300',
+        slug: formData.name.toLowerCase().replace(/\s+/g, '-'),
+        rating: 4.5,
+        reviews_count: 0,
         status: formData.status
       }
-      setProducts([...products, newProduct])
+      addProduct(newProduct)
       toast.success('Товар добавлен!', {
         description: formData.name,
         icon: '🎉',
@@ -189,7 +189,7 @@ export default function SellerProductsPage() {
 
   const handleDelete = (id: number) => {
     const product = products.find(p => p.id === id)
-    setProducts(products.filter(p => p.id !== id))
+    deleteProduct(id)
     toast.error('Товар удалён', {
       description: product?.name,
       icon: '🗑️',
