@@ -19,8 +19,6 @@ import SellerOrdersPage from "./pages/seller/SellerOrdersPage";
 import SellerSettingsPage from "./pages/seller/SellerSettingsPage";
 import SellerAnalyticsPage from "./pages/seller/SellerAnalyticsPage";
 import SellerProtectedRoute from "./components/SellerProtectedRoute";
-import { useEffect, useState } from "react";
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -31,12 +29,8 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const [isSeller, setIsSeller] = useState(false)
-
-  useEffect(() => {
-    const hostname = window.location.hostname
-    setIsSeller(hostname.startsWith('seller.'))
-  }, [])
+  const hostname = window.location.hostname
+  const isSeller = hostname.startsWith('seller.')
 
   return (
     <BrowserRouter>
