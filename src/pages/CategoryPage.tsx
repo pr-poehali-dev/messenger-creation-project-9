@@ -36,8 +36,11 @@ export default function CategoryPage() {
   const { getProductsByCategory } = useProducts()
   const [category, setCategory] = useState<Category | null>(null)
   const [showContent, setShowContent] = useState(false)
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000])
+  const [minPrice, setMinPrice] = useState(0)
+  const [maxPrice, setMaxPrice] = useState(200000)
   
-  const products = getProductsByCategory(Number(categoryId)).map(p => ({
+  const allProducts = getProductsByCategory(Number(categoryId)).map(p => ({
     id: p.id,
     name: p.name,
     price: p.price,
@@ -47,6 +50,8 @@ export default function CategoryPage() {
     category_id: p.category_id,
     slug: p.slug
   }))
+  
+  const products = allProducts.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1])
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
@@ -75,7 +80,16 @@ export default function CategoryPage() {
 
     const currentCategory = categories.find(c => c.id === Number(categoryId))
     setCategory(currentCategory || null)
-  }, [categoryId])
+    
+    if (allProducts.length > 0) {
+      const prices = allProducts.map(p => p.price)
+      const min = Math.min(...prices)
+      const max = Math.max(...prices)
+      setMinPrice(min)
+      setMaxPrice(max)
+      setPriceRange([min, max])
+    }
+  }, [categoryId, allProducts.length])
 
   if (!category) {
     return (
@@ -122,6 +136,62 @@ export default function CategoryPage() {
             </div>
           </div>
 
+          {allProducts.length > 0 && (
+            <div className="mb-8 bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg animate-slide-in-right">
+              <div className="flex items-center gap-2 mb-4">
+                <Icon name="SlidersHorizontal" className="h-5 w-5 text-purple-600" />
+                <h3 className="text-lg font-bold text-gray-800">Фильтр по цене</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <label className="text-sm text-gray-600 mb-1 block">От</label>
+                    <input
+                      type="number"
+                      value={priceRange[0]}
+                      onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+                      min={minPrice}
+                      max={priceRange[1]}
+                      className="w-full px-3 py-2 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none transition-colors"
+                      placeholder="0"
+                    />
+                  </div>
+                  <div className="pt-6">
+                    <Icon name="Minus" className="h-4 w-4 text-gray-400" />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-sm text-gray-600 mb-1 block">До</label>
+                    <input
+                      type="number"
+                      value={priceRange[1]}
+                      onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+                      min={priceRange[0]}
+                      max={maxPrice}
+                      className="w-full px-3 py-2 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none transition-colors"
+                      placeholder="200000"
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">
+                    Найдено: <span className="font-bold text-purple-600">{products.length}</span> из {allProducts.length}
+                  </span>
+                  {(priceRange[0] !== minPrice || priceRange[1] !== maxPrice) && (
+                    <button
+                      onClick={() => setPriceRange([minPrice, maxPrice])}
+                      className="text-purple-600 hover:text-purple-800 font-semibold transition-colors flex items-center gap-1"
+                    >
+                      <Icon name="X" className="h-4 w-4" />
+                      Сбросить
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {products.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product, index) => (
@@ -133,6 +203,18 @@ export default function CategoryPage() {
                   <ProductCard product={product} />
                 </div>
               ))}
+            </div>
+          ) : allProducts.length > 0 ? (
+            <div className="text-center py-16">
+              <Icon name="Search" className="h-24 w-24 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">Ничего не найдено</h3>
+              <p className="text-gray-600">Попробуйте изменить диапазон цен</p>
+              <button
+                onClick={() => setPriceRange([minPrice, maxPrice])}
+                className="mt-4 px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold hover:shadow-lg transition-all"
+              >
+                Сбросить фильтр
+              </button>
             </div>
           ) : (
             <div className="text-center py-16">
