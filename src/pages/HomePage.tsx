@@ -84,29 +84,29 @@ export default function HomePage() {
       <main className="container mx-auto px-4 py-8">
         <div className={`transition-opacity duration-500 ${isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'}`}>
           <section className="mb-12">
-            <div className="h-9 w-48 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 skeleton-box"></div>
+            <div className="h-9 w-48 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 skeleton-box skeleton-box-slow"></div>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/80 backdrop-blur-sm">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 skeleton-box"></div>
-                  <div className="h-4 w-20 bg-gray-200 rounded skeleton-box"></div>
+                  <div className="h-4 w-20 bg-gray-200 rounded skeleton-box skeleton-box-fast"></div>
                 </div>
               ))}
             </div>
           </section>
 
           <section>
-            <div className="h-9 w-32 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 skeleton-box"></div>
+            <div className="h-9 w-32 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 skeleton-box skeleton-box-slow"></div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="rounded-2xl overflow-hidden bg-white/90 backdrop-blur-sm">
-                  <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 skeleton-box"></div>
+                  <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 skeleton-box skeleton-box-slow"></div>
                   <div className="p-5 space-y-3">
                     <div className="h-6 bg-gray-200 rounded w-3/4 skeleton-box"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2 skeleton-box"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 skeleton-box skeleton-box-fast"></div>
                     <div className="flex items-baseline gap-2">
                       <div className="h-8 bg-gradient-to-r from-purple-200 to-pink-200 rounded w-24 skeleton-box"></div>
-                      <div className="h-4 bg-gray-200 rounded w-16 skeleton-box"></div>
+                      <div className="h-4 bg-gray-200 rounded w-16 skeleton-box skeleton-box-fast"></div>
                     </div>
                     <div className="h-10 bg-gradient-to-r from-purple-200 to-pink-200 rounded-xl skeleton-box"></div>
                   </div>

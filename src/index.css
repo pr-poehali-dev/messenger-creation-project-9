@@ -365,4 +365,12 @@
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
   }
+
+  .skeleton-box-fast::after {
+    animation: shimmer 1.2s infinite;
+  }
+
+  .skeleton-box-slow::after {
+    animation: shimmer 3s infinite;
+  }
 }
