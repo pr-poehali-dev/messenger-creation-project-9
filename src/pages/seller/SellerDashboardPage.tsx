@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import SellerHeader from '@/components/SellerHeader'
+import SwipeHint from '@/components/SwipeHint'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Icon from '@/components/ui/icon'
 import { Badge } from '@/components/ui/badge'
@@ -101,6 +102,11 @@ export default function SellerDashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <SellerHeader />
+      <SwipeHint 
+        storageKey="seller-swipe-hint-seen"
+        leftText="Товары"
+        rightText="Настройки"
+      />
 
       <main {...swipeHandlers} className="container mx-auto px-4 py-8">
         <div className="mb-8">

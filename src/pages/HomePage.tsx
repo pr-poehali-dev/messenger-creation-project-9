@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Header from '@/components/Header'
+import SwipeHint from '@/components/SwipeHint'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -102,6 +103,11 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <Header />
+      <SwipeHint 
+        storageKey="customer-swipe-hint-seen"
+        leftText="Корзина"
+        rightText="Профиль"
+      />
 
       <main {...swipeHandlers} className="container mx-auto px-4 py-8">
         <div className={`transition-opacity duration-500 ${isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'}`}>
