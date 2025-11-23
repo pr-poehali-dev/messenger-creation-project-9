@@ -17,10 +17,10 @@ export default function ProductPage() {
   if (!product) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
-        <div className="text-center bg-white rounded-3xl p-12 shadow-xl border border-slate-200/50">
-          <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-2xl font-bold mb-4 text-slate-800">Товар не найден</h2>
-          <Link to="/" className="inline-block bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white font-bold px-8 py-4 rounded-2xl transition-all hover:shadow-lg hover:shadow-violet-500/50">
+        <div className="text-center bg-white rounded-2xl sm:rounded-3xl p-8 sm:p-12 shadow-xl border border-slate-200/50">
+          <div className="text-5xl sm:text-6xl mb-4">😕</div>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4 text-slate-800">Товар не найден</h2>
+          <Link to="/" className="inline-block bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl transition-all hover:shadow-lg hover:shadow-violet-500/50 active:scale-95 touch-manipulation">
             Вернуться на главную
           </Link>
         </div>
@@ -40,21 +40,21 @@ export default function ProductPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-slate-200/50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <Link to="/" className="flex items-center gap-3 group">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 group active:scale-95 transition-transform">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-2xl blur-sm group-hover:blur-md transition-all"></div>
-                <div className="relative bg-gradient-to-br from-violet-600 to-fuchsia-600 p-2.5 rounded-2xl">
-                  <Sparkles className="w-6 h-6 text-white" />
+                <div className="relative bg-gradient-to-br from-violet-600 to-fuchsia-600 p-2 sm:p-2.5 rounded-2xl">
+                  <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
               </div>
-              <span className="text-2xl font-black bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="text-xl sm:text-2xl font-black bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 bg-clip-text text-transparent">
                 ShopFlow
               </span>
             </Link>
             
-            <div className="flex-1 max-w-2xl mx-8 hidden md:block">
+            <div className="flex-1 max-w-2xl mx-4 sm:mx-8 hidden md:block">
               <div className="relative group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 group-hover:text-violet-600 transition-colors" />
                 <input
@@ -65,14 +65,14 @@ export default function ProductPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button className="p-3 hover:bg-slate-100 rounded-2xl transition-all">
-                <User className="w-6 h-6 text-slate-700" />
+            <div className="flex items-center gap-1 sm:gap-2">
+              <button className="p-2 sm:p-3 hover:bg-slate-100 rounded-2xl transition-all active:scale-95 touch-manipulation">
+                <User className="w-5 h-5 sm:w-6 sm:h-6 text-slate-700" />
               </button>
-              <Link to="/cart" className="relative p-3 hover:bg-slate-100 rounded-2xl transition-all group">
-                <ShoppingCart className="w-6 h-6 text-slate-700 group-hover:text-violet-600 transition-colors" />
+              <Link to="/cart" className="relative p-2 sm:p-3 hover:bg-slate-100 rounded-2xl transition-all group active:scale-95 touch-manipulation">
+                <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 text-slate-700 group-hover:text-violet-600 transition-colors" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shadow-lg">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white text-xs font-bold w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shadow-lg">
                     {totalItems}
                   </span>
                 )}
@@ -82,15 +82,15 @@ export default function ProductPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-12">
-        <Link to={`/category/${product.category}`} className="inline-flex items-center text-slate-600 hover:text-violet-600 mb-8 font-semibold transition-colors group">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
+        <Link to={`/category/${product.category}`} className="inline-flex items-center text-slate-600 hover:text-violet-600 mb-4 sm:mb-8 font-semibold transition-colors group active:scale-95 touch-manipulation">
           <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           Назад к категории
         </Link>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          <div className="bg-white rounded-3xl p-8 border border-slate-200/50 shadow-xl">
-            <div className="aspect-square bg-slate-100 rounded-2xl overflow-hidden">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-12">
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-slate-200/50 shadow-xl">
+            <div className="aspect-square bg-slate-100 rounded-xl sm:rounded-2xl overflow-hidden">
               <img
                 src={product.image}
                 alt={product.name}
@@ -100,84 +100,84 @@ export default function ProductPage() {
           </div>
 
           <div>
-            <div className="bg-white rounded-3xl p-8 border border-slate-200/50 shadow-xl mb-6">
-              <h1 className="text-4xl font-black mb-4 text-slate-800">{product.name}</h1>
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-slate-200/50 shadow-xl mb-4 sm:mb-6">
+              <h1 className="text-2xl sm:text-4xl font-black mb-3 sm:mb-4 text-slate-800">{product.name}</h1>
               
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex items-center bg-yellow-50 px-4 py-2 rounded-2xl">
+              <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+                <div className="flex items-center bg-yellow-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300'}`}
+                      className={`w-4 h-4 sm:w-5 sm:h-5 ${i < Math.floor(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300'}`}
                     />
                   ))}
-                  <span className="ml-2 font-bold text-slate-800">{product.rating}</span>
+                  <span className="ml-1.5 sm:ml-2 font-bold text-sm sm:text-base text-slate-800">{product.rating}</span>
                 </div>
-                <span className="text-slate-600">({product.reviews} отзывов)</span>
+                <span className="text-sm sm:text-base text-slate-600">({product.reviews} отзывов)</span>
               </div>
 
-              <div className="text-5xl font-black mb-6 bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
+              <div className="text-3xl sm:text-5xl font-black mb-4 sm:mb-6 bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
                 {product.price.toLocaleString()} ₽
               </div>
 
               {product.inStock && (
-                <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-2xl mb-6 font-semibold">
-                  <Package className="w-5 h-5" />
+                <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl mb-4 sm:mb-6 font-semibold text-sm sm:text-base">
+                  <Package className="w-4 h-4 sm:w-5 sm:h-5" />
                   В наличии
                 </div>
               )}
 
-              <p className="text-slate-700 text-lg mb-8 leading-relaxed">
+              <p className="text-slate-700 text-sm sm:text-lg mb-6 sm:mb-8 leading-relaxed">
                 {product.description}
               </p>
 
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white font-bold py-5 rounded-2xl transition-all hover:shadow-2xl hover:shadow-violet-500/50 active:scale-95 flex items-center justify-center gap-3 text-lg mb-6"
+                className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white font-bold py-4 sm:py-5 rounded-xl sm:rounded-2xl transition-all hover:shadow-2xl hover:shadow-violet-500/50 active:scale-95 touch-manipulation flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg mb-4 sm:mb-6"
               >
-                <ShoppingCart className="w-6 h-6" />
+                <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
                 Добавить в корзину
               </button>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-slate-50 rounded-2xl">
-                  <TruckIcon className="w-8 h-8 mx-auto mb-2 text-violet-600" />
-                  <div className="text-sm font-semibold text-slate-700">Доставка</div>
+              <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                <div className="text-center p-3 sm:p-4 bg-slate-50 rounded-xl sm:rounded-2xl">
+                  <TruckIcon className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-violet-600" />
+                  <div className="text-xs sm:text-sm font-semibold text-slate-700">Доставка</div>
                   <div className="text-xs text-slate-500">2-3 дня</div>
                 </div>
-                <div className="text-center p-4 bg-slate-50 rounded-2xl">
-                  <Shield className="w-8 h-8 mx-auto mb-2 text-violet-600" />
-                  <div className="text-sm font-semibold text-slate-700">Гарантия</div>
+                <div className="text-center p-3 sm:p-4 bg-slate-50 rounded-xl sm:rounded-2xl">
+                  <Shield className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-violet-600" />
+                  <div className="text-xs sm:text-sm font-semibold text-slate-700">Гарантия</div>
                   <div className="text-xs text-slate-500">1 год</div>
                 </div>
-                <div className="text-center p-4 bg-slate-50 rounded-2xl">
-                  <Package className="w-8 h-8 mx-auto mb-2 text-violet-600" />
-                  <div className="text-sm font-semibold text-slate-700">Возврат</div>
+                <div className="text-center p-3 sm:p-4 bg-slate-50 rounded-xl sm:rounded-2xl">
+                  <Package className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 text-violet-600" />
+                  <div className="text-xs sm:text-sm font-semibold text-slate-700">Возврат</div>
                   <div className="text-xs text-slate-500">14 дней</div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl p-8 border border-slate-200/50 shadow-xl">
-              <h2 className="text-2xl font-black mb-6 bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-slate-200/50 shadow-xl">
+              <h2 className="text-xl sm:text-2xl font-black mb-4 sm:mb-6 bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
                 Характеристики
               </h2>
-              <ul className="space-y-4">
-                <li className="flex justify-between py-3 border-b border-slate-100">
-                  <span className="text-slate-600">Бренд</span>
-                  <span className="font-bold text-slate-800">{product.name.split(' ')[0]}</span>
+              <ul className="space-y-3 sm:space-y-4">
+                <li className="flex justify-between py-2 sm:py-3 border-b border-slate-100">
+                  <span className="text-sm sm:text-base text-slate-600">Бренд</span>
+                  <span className="font-bold text-sm sm:text-base text-slate-800">{product.name.split(' ')[0]}</span>
                 </li>
-                <li className="flex justify-between py-3 border-b border-slate-100">
-                  <span className="text-slate-600">Гарантия</span>
-                  <span className="font-bold text-slate-800">1 год</span>
+                <li className="flex justify-between py-2 sm:py-3 border-b border-slate-100">
+                  <span className="text-sm sm:text-base text-slate-600">Гарантия</span>
+                  <span className="font-bold text-sm sm:text-base text-slate-800">1 год</span>
                 </li>
-                <li className="flex justify-between py-3 border-b border-slate-100">
-                  <span className="text-slate-600">Доставка</span>
-                  <span className="font-bold text-slate-800">2-3 дня</span>
+                <li className="flex justify-between py-2 sm:py-3 border-b border-slate-100">
+                  <span className="text-sm sm:text-base text-slate-600">Доставка</span>
+                  <span className="font-bold text-sm sm:text-base text-slate-800">2-3 дня</span>
                 </li>
-                <li className="flex justify-between py-3">
-                  <span className="text-slate-600">Наличие</span>
-                  <span className="font-bold text-green-600">В наличии</span>
+                <li className="flex justify-between py-2 sm:py-3">
+                  <span className="text-sm sm:text-base text-slate-600">Наличие</span>
+                  <span className="font-bold text-sm sm:text-base text-green-600">В наличии</span>
                 </li>
               </ul>
             </div>
