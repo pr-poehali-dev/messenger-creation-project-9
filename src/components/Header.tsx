@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import Icon from '@/components/ui/icon'
 import { useCart } from '@/contexts/CartContext'
 import { useCustomerAuth } from '@/contexts/CustomerAuthContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import { useState } from 'react'
 import {
   Sheet,
@@ -17,10 +18,11 @@ import {
 export default function Header() {
   const { totalItems } = useCart()
   const { isAuthenticated } = useCustomerAuth()
+  const { theme, toggleTheme } = useTheme()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-purple-200/50 bg-white/80 backdrop-blur-xl shadow-lg">
+    <header className="sticky top-0 z-50 w-full border-b border-purple-200/50 dark:border-purple-900/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2 group">
@@ -42,14 +44,23 @@ export default function Header() {
 
           <div className="flex items-center gap-2">
             <div className="hidden md:flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={toggleTheme}
+                className="hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-full"
+              >
+                <Icon name={theme === 'dark' ? 'Sun' : 'Moon'} className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              </Button>
+
               {isAuthenticated ? (
-                <Button variant="ghost" size="icon" className="hover:bg-purple-100 transition-colors rounded-full" asChild>
+                <Button variant="ghost" size="icon" className="hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-full" asChild>
                   <Link to="/profile">
-                    <Icon name="User" className="h-5 w-5 text-purple-600" />
+                    <Icon name="User" className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </Link>
                 </Button>
               ) : (
-                <Button variant="ghost" className="hover:bg-purple-100 transition-colors rounded-full" asChild>
+                <Button variant="ghost" className="hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-full" asChild>
                   <Link to="/login">
                     <Icon name="LogIn" className="h-4 w-4 mr-2" />
                     Войти
@@ -57,7 +68,7 @@ export default function Header() {
                 </Button>
               )}
               
-              <Button variant="ghost" size="icon" className="relative hover:bg-purple-100 transition-colors rounded-full" asChild>
+              <Button variant="ghost" size="icon" className="relative hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-full" asChild>
                 <Link to="/cart">
                   <Icon name="ShoppingCart" className="h-5 w-5 text-purple-600" />
                   {totalItems > 0 && (
@@ -95,22 +106,31 @@ export default function Header() {
                   </div>
 
                   <div className="flex flex-col gap-2 mt-4">
+                    <Button 
+                      variant="ghost" 
+                      onClick={toggleTheme}
+                      className="justify-start hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-xl h-12"
+                    >
+                      <Icon name={theme === 'dark' ? 'Sun' : 'Moon'} className="h-5 w-5 mr-3 text-purple-600 dark:text-purple-400" />
+                      {theme === 'dark' ? 'Светлая тема' : 'Темная тема'}
+                    </Button>
+
                     {isAuthenticated ? (
                       <Button 
                         variant="ghost" 
-                        className="justify-start hover:bg-purple-100 transition-colors rounded-xl h-12" 
+                        className="justify-start hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-xl h-12" 
                         asChild
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Link to="/profile">
-                          <Icon name="User" className="h-5 w-5 mr-3 text-purple-600" />
+                          <Icon name="User" className="h-5 w-5 mr-3 text-purple-600 dark:text-purple-400" />
                           Профиль
                         </Link>
                       </Button>
                     ) : (
                       <Button 
                         variant="ghost" 
-                        className="justify-start hover:bg-purple-100 transition-colors rounded-xl h-12" 
+                        className="justify-start hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-xl h-12" 
                         asChild
                         onClick={() => setMobileMenuOpen(false)}
                       >
