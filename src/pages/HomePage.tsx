@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import PullToRefresh from 'react-simple-pull-to-refresh'
 import Header from '@/components/Header'
 import SwipeHint from '@/components/SwipeHint'
 import { Card, CardContent } from '@/components/ui/card'
@@ -79,20 +80,21 @@ export default function HomePage() {
     }, 600)
   }
 
+  const loadCategories = async () => {
+    try {
+      const res = await fetch('https://functions.poehali.dev/34e0420b-669c-42b4-9c05-40c5e47183fd')
+      if (!res.ok) throw new Error('Failed to fetch categories')
+      const data = await res.json()
+      setCategories(data.categories || [])
+    } catch (error) {
+      console.error('Error loading categories:', error)
+      setCategories([])
+    }
+  }
+
   useEffect(() => {
     setIsLoading(true)
-    fetch('https://functions.poehali.dev/34e0420b-669c-42b4-9c05-40c5e47183fd')
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch categories')
-        return res.json()
-      })
-      .then(data => {
-        setCategories(data.categories || [])
-      })
-      .catch(error => {
-        console.error('Error loading categories:', error)
-        setCategories([])
-      })
+    loadCategories()
       .finally(() => {
         setTimeout(() => {
           setIsLoading(false)
@@ -100,6 +102,14 @@ export default function HomePage() {
         }, 300)
       })
   }, [])
+
+  const handleRefresh = async () => {
+    await loadCategories()
+    toast.success('Обновлено!', {
+      icon: '🔄',
+      duration: 1500,
+    })
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
@@ -110,7 +120,26 @@ export default function HomePage() {
         rightText="Профиль"
       />
 
-      <main {...swipeHandlers} className="container mx-auto px-4 py-8">
+      <PullToRefresh 
+        onRefresh={handleRefresh}
+        pullingContent={
+          <div className="flex justify-center py-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center shadow-lg">
+              <Icon name="ArrowDown" className="h-5 w-5 text-white" />
+            </div>
+          </div>
+        }
+        refreshingContent={
+          <div className="flex justify-center py-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center shadow-lg">
+              <Icon name="Loader2" className="h-5 w-5 text-white animate-spin" />
+            </div>
+          </div>
+        }
+        resistance={2}
+        maxPullDownDistance={80}
+      >
+        <main {...swipeHandlers} className="container mx-auto px-4 py-8">
         <div className={`transition-opacity duration-500 ${isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'}`}>
           <section className="mb-12">
             <div className="h-9 w-48 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 skeleton-box skeleton-box-slow"></div>
@@ -239,6 +268,7 @@ export default function HomePage() {
         </section>
         </div>
       </main>
+      </PullToRefresh>
     </div>
   )
 }

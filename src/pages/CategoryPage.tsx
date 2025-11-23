@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSwipeable } from 'react-swipeable'
+import PullToRefresh from 'react-simple-pull-to-refresh'
+import { toast } from 'sonner'
 import Header from '@/components/Header'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ProductCard from '@/components/ProductCard'
@@ -86,7 +88,7 @@ export default function CategoryPage() {
     return () => clearTimeout(timer)
   }, [])
 
-  useEffect(() => {
+  const loadCategory = () => {
     const categories: Category[] = [
       { id: 1, name: 'Электроника' },
       { id: 2, name: 'Одежда' },
@@ -107,7 +109,19 @@ export default function CategoryPage() {
       setMaxPrice(max)
       setPriceRange([min, max])
     }
+  }
+
+  useEffect(() => {
+    loadCategory()
   }, [categoryId, allProducts.length])
+
+  const handleRefresh = async () => {
+    loadCategory()
+    toast.success('Обновлено!', {
+      icon: '🔄',
+      duration: 1500,
+    })
+  }
 
   if (!category) {
     return (
@@ -132,7 +146,26 @@ export default function CategoryPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <Header />
 
-      <main {...swipeHandlers} className="container mx-auto px-4 py-8">
+      <PullToRefresh 
+        onRefresh={handleRefresh}
+        pullingContent={
+          <div className="flex justify-center py-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center shadow-lg">
+              <Icon name="ArrowDown" className="h-5 w-5 text-white" />
+            </div>
+          </div>
+        }
+        refreshingContent={
+          <div className="flex justify-center py-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center shadow-lg">
+              <Icon name="Loader2" className="h-5 w-5 text-white animate-spin" />
+            </div>
+          </div>
+        }
+        resistance={2}
+        maxPullDownDistance={80}
+      >
+        <main {...swipeHandlers} className="container mx-auto px-4 py-8">
         <Breadcrumbs 
           items={[
             { label: category.name }
@@ -313,6 +346,7 @@ export default function CategoryPage() {
           )}
         </div>
       </main>
+      </PullToRefresh>
     </div>
   )
 }
