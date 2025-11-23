@@ -148,6 +148,12 @@ export default function CustomerLoginPage() {
                       </div>
                     )}
                   </Button>
+
+                  <div className="text-center mt-4">
+                    <Link to="/forgot-password" className="text-sm text-purple-600 hover:text-purple-700 font-medium">
+                      Забыли пароль?
+                    </Link>
+                  </div>
                 </form>
               </CardContent>
             </Card>

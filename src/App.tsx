@@ -11,6 +11,7 @@ import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
 import ProfilePage from "./pages/ProfilePage";
 import CustomerLoginPage from "./pages/CustomerLoginPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import SellerLoginPage from "./pages/seller/SellerLoginPage";
 import SellerDashboardPage from "./pages/seller/SellerDashboardPage";
 import SellerProductsPage from "./pages/seller/SellerProductsPage";
@@ -98,6 +99,7 @@ const App = () => {
                     <Route path="/product/:slug" element={<ProductPage />} />
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/login" element={<CustomerLoginPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
