@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import Icon from '@/components/ui/icon'
 import { useCart } from '@/contexts/CartContext'
 import { toast } from 'sonner'
+import confetti from 'canvas-confetti'
 
 export default function CartPage() {
   const navigate = useNavigate()
@@ -46,6 +47,55 @@ export default function CartPage() {
         icon: '➕',
       })
     }
+  }
+
+  const handleCheckout = () => {
+    // Запускаем конфетти
+    const duration = 3000
+    const animationEnd = Date.now() + duration
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 }
+
+    function randomInRange(min: number, max: number) {
+      return Math.random() * (max - min) + min
+    }
+
+    const interval = setInterval(function() {
+      const timeLeft = animationEnd - Date.now()
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval)
+      }
+
+      const particleCount = 50 * (timeLeft / duration)
+
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        colors: ['#9333ea', '#ec4899', '#8b5cf6', '#d946ef']
+      })
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        colors: ['#9333ea', '#ec4899', '#8b5cf6', '#d946ef']
+      })
+    }, 250)
+
+    // Показываем успешное уведомление
+    toast.success('Заказ успешно оформлен! 🎉', {
+      description: `Сумма: ${totalPrice.toLocaleString()} ₽`,
+      duration: 4000,
+      icon: '✅',
+    })
+
+    // Очищаем корзину через секунду
+    setTimeout(() => {
+      clearCart()
+      setTimeout(() => {
+        navigate('/')
+      }, 1500)
+    }, 2000)
   }
 
   if (items.length === 0) {
@@ -173,7 +223,12 @@ export default function CartPage() {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold text-lg py-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all hover:scale-105" size="lg">
+                  <Button 
+                    onClick={handleCheckout}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold text-lg py-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all hover:scale-105 active:scale-95" 
+                    size="lg"
+                  >
+                    <Icon name="Sparkles" className="h-5 w-5 mr-2" />
                     Оформить заказ
                   </Button>
                 </CardContent>
