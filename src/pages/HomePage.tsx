@@ -41,6 +41,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const [clickedCards, setClickedCards] = useState<Set<number>>(new Set())
   const [isLoading, setIsLoading] = useState(true)
+  const [showContent, setShowContent] = useState(false)
   const { addToCart } = useCart()
 
   const handleAddToCart = (product: { id: number; name: string; price: number; image_url: string }) => {
@@ -64,7 +65,12 @@ export default function HomePage() {
         setProducts(data.products || [])
       })
       .catch(console.error)
-      .finally(() => setIsLoading(false))
+      .finally(() => {
+        setTimeout(() => {
+          setIsLoading(false)
+          setTimeout(() => setShowContent(true), 50)
+        }, 300)
+      })
   }, [])
 
   const filteredProducts = selectedCategory
@@ -76,43 +82,42 @@ export default function HomePage() {
       <Header />
 
       <main className="container mx-auto px-4 py-8">
-        {isLoading ? (
-          <>
-            <section className="mb-12">
-              <div className="h-9 w-48 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 animate-pulse"></div>
-              <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/80 backdrop-blur-sm animate-pulse">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-200 to-pink-200"></div>
-                    <div className="h-4 w-20 bg-gray-200 rounded"></div>
-                  </div>
-                ))}
-              </div>
-            </section>
+        <div className={`transition-opacity duration-500 ${isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'}`}>
+          <section className="mb-12">
+            <div className="h-9 w-48 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 animate-pulse"></div>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/80 backdrop-blur-sm animate-pulse">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-200 to-pink-200"></div>
+                  <div className="h-4 w-20 bg-gray-200 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </section>
 
-            <section>
-              <div className="h-9 w-32 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 animate-pulse"></div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {[...Array(8)].map((_, i) => (
-                  <div key={i} className="rounded-2xl overflow-hidden bg-white/90 backdrop-blur-sm animate-pulse">
-                    <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100"></div>
-                    <div className="p-5 space-y-3">
-                      <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                      <div className="flex items-baseline gap-2">
-                        <div className="h-8 bg-gradient-to-r from-purple-200 to-pink-200 rounded w-24"></div>
-                        <div className="h-4 bg-gray-200 rounded w-16"></div>
-                      </div>
-                      <div className="h-10 bg-gradient-to-r from-purple-200 to-pink-200 rounded-xl"></div>
+          <section>
+            <div className="h-9 w-32 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 animate-pulse"></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="rounded-2xl overflow-hidden bg-white/90 backdrop-blur-sm animate-pulse">
+                  <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100"></div>
+                  <div className="p-5 space-y-3">
+                    <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                    <div className="flex items-baseline gap-2">
+                      <div className="h-8 bg-gradient-to-r from-purple-200 to-pink-200 rounded w-24"></div>
+                      <div className="h-4 bg-gray-200 rounded w-16"></div>
                     </div>
+                    <div className="h-10 bg-gradient-to-r from-purple-200 to-pink-200 rounded-xl"></div>
                   </div>
-                ))}
-              </div>
-            </section>
-          </>
-        ) : (
-          <>
-        <section className="mb-12 animate-fade-in">
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <div className={`transition-opacity duration-700 ${showContent ? 'opacity-100' : 'opacity-0'}`}>
+        <section className="mb-12">
           <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent animate-slide-in-left">
             Категории
           </h2>
@@ -217,8 +222,7 @@ export default function HomePage() {
             ))}
           </div>
         </section>
-        </>
-        )}
+        </div>
       </main>
     </div>
   )
