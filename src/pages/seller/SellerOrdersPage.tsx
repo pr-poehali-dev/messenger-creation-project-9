@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import SellerHeader from '@/components/SellerHeader'
+import { useSwipeable } from 'react-swipeable'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Icon from '@/components/ui/icon'
@@ -42,6 +44,7 @@ interface Order {
 }
 
 export default function SellerOrdersPage() {
+  const navigate = useNavigate()
   const [orders, setOrders] = useState<Order[]>([
     {
       id: 1,
@@ -143,6 +146,18 @@ export default function SellerOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      navigate('/seller/analytics')
+    },
+    onSwipedRight: () => {
+      navigate('/seller/products')
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: false,
+    delta: 50,
+  })
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
@@ -212,7 +227,7 @@ export default function SellerOrdersPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <SellerHeader />
 
-      <main className="container mx-auto px-4 py-8">
+      <main {...swipeHandlers} className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
             Заказы

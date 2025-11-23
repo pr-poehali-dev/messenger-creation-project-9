@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import SellerHeader from '@/components/SellerHeader'
+import { useSwipeable } from 'react-swipeable'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,6 +13,7 @@ import { toast } from 'sonner'
 import { Separator } from '@/components/ui/separator'
 
 export default function SellerSettingsPage() {
+  const navigate = useNavigate()
   const [shopSettings, setShopSettings] = useState({
     name: 'Peeky Shop',
     description: 'Интернет-магазин электроники и товаров для дома',
@@ -52,11 +55,23 @@ export default function SellerSettingsPage() {
     })
   }
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      navigate('/seller/dashboard')
+    },
+    onSwipedRight: () => {
+      navigate('/seller/analytics')
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: false,
+    delta: 50,
+  })
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <SellerHeader />
 
-      <main className="container mx-auto px-4 py-8">
+      <main {...swipeHandlers} className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
             Настройки

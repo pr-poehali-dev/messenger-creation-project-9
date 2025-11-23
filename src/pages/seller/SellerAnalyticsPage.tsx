@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import SellerHeader from '@/components/SellerHeader'
+import { useSwipeable } from 'react-swipeable'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import Icon from '@/components/ui/icon'
 import { Button } from '@/components/ui/button'
@@ -71,7 +73,20 @@ const topProducts = [
 ]
 
 export default function SellerAnalyticsPage() {
+  const navigate = useNavigate()
   const [period, setPeriod] = useState<'daily' | 'weekly' | 'monthly'>('daily')
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      navigate('/seller/settings')
+    },
+    onSwipedRight: () => {
+      navigate('/seller/orders')
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: false,
+    delta: 50,
+  })
 
   const getSalesData = () => {
     switch (period) {
@@ -101,7 +116,7 @@ export default function SellerAnalyticsPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <SellerHeader />
 
-      <main className="container mx-auto px-4 py-8">
+      <main {...swipeHandlers} className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">

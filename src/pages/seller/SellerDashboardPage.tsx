@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import SellerHeader from '@/components/SellerHeader'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Icon from '@/components/ui/icon'
 import { Badge } from '@/components/ui/badge'
+import { useSwipeable } from 'react-swipeable'
 
 interface DashboardStats {
   totalRevenue: number
@@ -29,6 +31,7 @@ interface TopProduct {
 }
 
 export default function SellerDashboardPage() {
+  const navigate = useNavigate()
   const [stats, setStats] = useState<DashboardStats>({
     totalRevenue: 1250000,
     totalOrders: 342,
@@ -36,6 +39,18 @@ export default function SellerDashboardPage() {
     pendingOrders: 12,
     revenueGrowth: 23.5,
     ordersGrowth: 18.2
+  })
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      navigate('/seller/products')
+    },
+    onSwipedRight: () => {
+      navigate('/seller/settings')
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: false,
+    delta: 50,
   })
 
   const [recentOrders] = useState<RecentOrder[]>([
@@ -87,7 +102,7 @@ export default function SellerDashboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <SellerHeader />
 
-      <main className="container mx-auto px-4 py-8">
+      <main {...swipeHandlers} className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
             Дашборд

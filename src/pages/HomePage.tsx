@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Header from '@/components/Header'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import Icon from '@/components/ui/icon'
 import { useCart } from '@/contexts/CartContext'
 import { toast } from 'sonner'
+import { useSwipeable } from 'react-swipeable'
 
 interface Category {
   id: number
@@ -44,6 +45,19 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [showContent, setShowContent] = useState(false)
   const { addToCart } = useCart()
+  const navigate = useNavigate()
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      navigate('/cart')
+    },
+    onSwipedRight: () => {
+      navigate('/profile')
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: false,
+    delta: 50,
+  })
 
   const handleAddToCart = (product: { id: number; name: string; price: number; image_url: string }) => {
     addToCart(product)
@@ -89,7 +103,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <Header />
 
-      <main className="container mx-auto px-4 py-8">
+      <main {...swipeHandlers} className="container mx-auto px-4 py-8">
         <div className={`transition-opacity duration-500 ${isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'}`}>
           <section className="mb-12">
             <div className="h-9 w-48 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 skeleton-box skeleton-box-slow"></div>
