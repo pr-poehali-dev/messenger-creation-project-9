@@ -24,17 +24,25 @@ export default function ProductPage() {
   const navigate = useNavigate()
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showContent, setShowContent] = useState(false)
   const { addToCart } = useCart()
 
   useEffect(() => {
+    setLoading(true)
+    setShowContent(false)
     fetch('https://functions.poehali.dev/34e0420b-669c-42b4-9c05-40c5e47183fd')
       .then(res => res.json())
       .then(data => {
         const found = data.products.find((p: Product) => p.slug === slug)
         setProduct(found || null)
-        setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch(() => setProduct(null))
+      .finally(() => {
+        setTimeout(() => {
+          setLoading(false)
+          setTimeout(() => setShowContent(true), 50)
+        }, 300)
+      })
   }, [slug])
 
   if (loading) {
@@ -42,7 +50,37 @@ export default function ProductPage() {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
         <Header />
         <main className="container mx-auto px-4 py-8">
-          <div className="text-center font-semibold text-purple-600">Загрузка...</div>
+          <div className="h-10 w-24 bg-gray-200 rounded-full mb-6 skeleton-box skeleton-box-fast"></div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl skeleton-box skeleton-box-slow"></div>
+            
+            <div className="flex flex-col bg-white/80 backdrop-blur-sm rounded-3xl p-8 space-y-6">
+              <div className="h-12 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg w-3/4 skeleton-box skeleton-box-slow"></div>
+              
+              <div className="flex items-center gap-2">
+                <div className="h-9 w-20 bg-yellow-100 rounded-full skeleton-box"></div>
+                <div className="h-6 w-32 bg-gray-200 rounded skeleton-box skeleton-box-fast"></div>
+              </div>
+              
+              <div className="flex items-baseline gap-4">
+                <div className="h-14 w-40 bg-gradient-to-r from-purple-200 to-pink-200 rounded skeleton-box"></div>
+                <div className="h-8 w-24 bg-gray-200 rounded skeleton-box skeleton-box-fast"></div>
+                <div className="h-8 w-16 bg-red-200 rounded-full skeleton-box"></div>
+              </div>
+              
+              <div className="h-10 w-48 bg-green-100 rounded-full skeleton-box"></div>
+              
+              <div className="h-14 w-full md:w-64 bg-gradient-to-r from-purple-200 to-pink-200 rounded-2xl skeleton-box"></div>
+              
+              <div className="border-t border-purple-200 pt-6 space-y-3">
+                <div className="h-8 w-40 bg-gradient-to-r from-purple-200 to-pink-200 rounded skeleton-box"></div>
+                <div className="h-4 bg-gray-200 rounded w-full skeleton-box skeleton-box-fast"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6 skeleton-box skeleton-box-fast"></div>
+                <div className="h-4 bg-gray-200 rounded w-4/5 skeleton-box skeleton-box-fast"></div>
+              </div>
+            </div>
+          </div>
         </main>
       </div>
     )
@@ -75,7 +113,7 @@ export default function ProductPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <Header />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className={`container mx-auto px-4 py-8 transition-opacity duration-700 ${showContent ? 'opacity-100' : 'opacity-0'}`}>
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6 hover:bg-purple-100 rounded-full">
           <Icon name="ArrowLeft" className="h-4 w-4 mr-2" />
           Назад
