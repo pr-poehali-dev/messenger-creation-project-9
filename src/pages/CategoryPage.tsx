@@ -13,6 +13,7 @@ interface Product {
   price: number
   image: string
   rating: number
+  reviews_count: number
   category_id: number
 }
 
@@ -39,6 +40,7 @@ export default function CategoryPage() {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 200000])
   const [minPrice, setMinPrice] = useState(0)
   const [maxPrice, setMaxPrice] = useState(200000)
+  const [sortBy, setSortBy] = useState<'default' | 'price-asc' | 'price-desc' | 'rating' | 'popular'>('default')
   
   const allProducts = getProductsByCategory(Number(categoryId)).map(p => ({
     id: p.id,
@@ -47,11 +49,27 @@ export default function CategoryPage() {
     old_price: p.old_price,
     image: p.image_url,
     rating: p.rating,
+    reviews_count: p.reviews_count,
     category_id: p.category_id,
     slug: p.slug
   }))
   
-  const products = allProducts.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1])
+  const filteredProducts = allProducts.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1])
+  
+  const products = [...filteredProducts].sort((a, b) => {
+    switch (sortBy) {
+      case 'price-asc':
+        return a.price - b.price
+      case 'price-desc':
+        return b.price - a.price
+      case 'rating':
+        return b.rating - a.rating
+      case 'popular':
+        return b.reviews_count - a.reviews_count
+      default:
+        return 0
+    }
+  })
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
@@ -137,56 +155,122 @@ export default function CategoryPage() {
           </div>
 
           {allProducts.length > 0 && (
-            <div className="mb-8 bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg animate-slide-in-right">
-              <div className="flex items-center gap-2 mb-4">
-                <Icon name="SlidersHorizontal" className="h-5 w-5 text-purple-600" />
-                <h3 className="text-lg font-bold text-gray-800">Фильтр по цене</h3>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <label className="text-sm text-gray-600 mb-1 block">От</label>
-                    <input
-                      type="number"
-                      value={priceRange[0]}
-                      onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-                      min={minPrice}
-                      max={priceRange[1]}
-                      className="w-full px-3 py-2 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none transition-colors"
-                      placeholder="0"
-                    />
-                  </div>
-                  <div className="pt-6">
-                    <Icon name="Minus" className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <div className="flex-1">
-                    <label className="text-sm text-gray-600 mb-1 block">До</label>
-                    <input
-                      type="number"
-                      value={priceRange[1]}
-                      onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-                      min={priceRange[0]}
-                      max={maxPrice}
-                      className="w-full px-3 py-2 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none transition-colors"
-                      placeholder="200000"
-                    />
-                  </div>
+            <div className="mb-8 space-y-4">
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg animate-slide-in-right">
+                <div className="flex items-center gap-2 mb-4">
+                  <Icon name="ArrowUpDown" className="h-5 w-5 text-purple-600" />
+                  <h3 className="text-lg font-bold text-gray-800">Сортировка</h3>
                 </div>
                 
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">
-                    Найдено: <span className="font-bold text-purple-600">{products.length}</span> из {allProducts.length}
-                  </span>
-                  {(priceRange[0] !== minPrice || priceRange[1] !== maxPrice) && (
-                    <button
-                      onClick={() => setPriceRange([minPrice, maxPrice])}
-                      className="text-purple-600 hover:text-purple-800 font-semibold transition-colors flex items-center gap-1"
-                    >
-                      <Icon name="X" className="h-4 w-4" />
-                      Сбросить
-                    </button>
-                  )}
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setSortBy('default')}
+                    className={`px-4 py-2 rounded-xl font-semibold transition-all ${
+                      sortBy === 'default'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    По умолчанию
+                  </button>
+                  <button
+                    onClick={() => setSortBy('price-asc')}
+                    className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-1 ${
+                      sortBy === 'price-asc'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <Icon name="ArrowUp" className="h-4 w-4" />
+                    Дешевле
+                  </button>
+                  <button
+                    onClick={() => setSortBy('price-desc')}
+                    className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-1 ${
+                      sortBy === 'price-desc'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <Icon name="ArrowDown" className="h-4 w-4" />
+                    Дороже
+                  </button>
+                  <button
+                    onClick={() => setSortBy('rating')}
+                    className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-1 ${
+                      sortBy === 'rating'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <Icon name="Star" className="h-4 w-4" />
+                    По рейтингу
+                  </button>
+                  <button
+                    onClick={() => setSortBy('popular')}
+                    className={`px-4 py-2 rounded-xl font-semibold transition-all flex items-center gap-1 ${
+                      sortBy === 'popular'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <Icon name="TrendingUp" className="h-4 w-4" />
+                    Популярные
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg animate-slide-in-right">
+                <div className="flex items-center gap-2 mb-4">
+                  <Icon name="SlidersHorizontal" className="h-5 w-5 text-purple-600" />
+                  <h3 className="text-lg font-bold text-gray-800">Фильтр по цене</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <label className="text-sm text-gray-600 mb-1 block">От</label>
+                      <input
+                        type="number"
+                        value={priceRange[0]}
+                        onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+                        min={minPrice}
+                        max={priceRange[1]}
+                        className="w-full px-3 py-2 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none transition-colors"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div className="pt-6">
+                      <Icon name="Minus" className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <div className="flex-1">
+                      <label className="text-sm text-gray-600 mb-1 block">До</label>
+                      <input
+                        type="number"
+                        value={priceRange[1]}
+                        onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+                        min={priceRange[0]}
+                        max={maxPrice}
+                        className="w-full px-3 py-2 border-2 border-purple-200 rounded-lg focus:border-purple-500 focus:outline-none transition-colors"
+                        placeholder="200000"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">
+                      Найдено: <span className="font-bold text-purple-600">{products.length}</span> из {allProducts.length}
+                    </span>
+                    {(priceRange[0] !== minPrice || priceRange[1] !== maxPrice) && (
+                      <button
+                        onClick={() => setPriceRange([minPrice, maxPrice])}
+                        className="text-purple-600 hover:text-purple-800 font-semibold transition-colors flex items-center gap-1"
+                      >
+                        <Icon name="X" className="h-4 w-4" />
+                        Сбросить
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
