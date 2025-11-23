@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '@/components/Header'
 import { Button } from '@/components/ui/button'
@@ -6,12 +7,67 @@ import Icon from '@/components/ui/icon'
 
 export default function ProfilePage() {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
+  const [showContent, setShowContent] = useState(false)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false)
+      setTimeout(() => setShowContent(true), 50)
+    }, 600)
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+        <Header />
+        <main className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="h-10 w-24 bg-gray-200 rounded-full mb-6 skeleton-box skeleton-box-fast"></div>
+            <div className="h-10 w-64 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg mb-6 skeleton-box skeleton-box-slow"></div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <Card key={i} className="bg-white/90 backdrop-blur-sm">
+                  <CardHeader>
+                    <div className="flex items-center gap-2">
+                      <div className="h-5 w-5 bg-purple-200 rounded skeleton-box"></div>
+                      <div className="h-6 w-32 bg-gray-200 rounded skeleton-box"></div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 skeleton-box skeleton-box-fast"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 skeleton-box skeleton-box-fast"></div>
+                    <div className="h-10 bg-purple-100 rounded-lg w-full mt-4 skeleton-box"></div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <Card className="mt-6 bg-white/90 backdrop-blur-sm">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-5 bg-purple-200 rounded skeleton-box"></div>
+                  <div className="h-6 w-32 bg-gray-200 rounded skeleton-box"></div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-10 bg-gray-100 rounded-lg skeleton-box skeleton-box-fast"></div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <Header />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className={`container mx-auto px-4 py-8 transition-opacity duration-700 ${showContent ? 'opacity-100' : 'opacity-0'}`}>
         <div className="max-w-4xl mx-auto">
           <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6">
             <Icon name="ArrowLeft" className="h-4 w-4 mr-2" />
