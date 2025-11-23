@@ -1,241 +1,60 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Header from '@/components/Header'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import Icon from '@/components/ui/icon'
-import { useCart } from '@/contexts/CartContext'
-import { toast } from 'sonner'
-import confetti from 'canvas-confetti'
+import { Link } from 'react-router-dom'
+import { ShoppingCart, Search, User, ChevronLeft } from 'lucide-react'
 
 export default function CartPage() {
-  const navigate = useNavigate()
-  const { items, removeFromCart, updateQuantity, clearCart, totalPrice } = useCart()
-  const [removingItems, setRemovingItems] = useState<Set<number>>(new Set())
-  const [quantityChanging, setQuantityChanging] = useState<{ id: number; direction: 'up' | 'down' } | null>(null)
-
-  const handleRemove = (id: number) => {
-    const item = items.find(i => i.id === id)
-    setRemovingItems(prev => new Set(prev).add(id))
-    
-    setTimeout(() => {
-      removeFromCart(id)
-      setRemovingItems(prev => {
-        const next = new Set(prev)
-        next.delete(id)
-        return next
-      })
-      
-      if (item) {
-        toast.error('Товар удалён из корзины', {
-          description: item.name,
-          duration: 2000,
-          icon: '🗑️',
-        })
-      }
-    }, 400)
-  }
-
-  const handleQuantityChange = (id: number, newQuantity: number, direction: 'up' | 'down') => {
-    setQuantityChanging({ id, direction })
-    updateQuantity(id, newQuantity)
-    setTimeout(() => setQuantityChanging(null), 300)
-    
-    if (direction === 'up') {
-      toast.success('Количество увеличено', {
-        duration: 1000,
-        icon: '➕',
-      })
-    }
-  }
-
-  const handleCheckout = () => {
-    // Запускаем конфетти
-    const duration = 3000
-    const animationEnd = Date.now() + duration
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 }
-
-    function randomInRange(min: number, max: number) {
-      return Math.random() * (max - min) + min
-    }
-
-    const interval = setInterval(function() {
-      const timeLeft = animationEnd - Date.now()
-
-      if (timeLeft <= 0) {
-        return clearInterval(interval)
-      }
-
-      const particleCount = 50 * (timeLeft / duration)
-
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-        colors: ['#9333ea', '#ec4899', '#8b5cf6', '#d946ef']
-      })
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-        colors: ['#9333ea', '#ec4899', '#8b5cf6', '#d946ef']
-      })
-    }, 250)
-
-    // Показываем успешное уведомление
-    toast.success('Заказ успешно оформлен! 🎉', {
-      description: `Сумма: ${totalPrice.toLocaleString()} ₽`,
-      duration: 4000,
-      icon: '✅',
-    })
-
-    // Очищаем корзину через секунду
-    setTimeout(() => {
-      clearCart()
-      setTimeout(() => {
-        navigate('/')
-      }, 1500)
-    }, 2000)
-  }
-
-  if (items.length === 0) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-950 dark:to-gray-900">
-        <Header />
-        <main className="container mx-auto px-4 py-8">
-          <div className="max-w-2xl mx-auto text-center bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-xl">
-            <Icon name="ShoppingCart" className="h-24 w-24 mx-auto mb-4 text-purple-300" />
-            <h1 className="text-3xl font-black mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Корзина пуста</h1>
-            <p className="text-gray-600 mb-6 text-lg">
-              Добавьте товары из каталога
-            </p>
-            <Button onClick={() => navigate('/')} className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105">
-              Перейти к покупкам
-            </Button>
-          </div>
-        </main>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-950 dark:to-gray-900">
-      <Header />
-
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-6 md:mb-8">
-            <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Корзина</h1>
-            <Button variant="ghost" onClick={clearCart} className="text-sm md:text-base hover:bg-red-100 text-red-600 font-semibold rounded-xl transition-all hover:scale-105 active:scale-95">
-              <span className="hidden sm:inline">Очистить всё</span>
-              <span className="sm:hidden">Очистить</span>
-            </Button>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 space-y-4">
-              {items.map(item => (
-                <Card key={item.id} className={`bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all rounded-2xl ${
-                  removingItems.has(item.id) ? 'animate-cart-item-remove' : 'animate-scale-in'
-                }`}>
-                  <CardContent className="p-6">
-                    <div className="flex gap-4">
-                      <div className="w-24 h-24 flex-shrink-0 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl overflow-hidden shadow-md">
-                        <img
-                          src={item.image_url}
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-
-                      <div className="flex-1">
-                        <h3 className="font-bold text-lg mb-2 text-gray-900">{item.name}</h3>
-                        <p className="text-xl font-black mb-3 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                          {item.price.toLocaleString()} ₽
-                        </p>
-
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Button
-                              size="sm"
-                              className="bg-purple-100 hover:bg-purple-200 text-purple-700 border-0 rounded-lg transition-all active:scale-90 hover:scale-110"
-                              onClick={() => handleQuantityChange(item.id, item.quantity - 1, 'down')}
-                            >
-                              <Icon name="Minus" className="h-4 w-4" />
-                            </Button>
-                            <span className={`w-12 text-center font-bold text-lg transition-all ${
-                              quantityChanging?.id === item.id 
-                                ? quantityChanging.direction === 'up' 
-                                  ? 'animate-quantity-up' 
-                                  : 'animate-quantity-down'
-                                : ''
-                            }`}>
-                              {item.quantity}
-                            </span>
-                            <Button
-                              size="sm"
-                              className="bg-purple-100 hover:bg-purple-200 text-purple-700 border-0 rounded-lg transition-all active:scale-90 hover:scale-110"
-                              onClick={() => handleQuantityChange(item.id, item.quantity + 1, 'up')}
-                            >
-                              <Icon name="Plus" className="h-4 w-4" />
-                            </Button>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            className="hover:bg-red-100 text-red-600 rounded-lg transition-all active:scale-90 hover:scale-110 hover:rotate-12"
-                            variant="ghost"
-                            onClick={() => handleRemove(item.id)}
-                          >
-                            <Icon name="Trash2" className={`h-4 w-4 transition-transform ${
-                              removingItems.has(item.id) ? 'animate-trash-shake' : ''
-                            }`} />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="text-2xl font-bold text-blue-600">
+              Маркетплейс
+            </Link>
+            
+            <div className="flex-1 max-w-2xl mx-8">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Поиск товаров..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
             </div>
 
-            <div>
-              <Card className="sticky top-20 bg-white/90 backdrop-blur-sm border-0 shadow-2xl rounded-3xl">
-                <CardContent className="p-8">
-                  <h2 className="text-2xl font-black mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Итого</h2>
-
-                  <div className="space-y-3 mb-6">
-                    <div className="flex justify-between text-gray-700 font-medium">
-                      <span>Товары ({items.reduce((sum, item) => sum + item.quantity, 0)})</span>
-                      <span>{totalPrice.toLocaleString()} ₽</span>
-                    </div>
-                    <div className="flex justify-between text-gray-700 font-medium">
-                      <span>Доставка</span>
-                      <span className="text-green-600 font-bold">Бесплатно</span>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-purple-200 pt-6 mb-6">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xl font-bold text-gray-900">К оплате</span>
-                      <span className="text-3xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                        {totalPrice.toLocaleString()} ₽
-                      </span>
-                    </div>
-                  </div>
-
-                  <Button 
-                    onClick={handleCheckout}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold text-lg py-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all hover:scale-105 active:scale-95" 
-                    size="lg"
-                  >
-                    <Icon name="Sparkles" className="h-5 w-5 mr-2" />
-                    Оформить заказ
-                  </Button>
-                </CardContent>
-              </Card>
+            <div className="flex items-center gap-4">
+              <button className="p-2 hover:bg-gray-100 rounded-lg">
+                <User className="w-6 h-6" />
+              </button>
+              <Link to="/cart" className="p-2 hover:bg-gray-100 rounded-lg relative">
+                <ShoppingCart className="w-6 h-6" />
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  0
+                </span>
+              </Link>
             </div>
           </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6">
+          <ChevronLeft className="w-5 h-5" />
+          Продолжить покупки
+        </Link>
+
+        <h1 className="text-3xl font-bold mb-8">Корзина</h1>
+
+        <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+          <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Корзина пуста</h2>
+          <p className="text-gray-600 mb-6">Добавьте товары, чтобы начать покупки</p>
+          <Link
+            to="/"
+            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+          >
+            Перейти к покупкам
+          </Link>
         </div>
       </main>
     </div>

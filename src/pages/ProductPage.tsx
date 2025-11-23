@@ -1,200 +1,126 @@
-import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import Header from '@/components/Header'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import Icon from '@/components/ui/icon'
-import { useCart } from '@/contexts/CartContext'
-import { toast } from 'sonner'
+import { Link, useParams } from 'react-router-dom'
+import { ShoppingCart, Search, User, ChevronLeft, Star } from 'lucide-react'
 
-interface Product {
-  id: number
-  name: string
-  slug: string
-  description: string
-  price: number
-  old_price: number | null
-  image_url: string
-  stock: number
-  rating: number
-  reviews_count: number
-}
+const products = [
+  { id: 1, name: 'iPhone 15 Pro', price: 89990, image: 'https://images.unsplash.com/photo-1592286927505-0ac3b3e76dbb?w=800', category: 1, description: 'Новейший iPhone с профессиональными возможностями камеры и мощным процессором A17 Pro' },
+  { id: 2, name: 'Samsung Galaxy S24', price: 79990, image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800', category: 1, description: 'Флагманский смартфон от Samsung с ИИ и улучшенной камерой' },
+  { id: 3, name: 'Джинсы Levis', price: 6990, image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=800', category: 2, description: 'Классические джинсы Levis 501 из прочного денима' },
+  { id: 4, name: 'Кроссовки Nike', price: 12990, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800', category: 2, description: 'Удобные спортивные кроссовки для бега и тренировок' },
+]
 
 export default function ProductPage() {
-  const { slug } = useParams()
-  const navigate = useNavigate()
-  const [product, setProduct] = useState<Product | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [showContent, setShowContent] = useState(false)
-  const { addToCart } = useCart()
-
-  useEffect(() => {
-    setLoading(true)
-    setShowContent(false)
-    fetch('https://functions.poehali.dev/34e0420b-669c-42b4-9c05-40c5e47183fd')
-      .then(res => res.json())
-      .then(data => {
-        const found = data.products.find((p: Product) => p.slug === slug)
-        setProduct(found || null)
-      })
-      .catch(() => setProduct(null))
-      .finally(() => {
-        setTimeout(() => {
-          setLoading(false)
-          setTimeout(() => setShowContent(true), 50)
-        }, 300)
-      })
-  }, [slug])
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-950 dark:to-gray-900">
-        <Header />
-        <main className="container mx-auto px-4 py-8">
-          <div className="h-10 w-24 bg-gray-200 rounded-full mb-6 skeleton-box skeleton-box-fast"></div>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl skeleton-box skeleton-box-slow"></div>
-            
-            <div className="flex flex-col bg-white/80 backdrop-blur-sm rounded-3xl p-8 space-y-6">
-              <div className="h-12 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg w-3/4 skeleton-box skeleton-box-slow"></div>
-              
-              <div className="flex items-center gap-2">
-                <div className="h-9 w-20 bg-yellow-100 rounded-full skeleton-box"></div>
-                <div className="h-6 w-32 bg-gray-200 rounded skeleton-box skeleton-box-fast"></div>
-              </div>
-              
-              <div className="flex items-baseline gap-4">
-                <div className="h-14 w-40 bg-gradient-to-r from-purple-200 to-pink-200 rounded skeleton-box"></div>
-                <div className="h-8 w-24 bg-gray-200 rounded skeleton-box skeleton-box-fast"></div>
-                <div className="h-8 w-16 bg-red-200 rounded-full skeleton-box"></div>
-              </div>
-              
-              <div className="h-10 w-48 bg-green-100 rounded-full skeleton-box"></div>
-              
-              <div className="h-14 w-full md:w-64 bg-gradient-to-r from-purple-200 to-pink-200 rounded-2xl skeleton-box"></div>
-              
-              <div className="border-t border-purple-200 pt-6 space-y-3">
-                <div className="h-8 w-40 bg-gradient-to-r from-purple-200 to-pink-200 rounded skeleton-box"></div>
-                <div className="h-4 bg-gray-200 rounded w-full skeleton-box skeleton-box-fast"></div>
-                <div className="h-4 bg-gray-200 rounded w-5/6 skeleton-box skeleton-box-fast"></div>
-                <div className="h-4 bg-gray-200 rounded w-4/5 skeleton-box skeleton-box-fast"></div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    )
-  }
+  const { id } = useParams()
+  const product = products.find(p => p.id === Number(id))
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-950 dark:to-gray-900">
-        <Header />
-        <main className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Товар не найден</h1>
-            <Button onClick={() => navigate('/')}>На главную</Button>
-          </div>
-        </main>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Товар не найден</h2>
+          <Link to="/" className="text-blue-600 hover:underline">
+            Вернуться на главную
+          </Link>
+        </div>
       </div>
     )
   }
 
-  const handleAddToCart = () => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: parseFloat(String(product.price)),
-      image_url: product.image_url
-    })
-    
-    toast.success('Товар добавлен в корзину!', {
-      description: product.name,
-      duration: 2000,
-      icon: '🛒',
-      action: {
-        label: 'Перейти в корзину',
-        onClick: () => navigate('/cart')
-      }
-    })
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-950 dark:to-gray-900">
-      <Header />
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="text-2xl font-bold text-blue-600">
+              Маркетплейс
+            </Link>
+            
+            <div className="flex-1 max-w-2xl mx-8">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Поиск товаров..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
 
-      <main className={`container mx-auto px-4 py-8 transition-opacity duration-700 ${showContent ? 'opacity-100' : 'opacity-0'}`}>
-        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6 hover:bg-purple-100 rounded-full">
-          <Icon name="ArrowLeft" className="h-4 w-4 mr-2" />
-          Назад
-        </Button>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl overflow-hidden shadow-2xl">
-            <img
-              src={product.image_url}
-              alt={product.name}
-              className="w-full h-full object-cover"
-            />
+            <div className="flex items-center gap-4">
+              <button className="p-2 hover:bg-gray-100 rounded-lg">
+                <User className="w-6 h-6" />
+              </button>
+              <Link to="/cart" className="p-2 hover:bg-gray-100 rounded-lg relative">
+                <ShoppingCart className="w-6 h-6" />
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  0
+                </span>
+              </Link>
+            </div>
           </div>
+        </div>
+      </header>
 
-          <div className="flex flex-col bg-white/80 backdrop-blur-sm rounded-3xl p-4 md:p-8 shadow-xl">
-            <h1 className="text-2xl md:text-4xl font-black mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{product.name}</h1>
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <Link to={`/category/${product.category}`} className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6">
+          <ChevronLeft className="w-5 h-5" />
+          Назад к категории
+        </Link>
 
-            <div className="flex items-center gap-2 mb-6">
-              <div className="flex items-center gap-1 bg-yellow-50 rounded-full px-2 py-1 md:px-3 md:py-1.5">
-                <Icon name="Star" className="h-4 w-4 md:h-5 md:w-5 fill-yellow-400 text-yellow-400" />
-                <span className="text-base md:text-lg font-bold text-yellow-700">{product.rating}</span>
-              </div>
-              <span className="text-sm md:text-base text-gray-600 font-medium">
-                {product.reviews_count} отзывов
-              </span>
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-8 p-8">
+            <div>
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full rounded-lg"
+              />
             </div>
 
-            <div className="flex items-baseline gap-2 md:gap-4 mb-6">
-              <span className="text-3xl md:text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                {parseFloat(String(product.price)).toLocaleString()} ₽
-              </span>
-              {product.old_price && (
-                <>
-                  <span className="text-xl text-gray-400 line-through">
-                    {parseFloat(String(product.old_price)).toLocaleString()} ₽
-                  </span>
-                  <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white border-0 text-lg px-3 py-1">
-                    -{Math.round((1 - parseFloat(String(product.price)) / parseFloat(String(product.old_price))) * 100)}%
-                  </Badge>
-                </>
-              )}
-            </div>
-
-            {product.stock > 0 ? (
-              <div className="flex items-center gap-2 mb-6 bg-green-50 rounded-full px-4 py-2 w-fit">
-                <Icon name="Check" className="h-5 w-5 text-green-600" />
-                <span className="font-semibold text-green-700">В наличии: {product.stock} шт</span>
+            <div>
+              <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+              
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-5 h-5 ${i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                    />
+                  ))}
+                </div>
+                <span className="text-gray-600">(127 отзывов)</span>
               </div>
-            ) : (
-              <div className="flex items-center gap-2 mb-6 bg-red-50 rounded-full px-4 py-2 w-fit">
-                <Icon name="X" className="h-5 w-5 text-red-600" />
-                <span className="font-semibold text-red-700">Нет в наличии</span>
+
+              <div className="text-4xl font-bold text-blue-600 mb-6">
+                {product.price.toLocaleString()} ₽
               </div>
-            )}
 
-            <Button
-              size="lg"
-              className="w-full md:w-auto mb-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold text-lg py-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all hover:scale-105"
-              disabled={product.stock === 0}
-              onClick={handleAddToCart}
-            >
-              <Icon name="ShoppingCart" className="h-5 w-5 mr-2" />
-              В корзину
-            </Button>
-
-            <div className="border-t border-purple-200 pt-6">
-              <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Описание</h2>
-              <p className="text-gray-700 leading-relaxed text-lg">
+              <p className="text-gray-700 mb-6">
                 {product.description}
               </p>
+
+              <button className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                <ShoppingCart className="w-5 h-5" />
+                Добавить в корзину
+              </button>
+
+              <div className="mt-8 border-t pt-6">
+                <h3 className="font-bold mb-4">Характеристики</h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li className="flex justify-between">
+                    <span>Бренд</span>
+                    <span className="font-semibold">{product.name.split(' ')[0]}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>Гарантия</span>
+                    <span className="font-semibold">1 год</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span>Доставка</span>
+                    <span className="font-semibold">2-3 дня</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
