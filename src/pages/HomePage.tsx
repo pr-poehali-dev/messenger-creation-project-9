@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, useInView } from 'framer-motion'
 import Header from '@/components/Header'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -26,11 +27,24 @@ interface Product {
   reviews_count: number
 }
 
+const categoryIcons: Record<string, string> = {
+  'электроника': 'Laptop',
+  'одежда': 'ShoppingBag',
+  'дом и сад': 'Home',
+  'спорт': 'Dumbbell',
+  'красота': 'Sparkles',
+  'книги': 'Book'
+}
+
 export default function HomePage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const { addToCart } = useCart()
+  const categoriesRef = useRef(null)
+  const productsRef = useRef(null)
+  const categoriesInView = useInView(categoriesRef, { once: true, margin: '-100px' })
+  const productsInView = useInView(productsRef, { once: true, margin: '-100px' })
 
   useEffect(() => {
     fetch('https://functions.poehali.dev/34e0420b-669c-42b4-9c05-40c5e47183fd')
@@ -51,25 +65,38 @@ export default function HomePage() {
       <Header />
 
       <main className="container mx-auto px-4 py-8">
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Категории</h2>
+        <section className="mb-12" ref={categoriesRef}>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={categoriesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
+          >
+            Категории
+          </motion.h2>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
-                className={`group flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 ${
-                  selectedCategory === cat.id
-                    ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100 shadow-lg scale-105'
-                    : 'border-transparent bg-white/80 backdrop-blur-sm hover:border-purple-300 hover:shadow-md hover:scale-105'
-                }`}
-              >
-                <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-purple-200 to-pink-200 ring-2 ring-white shadow-lg group-hover:ring-purple-300 transition-all">
-                  <img src={cat.image_url} alt={cat.name} className="w-full h-full object-cover" />
-                </div>
-                <span className="text-sm font-semibold text-center">{cat.name}</span>
-              </button>
-            ))}
+            {categories.map((cat, index) => {
+              const iconName = categoryIcons[cat.name.toLowerCase()] || 'Package'
+              return (
+                <motion.button
+                  key={cat.id}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={categoriesInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
+                  className={`group flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 ${
+                    selectedCategory === cat.id
+                      ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100 shadow-lg scale-105'
+                      : 'border-transparent bg-white/80 backdrop-blur-sm hover:border-purple-300 hover:shadow-md hover:scale-105'
+                  }`}
+                >
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200 ring-2 ring-white shadow-lg group-hover:ring-purple-300 transition-all">
+                    <Icon name={iconName} className="h-8 w-8 text-purple-700" />
+                  </div>
+                  <span className="text-sm font-semibold text-center">{cat.name}</span>
+                </motion.button>
+              )
+            })}
           </div>
           {selectedCategory && (
             <Button
@@ -83,11 +110,24 @@ export default function HomePage() {
           )}
         </section>
 
-        <section>
-          <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Товары</h2>
+        <section ref={productsRef}>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={productsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
+          >
+            Товары
+          </motion.h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredProducts.map(product => (
-              <Card key={product.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 bg-white/90 backdrop-blur-sm hover:scale-105 rounded-2xl">
+            {filteredProducts.map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={productsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+              >
+                <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 bg-white/90 backdrop-blur-sm hover:scale-105 rounded-2xl">
                 <Link to={`/product/${product.slug}`}>
                   <div className="relative aspect-square bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
                     <img
@@ -134,6 +174,7 @@ export default function HomePage() {
                   </Button>
                 </CardContent>
               </Card>
+              </motion.div>
             ))}
           </div>
         </section>
