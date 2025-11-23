@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import Icon from '@/components/ui/icon'
 import { useCart } from '@/contexts/CartContext'
+import { useCustomerAuth } from '@/contexts/CustomerAuthContext'
 
 export default function Header() {
   const { totalItems } = useCart()
+  const { isAuthenticated } = useCustomerAuth()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-purple-200/50 bg-white/80 backdrop-blur-xl shadow-lg">
@@ -30,11 +32,20 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="hover:bg-purple-100 transition-colors rounded-full" asChild>
-              <Link to="/profile">
-                <Icon name="User" className="h-5 w-5 text-purple-600" />
-              </Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button variant="ghost" size="icon" className="hover:bg-purple-100 transition-colors rounded-full" asChild>
+                <Link to="/profile">
+                  <Icon name="User" className="h-5 w-5 text-purple-600" />
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="ghost" className="hover:bg-purple-100 transition-colors rounded-full" asChild>
+                <Link to="/login">
+                  <Icon name="LogIn" className="h-4 w-4 mr-2" />
+                  Войти
+                </Link>
+              </Button>
+            )}
             
             <Button variant="ghost" size="icon" className="relative hover:bg-purple-100 transition-colors rounded-full" asChild>
               <Link to="/cart">
