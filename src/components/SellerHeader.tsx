@@ -64,6 +64,16 @@ export default function SellerHeader() {
                 Заказы
               </Link>
             </Button>
+            <Button
+              variant="ghost"
+              asChild
+              className="rounded-xl hover:bg-purple-100 transition-all"
+            >
+              <Link to="/seller/analytics">
+                <Icon name="BarChart" className="h-4 w-4 mr-2" />
+                Аналитика
+              </Link>
+            </Button>
           </nav>
 
           <DropdownMenu>
