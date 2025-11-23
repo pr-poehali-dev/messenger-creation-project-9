@@ -146,7 +146,7 @@ export default function HomePage() {
                   <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200 ring-2 ring-white shadow-lg group-hover:ring-purple-300 transition-all group-hover:rotate-12 group-active:ring-4 group-active:ring-purple-400">
                     <Icon name={iconName} className="h-8 w-8 text-purple-700 group-active:scale-90 transition-transform" />
                   </div>
-                  <span className="text-sm font-semibold text-center">{cat.name}</span>
+                  <span className="text-sm font-semibold text-center text-gray-900">{cat.name}</span>
                 </button>
               )
             })}
