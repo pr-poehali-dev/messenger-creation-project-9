@@ -15,6 +15,7 @@ import SellerProductsPage from "./pages/seller/SellerProductsPage";
 import SellerOrdersPage from "./pages/seller/SellerOrdersPage";
 import SellerSettingsPage from "./pages/seller/SellerSettingsPage";
 import SellerAnalyticsPage from "./pages/seller/SellerAnalyticsPage";
+import SellerProtectedRoute from "./components/SellerProtectedRoute";
 import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient({
@@ -46,11 +47,46 @@ const App = () => {
                 <Routes>
                   <Route path="/" element={<Navigate to="/seller/login" replace />} />
                   <Route path="/seller/login" element={<SellerLoginPage />} />
-                  <Route path="/seller/dashboard" element={<SellerDashboardPage />} />
-                  <Route path="/seller/products" element={<SellerProductsPage />} />
-                  <Route path="/seller/orders" element={<SellerOrdersPage />} />
-                  <Route path="/seller/analytics" element={<SellerAnalyticsPage />} />
-                  <Route path="/seller/settings" element={<SellerSettingsPage />} />
+                  <Route 
+                    path="/seller/dashboard" 
+                    element={
+                      <SellerProtectedRoute>
+                        <SellerDashboardPage />
+                      </SellerProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/seller/products" 
+                    element={
+                      <SellerProtectedRoute>
+                        <SellerProductsPage />
+                      </SellerProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/seller/orders" 
+                    element={
+                      <SellerProtectedRoute>
+                        <SellerOrdersPage />
+                      </SellerProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/seller/analytics" 
+                    element={
+                      <SellerProtectedRoute>
+                        <SellerAnalyticsPage />
+                      </SellerProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/seller/settings" 
+                    element={
+                      <SellerProtectedRoute>
+                        <SellerSettingsPage />
+                      </SellerProtectedRoute>
+                    } 
+                  />
                   <Route path="*" element={<Navigate to="/seller/login" replace />} />
                 </Routes>
               ) : (
