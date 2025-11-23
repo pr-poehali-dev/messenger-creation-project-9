@@ -44,6 +44,7 @@ const App = () => {
                 <CartProvider>
                   <Toaster />
                   <Sonner />
+                  <div className="flex flex-col min-h-screen">
                 {isSeller ? (
                   <Routes>
                     <Route path="/" element={<Navigate to="/seller/login" replace />} />
@@ -102,6 +103,7 @@ const App = () => {
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
                 )}
+                  </div>
                 </CartProvider>
               </ProductsProvider>
             </CustomerAuthProvider>

@@ -82,11 +82,17 @@ export default function HomePage() {
   useEffect(() => {
     setIsLoading(true)
     fetch('https://functions.poehali.dev/34e0420b-669c-42b4-9c05-40c5e47183fd')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch categories')
+        return res.json()
+      })
       .then(data => {
         setCategories(data.categories || [])
       })
-      .catch(console.error)
+      .catch(error => {
+        console.error('Error loading categories:', error)
+        setCategories([])
+      })
       .finally(() => {
         setTimeout(() => {
           setIsLoading(false)
