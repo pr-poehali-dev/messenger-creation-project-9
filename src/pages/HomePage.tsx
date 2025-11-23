@@ -157,13 +157,13 @@ export default function HomePage() {
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
                   style={{ animationDelay: `${index * 0.1}s` }}
-                  className={`group flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 animate-bounce-in hover:animate-wiggle active:animate-click-pulse ${
+                  className={`group flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 animate-bounce-in active:animate-click-pulse ${
                     selectedCategory === cat.id
                       ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100 shadow-lg scale-105 animate-selected-burst'
-                      : 'border-transparent bg-white/80 backdrop-blur-sm hover:border-purple-300 hover:shadow-md hover:scale-110 active:scale-95'
+                      : 'border-transparent bg-white/80 backdrop-blur-sm active:scale-95'
                   }`}
                 >
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200 ring-2 ring-white shadow-lg group-hover:ring-purple-300 transition-all group-hover:rotate-12 group-active:ring-4 group-active:ring-purple-400">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200 ring-2 ring-white shadow-lg transition-all group-hover:rotate-12 group-active:ring-4 group-active:ring-purple-400">
                     <Icon name={iconName} className="h-8 w-8 text-purple-700 group-active:scale-90 transition-transform" />
                   </div>
                   <span className="text-sm font-semibold text-center text-gray-900">{cat.name}</span>
