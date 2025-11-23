@@ -40,6 +40,7 @@ export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const [clickedCards, setClickedCards] = useState<Set<number>>(new Set())
+  const [isLoading, setIsLoading] = useState(true)
   const { addToCart } = useCart()
 
   const handleAddToCart = (product: { id: number; name: string; price: number; image_url: string }) => {
@@ -55,6 +56,7 @@ export default function HomePage() {
   }
 
   useEffect(() => {
+    setIsLoading(true)
     fetch('https://functions.poehali.dev/34e0420b-669c-42b4-9c05-40c5e47183fd')
       .then(res => res.json())
       .then(data => {
@@ -62,6 +64,7 @@ export default function HomePage() {
         setProducts(data.products || [])
       })
       .catch(console.error)
+      .finally(() => setIsLoading(false))
   }, [])
 
   const filteredProducts = selectedCategory
@@ -73,6 +76,23 @@ export default function HomePage() {
       <Header />
 
       <main className="container mx-auto px-4 py-8">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+            <div className="relative w-24 h-24">
+              <div className="absolute inset-0 rounded-full border-4 border-purple-200"></div>
+              <div className="absolute inset-0 rounded-full border-4 border-t-purple-600 border-r-pink-600 animate-spin"></div>
+              <div className="absolute inset-3 rounded-full border-4 border-pink-200"></div>
+              <div className="absolute inset-3 rounded-full border-4 border-t-pink-600 border-r-purple-600 animate-spin" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}></div>
+            </div>
+            <div className="text-center">
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 animate-pulse">
+                Загружаем товары...
+              </h3>
+              <p className="text-gray-500">Ещё секундочку 🚀</p>
+            </div>
+          </div>
+        ) : (
+          <>
         <section className="mb-12 animate-fade-in">
           <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent animate-slide-in-left">
             Категории
@@ -178,6 +198,8 @@ export default function HomePage() {
             ))}
           </div>
         </section>
+        </>
+        )}
       </main>
     </div>
   )
