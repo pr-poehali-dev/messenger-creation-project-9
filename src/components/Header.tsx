@@ -9,38 +9,38 @@ export default function Header() {
   const { totalItems } = useCart()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-purple-200/50 bg-white/80 backdrop-blur-xl shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <Icon name="Store" className="h-5 w-5 text-primary-foreground" />
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all group-hover:scale-110">
+              <Icon name="Store" className="h-5 w-5 text-white" />
             </div>
-            <span className="text-xl font-bold">Маркетплейс</span>
+            <span className="text-xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Маркетплейс</span>
           </Link>
 
           <div className="flex-1 max-w-xl mx-4">
             <div className="relative">
-              <Icon name="Search" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Icon name="Search" className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-purple-400" />
               <Input
                 placeholder="Поиск товаров..."
-                className="pl-10"
+                className="pl-12 h-11 rounded-full border-2 border-purple-200 bg-white/50 backdrop-blur-sm focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon" className="hover:bg-purple-100 transition-colors rounded-full" asChild>
               <Link to="/profile">
-                <Icon name="User" className="h-5 w-5" />
+                <Icon name="User" className="h-5 w-5 text-purple-600" />
               </Link>
             </Button>
             
-            <Button variant="ghost" size="icon" className="relative" asChild>
+            <Button variant="ghost" size="icon" className="relative hover:bg-purple-100 transition-colors rounded-full" asChild>
               <Link to="/cart">
-                <Icon name="ShoppingCart" className="h-5 w-5" />
+                <Icon name="ShoppingCart" className="h-5 w-5 text-purple-600" />
                 {totalItems > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-gradient-to-r from-pink-500 to-purple-500 border-0 shadow-lg">
                     {totalItems}
                   </Badge>
                 )}

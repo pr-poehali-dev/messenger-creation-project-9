@@ -47,27 +47,27 @@ export default function HomePage() {
     : products
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <Header />
 
-      <main className="container mx-auto px-4 py-6">
-        <section className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">Категории</h2>
+      <main className="container mx-auto px-4 py-8">
+        <section className="mb-12">
+          <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Категории</h2>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
             {categories.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
-                className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                className={`group flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 ${
                   selectedCategory === cat.id
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50'
+                    ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100 shadow-lg scale-105'
+                    : 'border-transparent bg-white/80 backdrop-blur-sm hover:border-purple-300 hover:shadow-md hover:scale-105'
                 }`}
               >
-                <div className="w-16 h-16 rounded-full overflow-hidden bg-muted">
+                <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-purple-200 to-pink-200 ring-2 ring-white shadow-lg group-hover:ring-purple-300 transition-all">
                   <img src={cat.image_url} alt={cat.name} className="w-full h-full object-cover" />
                 </div>
-                <span className="text-sm font-medium text-center">{cat.name}</span>
+                <span className="text-sm font-semibold text-center">{cat.name}</span>
               </button>
             ))}
           </div>
@@ -84,43 +84,44 @@ export default function HomePage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold mb-4">Товары</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Товары</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredProducts.map(product => (
-              <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <Card key={product.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 bg-white/90 backdrop-blur-sm hover:scale-105 rounded-2xl">
                 <Link to={`/product/${product.slug}`}>
-                  <div className="aspect-square bg-muted overflow-hidden">
+                  <div className="relative aspect-square bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
                     <img
                       src={product.image_url}
                       alt={product.name}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </Link>
-                <CardContent className="p-4">
+                <CardContent className="p-5">
                   <Link to={`/product/${product.slug}`}>
-                    <h3 className="font-semibold mb-2 hover:text-primary transition-colors line-clamp-2">
+                    <h3 className="font-bold text-lg mb-2 hover:text-purple-600 transition-colors line-clamp-2">
                       {product.name}
                     </h3>
                   </Link>
                   
-                  <div className="flex items-center gap-1 mb-2 text-sm">
+                  <div className="flex items-center gap-1 mb-3 text-sm bg-yellow-50 rounded-full px-2 py-1 w-fit">
                     <Icon name="Star" className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-medium">{product.rating}</span>
-                    <span className="text-muted-foreground">({product.reviews_count})</span>
+                    <span className="font-bold text-yellow-700">{product.rating}</span>
+                    <span className="text-yellow-600">({product.reviews_count})</span>
                   </div>
 
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-2xl font-bold">{parseFloat(String(product.price)).toLocaleString()} ₽</span>
+                  <div className="flex items-baseline gap-2 mb-4">
+                    <span className="text-2xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{parseFloat(String(product.price)).toLocaleString()} ₽</span>
                     {product.old_price && (
-                      <span className="text-sm text-muted-foreground line-through">
+                      <span className="text-sm text-gray-400 line-through">
                         {parseFloat(String(product.old_price)).toLocaleString()} ₽
                       </span>
                     )}
                   </div>
 
                   <Button
-                    className="w-full"
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                     onClick={() => addToCart({
                       id: product.id,
                       name: product.name,

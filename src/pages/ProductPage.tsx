@@ -39,10 +39,10 @@ export default function ProductPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
         <Header />
         <main className="container mx-auto px-4 py-8">
-          <div className="text-center">Загрузка...</div>
+          <div className="text-center font-semibold text-purple-600">Загрузка...</div>
         </main>
       </div>
     )
@@ -50,7 +50,7 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
         <Header />
         <main className="container mx-auto px-4 py-8">
           <div className="text-center">
@@ -72,17 +72,17 @@ export default function ProductPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       <Header />
 
       <main className="container mx-auto px-4 py-8">
-        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6">
+        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6 hover:bg-purple-100 rounded-full">
           <Icon name="ArrowLeft" className="h-4 w-4 mr-2" />
           Назад
         </Button>
 
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="aspect-square bg-muted rounded-lg overflow-hidden">
+          <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl overflow-hidden shadow-2xl">
             <img
               src={product.image_url}
               alt={product.name}
@@ -90,29 +90,29 @@ export default function ProductPage() {
             />
           </div>
 
-          <div className="flex flex-col">
-            <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+          <div className="flex flex-col bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl">
+            <h1 className="text-4xl font-black mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">{product.name}</h1>
 
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-1 bg-yellow-50 rounded-full px-3 py-1.5">
                 <Icon name="Star" className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                <span className="text-lg font-semibold">{product.rating}</span>
+                <span className="text-lg font-bold text-yellow-700">{product.rating}</span>
               </div>
-              <span className="text-muted-foreground">
+              <span className="text-gray-600 font-medium">
                 {product.reviews_count} отзывов
               </span>
             </div>
 
-            <div className="flex items-center gap-4 mb-6">
-              <span className="text-4xl font-bold">
+            <div className="flex items-baseline gap-4 mb-6">
+              <span className="text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 {parseFloat(String(product.price)).toLocaleString()} ₽
               </span>
               {product.old_price && (
                 <>
-                  <span className="text-xl text-muted-foreground line-through">
+                  <span className="text-xl text-gray-400 line-through">
                     {parseFloat(String(product.old_price)).toLocaleString()} ₽
                   </span>
-                  <Badge variant="destructive">
+                  <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white border-0 text-lg px-3 py-1">
                     -{Math.round((1 - parseFloat(String(product.price)) / parseFloat(String(product.old_price))) * 100)}%
                   </Badge>
                 </>
@@ -120,20 +120,20 @@ export default function ProductPage() {
             </div>
 
             {product.stock > 0 ? (
-              <div className="flex items-center gap-2 mb-6 text-green-600">
-                <Icon name="Check" className="h-5 w-5" />
-                <span>В наличии: {product.stock} шт</span>
+              <div className="flex items-center gap-2 mb-6 bg-green-50 rounded-full px-4 py-2 w-fit">
+                <Icon name="Check" className="h-5 w-5 text-green-600" />
+                <span className="font-semibold text-green-700">В наличии: {product.stock} шт</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2 mb-6 text-red-600">
-                <Icon name="X" className="h-5 w-5" />
-                <span>Нет в наличии</span>
+              <div className="flex items-center gap-2 mb-6 bg-red-50 rounded-full px-4 py-2 w-fit">
+                <Icon name="X" className="h-5 w-5 text-red-600" />
+                <span className="font-semibold text-red-700">Нет в наличии</span>
               </div>
             )}
 
             <Button
               size="lg"
-              className="w-full md:w-auto mb-6"
+              className="w-full md:w-auto mb-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold text-lg py-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all hover:scale-105"
               disabled={product.stock === 0}
               onClick={handleAddToCart}
             >
@@ -141,9 +141,9 @@ export default function ProductPage() {
               В корзину
             </Button>
 
-            <div className="border-t pt-6">
-              <h2 className="text-xl font-semibold mb-3">Описание</h2>
-              <p className="text-muted-foreground leading-relaxed">
+            <div className="border-t border-purple-200 pt-6">
+              <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Описание</h2>
+              <p className="text-gray-700 leading-relaxed text-lg">
                 {product.description}
               </p>
             </div>
