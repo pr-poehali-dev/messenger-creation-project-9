@@ -67,9 +67,14 @@ export default function HomePage() {
       <main className="container mx-auto px-4 py-8">
         <section className="mb-12" ref={categoriesRef}>
           <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            animate={categoriesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, x: -100, rotate: -10 }}
+            animate={categoriesInView ? { opacity: 1, x: 0, rotate: 0 } : { opacity: 0, x: -100, rotate: -10 }}
+            transition={{ 
+              duration: 0.8, 
+              type: "spring",
+              stiffness: 100,
+              damping: 10
+            }}
             className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
           >
             Категории
@@ -80,14 +85,34 @@ export default function HomePage() {
               return (
                 <motion.button
                   key={cat.id}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={categoriesInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  initial={{ opacity: 0, scale: 0, rotate: 180 }}
+                  animate={categoriesInView ? { 
+                    opacity: 1, 
+                    scale: 1, 
+                    rotate: 0
+                  } : { 
+                    opacity: 0, 
+                    scale: 0, 
+                    rotate: 180 
+                  }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: index * 0.1,
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 12
+                  }}
+                  whileHover={{ 
+                    scale: 1.15, 
+                    rotate: [0, -5, 5, 0],
+                    transition: { duration: 0.3 }
+                  }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
                   className={`group flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 ${
                     selectedCategory === cat.id
                       ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100 shadow-lg scale-105'
-                      : 'border-transparent bg-white/80 backdrop-blur-sm hover:border-purple-300 hover:shadow-md hover:scale-105'
+                      : 'border-transparent bg-white/80 backdrop-blur-sm hover:border-purple-300 hover:shadow-md'
                   }`}
                 >
                   <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200 ring-2 ring-white shadow-lg group-hover:ring-purple-300 transition-all">
@@ -112,9 +137,14 @@ export default function HomePage() {
 
         <section ref={productsRef}>
           <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            animate={productsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, x: 100, rotate: 10 }}
+            animate={productsInView ? { opacity: 1, x: 0, rotate: 0 } : { opacity: 0, x: 100, rotate: 10 }}
+            transition={{ 
+              duration: 0.8, 
+              type: "spring",
+              stiffness: 100,
+              damping: 10
+            }}
             className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
           >
             Товары
@@ -123,9 +153,29 @@ export default function HomePage() {
             {filteredProducts.map((product, index) => (
               <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={productsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
+                initial={{ opacity: 0, y: 50, scale: 0.8, rotateX: 45 }}
+                animate={productsInView ? { 
+                  opacity: 1, 
+                  y: 0, 
+                  scale: 1, 
+                  rotateX: 0 
+                } : { 
+                  opacity: 0, 
+                  y: 50, 
+                  scale: 0.8, 
+                  rotateX: 45 
+                }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.05,
+                  type: "spring",
+                  stiffness: 150,
+                  damping: 12
+                }}
+                whileHover={{ 
+                  y: -10,
+                  transition: { duration: 0.2 }
+                }}
               >
                 <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 bg-white/90 backdrop-blur-sm hover:scale-105 rounded-2xl">
                 <Link to={`/product/${product.slug}`}>
