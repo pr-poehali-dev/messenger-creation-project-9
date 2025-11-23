@@ -33,6 +33,7 @@ interface Product {
   old_price: number | null
   stock: number
   category: string
+  category_id: number
   image_url: string
   status: 'active' | 'inactive'
 }
@@ -47,6 +48,7 @@ export default function SellerProductsPage() {
       old_price: 149990,
       stock: 15,
       category: 'Электроника',
+      category_id: 1,
       image_url: 'https://picsum.photos/seed/iphone15/300',
       status: 'active'
     },
@@ -57,6 +59,7 @@ export default function SellerProductsPage() {
       old_price: null,
       stock: 22,
       category: 'Электроника',
+      category_id: 1,
       image_url: 'https://picsum.photos/seed/samsung24/300',
       status: 'active'
     },
@@ -67,6 +70,7 @@ export default function SellerProductsPage() {
       old_price: 179990,
       stock: 8,
       category: 'Электроника',
+      category_id: 1,
       image_url: 'https://picsum.photos/seed/macbookm3/300',
       status: 'active'
     },
@@ -77,6 +81,7 @@ export default function SellerProductsPage() {
       old_price: null,
       stock: 0,
       category: 'Электроника',
+      category_id: 1,
       image_url: 'https://picsum.photos/seed/airpods2/300',
       status: 'inactive'
     }
@@ -90,6 +95,7 @@ export default function SellerProductsPage() {
     old_price: '',
     stock: '',
     category: '',
+    category_id: 1,
     image_url: '',
     status: 'active' as 'active' | 'inactive'
   })
@@ -112,6 +118,7 @@ export default function SellerProductsPage() {
       name: product.name,
       price: String(product.price),
       old_price: product.old_price ? String(product.old_price) : '',
+      category_id: product.category_id,
       stock: String(product.stock),
       category: product.category,
       image_url: product.image_url,
@@ -128,6 +135,7 @@ export default function SellerProductsPage() {
       old_price: '',
       stock: '',
       category: 'Электроника',
+      category_id: 1,
       image_url: '',
       status: 'active'
     })
@@ -147,6 +155,7 @@ export default function SellerProductsPage() {
               old_price: formData.old_price ? Number(formData.old_price) : null,
               stock: Number(formData.stock),
               category: formData.category,
+              category_id: formData.category_id,
               image_url: formData.image_url,
               status: formData.status
             }
@@ -164,6 +173,7 @@ export default function SellerProductsPage() {
         old_price: formData.old_price ? Number(formData.old_price) : null,
         stock: Number(formData.stock),
         category: formData.category,
+        category_id: formData.category_id,
         image_url: formData.image_url || 'https://picsum.photos/seed/new/300',
         status: formData.status
       }
@@ -281,7 +291,21 @@ export default function SellerProductsPage() {
                     <Label htmlFor="category">Категория</Label>
                     <Select
                       value={formData.category}
-                      onValueChange={(value) => setFormData({ ...formData, category: value })}
+                      onValueChange={(value) => {
+                        const categoryMap: Record<string, number> = {
+                          'Электроника': 1,
+                          'Одежда': 2,
+                          'Книги': 3,
+                          'Дом и сад': 4,
+                          'Спорт': 5,
+                          'Красота': 6
+                        }
+                        setFormData({ 
+                          ...formData, 
+                          category: value,
+                          category_id: categoryMap[value] || 1
+                        })
+                      }}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Выберите категорию" />

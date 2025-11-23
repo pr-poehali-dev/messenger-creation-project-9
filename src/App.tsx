@@ -7,6 +7,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { SellerAuthProvider } from "@/contexts/SellerAuthContext";
 import { CustomerAuthProvider } from "@/contexts/CustomerAuthContext";
 import HomePage from "./pages/HomePage";
+import CategoryPage from "./pages/CategoryPage";
 import ProductPage from "./pages/ProductPage";
 import CartPage from "./pages/CartPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -90,6 +91,7 @@ const App = () => {
                 ) : (
                   <Routes>
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/category/:categoryId" element={<CategoryPage />} />
                     <Route path="/product/:slug" element={<ProductPage />} />
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/login" element={<CustomerLoginPage />} />

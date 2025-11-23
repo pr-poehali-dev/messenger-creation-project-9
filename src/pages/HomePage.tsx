@@ -41,7 +41,6 @@ const categoryIcons: Record<string, string> = {
 export default function HomePage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
   const [clickedCards, setClickedCards] = useState<Set<number>>(new Set())
   const [isLoading, setIsLoading] = useState(true)
   const [showContent, setShowContent] = useState(false)
@@ -95,10 +94,6 @@ export default function HomePage() {
         }, 300)
       })
   }, [])
-
-  const filteredProducts = selectedCategory
-    ? products.filter(p => p.category_id === selectedCategory)
-    : products
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
@@ -155,13 +150,9 @@ export default function HomePage() {
               return (
                 <button
                   key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id === selectedCategory ? null : cat.id)}
+                  onClick={() => navigate(`/category/${cat.id}`)}
                   style={{ animationDelay: `${index * 0.1}s` }}
-                  className={`group flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300 animate-bounce-in active:animate-click-pulse ${
-                    selectedCategory === cat.id
-                      ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100 shadow-lg scale-105 animate-selected-burst'
-                      : 'border-transparent bg-white/80 backdrop-blur-sm active:scale-95'
-                  }`}
+                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl border-2 border-transparent bg-white/80 backdrop-blur-sm transition-all duration-300 animate-bounce-in active:animate-click-pulse active:scale-95"
                 >
                   <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-200 to-pink-200 ring-2 ring-white shadow-lg transition-all group-hover:rotate-12 group-active:ring-4 group-active:ring-purple-400">
                     <Icon name={iconName} className="h-8 w-8 text-purple-700 group-active:scale-90 transition-transform" />
@@ -171,16 +162,6 @@ export default function HomePage() {
               )
             })}
           </div>
-          {selectedCategory && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-4"
-              onClick={() => setSelectedCategory(null)}
-            >
-              Сбросить фильтр
-            </Button>
-          )}
         </section>
 
         <section className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
@@ -188,7 +169,7 @@ export default function HomePage() {
             Товары
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredProducts.map((product, index) => (
+            {products.map((product, index) => (
               <div
                 key={product.id}
                 className="animate-scale-in"
