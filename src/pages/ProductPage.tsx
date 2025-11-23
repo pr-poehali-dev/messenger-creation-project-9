@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import Icon from '@/components/ui/icon'
 import { useCart } from '@/contexts/CartContext'
+import { toast } from 'sonner'
 
 interface Product {
   id: number
@@ -106,6 +107,16 @@ export default function ProductPage() {
       name: product.name,
       price: parseFloat(String(product.price)),
       image_url: product.image_url
+    })
+    
+    toast.success('Товар добавлен в корзину!', {
+      description: product.name,
+      duration: 2000,
+      icon: '🛒',
+      action: {
+        label: 'Перейти в корзину',
+        onClick: () => navigate('/cart')
+      }
     })
   }
 

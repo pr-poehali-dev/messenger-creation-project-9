@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import Icon from '@/components/ui/icon'
 import { useCart } from '@/contexts/CartContext'
+import { toast } from 'sonner'
 
 export default function CartPage() {
   const navigate = useNavigate()
@@ -13,7 +14,9 @@ export default function CartPage() {
   const [quantityChanging, setQuantityChanging] = useState<{ id: number; direction: 'up' | 'down' } | null>(null)
 
   const handleRemove = (id: number) => {
+    const item = items.find(i => i.id === id)
     setRemovingItems(prev => new Set(prev).add(id))
+    
     setTimeout(() => {
       removeFromCart(id)
       setRemovingItems(prev => {
@@ -21,6 +24,14 @@ export default function CartPage() {
         next.delete(id)
         return next
       })
+      
+      if (item) {
+        toast.error('Товар удалён из корзины', {
+          description: item.name,
+          duration: 2000,
+          icon: '🗑️',
+        })
+      }
     }, 400)
   }
 
@@ -28,6 +39,13 @@ export default function CartPage() {
     setQuantityChanging({ id, direction })
     updateQuantity(id, newQuantity)
     setTimeout(() => setQuantityChanging(null), 300)
+    
+    if (direction === 'up') {
+      toast.success('Количество увеличено', {
+        duration: 1000,
+        icon: '➕',
+      })
+    }
   }
 
   if (items.length === 0) {

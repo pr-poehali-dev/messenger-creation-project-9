@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import Icon from '@/components/ui/icon'
 import { useCart } from '@/contexts/CartContext'
+import { toast } from 'sonner'
 
 interface Category {
   id: number
@@ -47,6 +48,13 @@ export default function HomePage() {
   const handleAddToCart = (product: { id: number; name: string; price: number; image_url: string }) => {
     addToCart(product)
     setClickedCards(prev => new Set(prev).add(product.id))
+    
+    toast.success('Товар добавлен в корзину!', {
+      description: product.name,
+      duration: 2000,
+      icon: '🛒',
+    })
+    
     setTimeout(() => {
       setClickedCards(prev => {
         const next = new Set(prev)
