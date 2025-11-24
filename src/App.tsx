@@ -6,6 +6,9 @@ import ProductPage from './pages/ProductPage'
 import CartPage from './pages/CartPage'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
+import SellerRegister from './pages/SellerRegister'
+import SellerLogin from './pages/SellerLogin'
+import SellerDashboard from './pages/SellerDashboard'
 
 export default function App() {
   return (
@@ -18,6 +21,9 @@ export default function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/seller/register" element={<SellerRegister />} />
+          <Route path="/seller/login" element={<SellerLogin />} />
+          <Route path="/seller/dashboard" element={<SellerDashboard />} />
         </Routes>
       </BrowserRouter>
     </CartProvider>
