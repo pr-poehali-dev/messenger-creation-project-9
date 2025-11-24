@@ -137,28 +137,6 @@ export default function HomePage() {
                 <TrendingUp className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
-            
-            <div className="hidden md:flex items-center justify-center">
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/20 rounded-3xl blur-2xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-sm p-8 rounded-3xl border-2 border-white/30">
-                  <div className="text-center mb-4">
-                    <div className="text-5xl font-black text-white mb-2">10K+</div>
-                    <div className="text-white/80 font-semibold">Покупателей</div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="text-center">
-                      <div className="text-3xl font-black text-white mb-1">500+</div>
-                      <div className="text-sm text-white/80">Продавцов</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-black text-white mb-1">4.8★</div>
-                      <div className="text-sm text-white/80">Рейтинг</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </Link>
 
