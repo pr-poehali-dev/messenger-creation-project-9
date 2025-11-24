@@ -14,6 +14,10 @@ import SellerLanding from './pages/SellerLanding'
 import CustomerRegister from './pages/CustomerRegister'
 import CustomerLogin from './pages/CustomerLogin'
 import CustomerProfile from './pages/CustomerProfile'
+import PicSellerLanding from './pages/PicSellerLanding'
+import PicSellerRegister from './pages/PicSellerRegister'
+import PicSellerLogin from './pages/PicSellerLogin'
+import PicSellerDashboard from './pages/PicSellerDashboard'
 
 export default function App() {
   return (
@@ -34,6 +38,10 @@ export default function App() {
             <Route path="/seller/register" element={<SellerRegister />} />
             <Route path="/seller/login" element={<SellerLogin />} />
             <Route path="/seller/dashboard" element={<SellerDashboard />} />
+            <Route path="/pic" element={<PicSellerLanding />} />
+            <Route path="/pic/register" element={<PicSellerRegister />} />
+            <Route path="/pic/login" element={<PicSellerLogin />} />
+            <Route path="/pic/dashboard" element={<PicSellerDashboard />} />
           </Routes>
         </BrowserRouter>
       </CartProvider>
