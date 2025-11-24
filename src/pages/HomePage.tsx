@@ -1,37 +1,51 @@
 import { Link } from 'react-router-dom'
 import { ShoppingCart, Search, User, Sparkles, TrendingUp } from 'lucide-react'
 import { useCart } from '../context/CartContext'
-
-const categories = [
-  { id: 1, name: 'Электроника', icon: '📱', gradient: 'from-blue-500 to-cyan-500' },
-  { id: 2, name: 'Одежда', icon: '👕', gradient: 'from-purple-500 to-pink-500' },
-  { id: 3, name: 'Дом и сад', icon: '🏡', gradient: 'from-green-500 to-emerald-500' },
-  { id: 4, name: 'Красота', icon: '💄', gradient: 'from-rose-500 to-pink-500' },
-  { id: 5, name: 'Спорт', icon: '⚽', gradient: 'from-orange-500 to-red-500' },
-  { id: 6, name: 'Детские товары', icon: '🧸', gradient: 'from-yellow-500 to-orange-500' },
-]
-
-const products = [
-  { id: 1, name: 'iPhone 15 Pro', price: 89990, image: 'https://images.unsplash.com/photo-1592286927505-0ac3b3e76dbb?w=400', category: 1, rating: 4.9, reviews: 234 },
-  { id: 2, name: 'Samsung Galaxy S24', price: 79990, image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400', category: 1, rating: 4.8, reviews: 189 },
-  { id: 3, name: 'Джинсы Levis', price: 6990, image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400', category: 2, rating: 4.7, reviews: 456 },
-  { id: 4, name: 'Кроссовки Nike', price: 12990, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400', category: 2, rating: 4.9, reviews: 789 },
-  { id: 5, name: 'Кофеварка Delonghi', price: 24990, image: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=400', category: 3, rating: 4.6, reviews: 123 },
-  { id: 6, name: 'Пылесос Dyson', price: 34990, image: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=400', category: 3, rating: 4.8, reviews: 234 },
-  { id: 7, name: 'Помада MAC', price: 2490, image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400', category: 4, rating: 4.5, reviews: 567 },
-  { id: 8, name: 'Духи Chanel', price: 8990, image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400', category: 4, rating: 4.9, reviews: 345 },
-]
+import { useState, useEffect } from 'react'
+import { api, Category, Product } from '../services/api'
 
 export default function HomePage() {
   const { addToCart, totalItems } = useCart()
+  const [categories, setCategories] = useState<Category[]>([])
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const handleAddToCart = (product: typeof products[0]) => {
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [cats, prods] = await Promise.all([
+          api.getCategories(),
+          api.getProducts()
+        ])
+        setCategories(cats)
+        setProducts(prods)
+      } catch (error) {
+        console.error('Failed to load data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
+
+  const handleAddToCart = (product: Product) => {
     addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
       image: product.image
     })
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-violet-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 font-semibold">Загрузка...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -96,7 +110,9 @@ export default function HomePage() {
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${cat.gradient} opacity-0 group-active:opacity-5 transition-opacity`}></div>
                 <div className="relative text-center">
-                  <div className="text-4xl sm:text-5xl mb-2 sm:mb-3 transform group-active:scale-110 transition-transform">{cat.icon}</div>
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 rounded-2xl overflow-hidden bg-slate-100">
+                    <img src={cat.icon} alt={cat.name} className="w-full h-full object-cover" />
+                  </div>
                   <div className="font-bold text-sm sm:text-base text-slate-700 group-hover:text-violet-600 transition-colors">{cat.name}</div>
                 </div>
               </Link>

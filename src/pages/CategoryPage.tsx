@@ -1,40 +1,64 @@
 import { Link, useParams } from 'react-router-dom'
 import { ShoppingCart, Search, User, ChevronLeft, Sparkles } from 'lucide-react'
 import { useCart } from '../context/CartContext'
-
-const products = [
-  { id: 1, name: 'iPhone 15 Pro', price: 89990, image: 'https://images.unsplash.com/photo-1592286927505-0ac3b3e76dbb?w=400', category: 1, rating: 4.9, reviews: 234 },
-  { id: 2, name: 'Samsung Galaxy S24', price: 79990, image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400', category: 1, rating: 4.8, reviews: 189 },
-  { id: 3, name: 'Джинсы Levis', price: 6990, image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400', category: 2, rating: 4.7, reviews: 456 },
-  { id: 4, name: 'Кроссовки Nike', price: 12990, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400', category: 2, rating: 4.9, reviews: 789 },
-  { id: 5, name: 'Кофеварка Delonghi', price: 24990, image: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=400', category: 3, rating: 4.6, reviews: 123 },
-  { id: 6, name: 'Пылесос Dyson', price: 34990, image: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=400', category: 3, rating: 4.8, reviews: 234 },
-  { id: 7, name: 'Помада MAC', price: 2490, image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400', category: 4, rating: 4.5, reviews: 567 },
-  { id: 8, name: 'Духи Chanel', price: 8990, image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400', category: 4, rating: 4.9, reviews: 345 },
-]
-
-const categories: Record<string, { name: string; icon: string; gradient: string }> = {
-  '1': { name: 'Электроника', icon: '📱', gradient: 'from-blue-500 to-cyan-500' },
-  '2': { name: 'Одежда', icon: '👕', gradient: 'from-purple-500 to-pink-500' },
-  '3': { name: 'Дом и сад', icon: '🏡', gradient: 'from-green-500 to-emerald-500' },
-  '4': { name: 'Красота', icon: '💄', gradient: 'from-rose-500 to-pink-500' },
-  '5': { name: 'Спорт', icon: '⚽', gradient: 'from-orange-500 to-red-500' },
-  '6': { name: 'Детские товары', icon: '🧸', gradient: 'from-yellow-500 to-orange-500' },
-}
+import { useState, useEffect } from 'react'
+import { api, Product, Category } from '../services/api'
 
 export default function CategoryPage() {
   const { id } = useParams()
   const { addToCart, totalItems } = useCart()
-  const category = categories[id || '1']
-  const filteredProducts = products.filter(p => p.category === Number(id))
+  const [products, setProducts] = useState<Product[]>([])
+  const [category, setCategory] = useState<Category | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const handleAddToCart = (product: typeof products[0]) => {
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [cats, prods] = await Promise.all([
+          api.getCategories(),
+          api.getProducts(id)
+        ])
+        const currentCat = cats.find(c => c.id === id)
+        setCategory(currentCat || null)
+        setProducts(prods)
+      } catch (error) {
+        console.error('Failed to load data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [id])
+
+  const handleAddToCart = (product: Product) => {
     addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
       image: product.image
     })
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-violet-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 font-semibold">Загрузка...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!category) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">Категория не найдена</h2>
+          <Link to="/" className="text-violet-600 font-semibold hover:underline">Вернуться на главную</Link>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -91,8 +115,8 @@ export default function CategoryPage() {
         <div className="mb-6 sm:mb-12 flex items-center gap-4 sm:gap-6">
           <div className="relative flex-shrink-0">
             <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} rounded-2xl sm:rounded-3xl blur-lg opacity-50`}></div>
-            <div className={`relative bg-gradient-to-br ${category.gradient} p-4 sm:p-6 rounded-2xl sm:rounded-3xl`}>
-              <span className="text-4xl sm:text-6xl">{category.icon}</span>
+            <div className={`relative bg-gradient-to-br ${category.gradient} p-4 sm:p-6 rounded-2xl sm:rounded-3xl overflow-hidden`}>
+              <img src={category.icon} alt={category.name} className="w-16 h-16 sm:w-24 sm:h-24 object-cover" />
             </div>
           </div>
           <div>
@@ -100,12 +124,12 @@ export default function CategoryPage() {
               {category.name}
             </h1>
             <p className="text-slate-600 text-sm sm:text-lg">
-              {filteredProducts.length} товаров
+              {products.length} товаров
             </p>
           </div>
         </div>
 
-        {filteredProducts.length === 0 ? (
+        {products.length === 0 ? (
           <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-8 sm:p-12 text-center border border-slate-200/50">
             <div className="text-5xl sm:text-6xl mb-4">🔍</div>
             <h2 className="text-xl sm:text-2xl font-bold mb-2 text-slate-800">Товары не найдены</h2>
@@ -119,7 +143,7 @@ export default function CategoryPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {filteredProducts.map((product) => (
+            {products.map((product) => (
               <div
                 key={product.id}
                 className="group bg-white rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-violet-500/20 transition-all border border-slate-200/50"

@@ -1,18 +1,40 @@
 import { Link, useParams } from 'react-router-dom'
 import { ShoppingCart, Search, User, ChevronLeft, Star, Sparkles, Package, TruckIcon, Shield } from 'lucide-react'
 import { useCart } from '../context/CartContext'
-
-const products = [
-  { id: 1, name: 'iPhone 15 Pro', price: 89990, image: 'https://images.unsplash.com/photo-1592286927505-0ac3b3e76dbb?w=800', category: 1, description: 'Новейший iPhone с профессиональными возможностями камеры и мощным процессором A17 Pro', rating: 4.9, reviews: 234, inStock: true },
-  { id: 2, name: 'Samsung Galaxy S24', price: 79990, image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800', category: 1, description: 'Флагманский смартфон от Samsung с ИИ и улучшенной камерой', rating: 4.8, reviews: 189, inStock: true },
-  { id: 3, name: 'Джинсы Levis', price: 6990, image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=800', category: 2, description: 'Классические джинсы Levis 501 из прочного денима', rating: 4.7, reviews: 456, inStock: true },
-  { id: 4, name: 'Кроссовки Nike', price: 12990, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800', category: 2, description: 'Удобные спортивные кроссовки для бега и тренировок', rating: 4.9, reviews: 789, inStock: true },
-]
+import { useState, useEffect } from 'react'
+import { api, Product } from '../services/api'
 
 export default function ProductPage() {
   const { id } = useParams()
   const { addToCart, totalItems } = useCart()
-  const product = products.find(p => p.id === Number(id))
+  const [product, setProduct] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadProduct() {
+      if (!id) return
+      try {
+        const prod = await api.getProduct(Number(id))
+        setProduct(prod)
+      } catch (error) {
+        console.error('Failed to load product:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadProduct()
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-violet-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 font-semibold">Загрузка...</p>
+        </div>
+      </div>
+    )
+  }
 
   if (!product) {
     return (
@@ -29,6 +51,7 @@ export default function ProductPage() {
   }
 
   const handleAddToCart = () => {
+    if (!product) return
     addToCart({
       id: product.id,
       name: product.name,
