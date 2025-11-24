@@ -9,6 +9,7 @@ import AdminDashboard from './pages/AdminDashboard'
 import SellerRegister from './pages/SellerRegister'
 import SellerLogin from './pages/SellerLogin'
 import SellerDashboard from './pages/SellerDashboard'
+import SellerLanding from './pages/SellerLanding'
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/seller" element={<SellerLanding />} />
           <Route path="/seller/register" element={<SellerRegister />} />
           <Route path="/seller/login" element={<SellerLogin />} />
           <Route path="/seller/dashboard" element={<SellerDashboard />} />
