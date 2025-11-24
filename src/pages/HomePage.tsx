@@ -16,7 +16,7 @@ const categoryIcons: Record<string, any> = {
 
 export default function HomePage() {
   const { addToCart, totalItems } = useCart()
-  const { isAuthenticated } = useCustomerAuth()
+  const { isAuthenticated, customer } = useCustomerAuth()
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -89,8 +89,9 @@ export default function HomePage() {
 
             <div className="flex items-center gap-1 sm:gap-2">
               {isAuthenticated ? (
-                <Link to="/profile" className="p-2 sm:p-3 hover:bg-slate-100 rounded-2xl transition-all active:scale-95 touch-manipulation">
+                <Link to="/profile" className="flex items-center gap-2 p-2 sm:px-4 sm:py-3 hover:bg-slate-100 rounded-2xl transition-all active:scale-95 touch-manipulation">
                   <User className="w-5 h-5 sm:w-6 sm:h-6 text-slate-700" />
+                  <span className="hidden sm:block text-sm font-semibold text-slate-700">{customer?.full_name}</span>
                 </Link>
               ) : (
                 <Link to="/login" className="p-2 sm:p-3 hover:bg-slate-100 rounded-2xl transition-all active:scale-95 touch-manipulation">
