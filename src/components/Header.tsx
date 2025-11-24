@@ -46,6 +46,17 @@ export default function Header() {
             <div className="hidden md:flex items-center gap-2">
               <Button 
                 variant="ghost" 
+                className="hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-full" 
+                asChild
+              >
+                <Link to="/seller">
+                  <Icon name="Store" className="h-4 w-4 mr-2 text-purple-600 dark:text-purple-400" />
+                  Продавцам
+                </Link>
+              </Button>
+
+              <Button 
+                variant="ghost" 
                 size="icon" 
                 onClick={toggleTheme}
                 className="hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-full"
@@ -108,6 +119,30 @@ export default function Header() {
                   <div className="flex flex-col gap-2 mt-4">
                     <Button 
                       variant="ghost" 
+                      className="justify-start hover:bg-purple-100 transition-colors rounded-xl h-12" 
+                      asChild
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Link to="/">
+                        <Icon name="Home" className="h-5 w-5 mr-3 text-purple-600" />
+                        Главная
+                      </Link>
+                    </Button>
+
+                    <Button 
+                      variant="ghost" 
+                      className="justify-start hover:bg-purple-100 transition-colors rounded-xl h-12" 
+                      asChild
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Link to="/seller">
+                        <Icon name="Store" className="h-5 w-5 mr-3 text-purple-600" />
+                        Продавцам
+                      </Link>
+                    </Button>
+
+                    <Button 
+                      variant="ghost" 
                       onClick={toggleTheme}
                       className="justify-start hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors rounded-xl h-12"
                     >
@@ -155,18 +190,6 @@ export default function Header() {
                             {totalItems}
                           </Badge>
                         )}
-                      </Link>
-                    </Button>
-
-                    <Button 
-                      variant="ghost" 
-                      className="justify-start hover:bg-purple-100 transition-colors rounded-xl h-12" 
-                      asChild
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Link to="/">
-                        <Icon name="Home" className="h-5 w-5 mr-3 text-purple-600" />
-                        Главная
                       </Link>
                     </Button>
                   </div>
