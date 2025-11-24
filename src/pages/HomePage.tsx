@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ShoppingCart, Search, User, Sparkles, TrendingUp, Smartphone, Shirt, BookOpen, Home, Dumbbell, Sparkle } from 'lucide-react'
 import { useCart } from '../context/CartContext'
+import { useCustomerAuth } from '../context/CustomerAuthContext'
 import { useState, useEffect } from 'react'
 import { api, Category, Product } from '../services/api'
 
@@ -15,6 +16,7 @@ const categoryIcons: Record<string, any> = {
 
 export default function HomePage() {
   const { addToCart, totalItems } = useCart()
+  const { isAuthenticated } = useCustomerAuth()
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -86,9 +88,15 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
-              <button className="p-2 sm:p-3 hover:bg-slate-100 rounded-2xl transition-all active:scale-95 touch-manipulation">
-                <User className="w-5 h-5 sm:w-6 sm:h-6 text-slate-700" />
-              </button>
+              {isAuthenticated ? (
+                <Link to="/profile" className="p-2 sm:p-3 hover:bg-slate-100 rounded-2xl transition-all active:scale-95 touch-manipulation">
+                  <User className="w-5 h-5 sm:w-6 sm:h-6 text-slate-700" />
+                </Link>
+              ) : (
+                <Link to="/login" className="p-2 sm:p-3 hover:bg-slate-100 rounded-2xl transition-all active:scale-95 touch-manipulation">
+                  <User className="w-5 h-5 sm:w-6 sm:h-6 text-slate-700" />
+                </Link>
+              )}
               <Link to="/cart" className="relative p-2 sm:p-3 hover:bg-slate-100 rounded-2xl transition-all group active:scale-95 touch-manipulation">
                 <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 text-slate-700 group-hover:text-violet-600 transition-colors" />
                 {totalItems > 0 && (

@@ -1,4 +1,5 @@
 {
+  "customer-auth": "https://functions.poehali.dev/8ddebd19-d89f-4be7-b465-1663cb539eb0",
   "seller": "https://functions.poehali.dev/dc1ea738-7e4f-4794-ae7f-88de590113bd",
   "admin": "https://functions.poehali.dev/f3d74af2-2b4e-4711-b02e-15d39ab212ef",
   "api": "https://functions.poehali.dev/d490f8b9-04d2-4119-ac7d-9334c3d44246",

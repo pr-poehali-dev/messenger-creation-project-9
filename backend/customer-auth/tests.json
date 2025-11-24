@@ -1,0 +1,44 @@
+{
+  "tests": [
+    {
+      "name": "Register new customer",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "register",
+        "email": "test@example.com",
+        "password": "password123",
+        "full_name": "Test User",
+        "phone": "+7 999 123 45 67"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "token": "string",
+        "customer": {
+          "id": "number",
+          "email": "string",
+          "full_name": "string"
+        }
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Login existing customer",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "login",
+        "email": "test@example.com",
+        "password": "password123"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "token": "string",
+        "customer": {
+          "email": "string"
+        }
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
