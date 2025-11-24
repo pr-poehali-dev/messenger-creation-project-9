@@ -19,6 +19,7 @@ interface Stats {
   categories: number
   sellers: number
   customers: number
+  orders: number
 }
 
 export default function HomePage() {
@@ -154,22 +155,26 @@ export default function HomePage() {
                 <div className="relative">
                   <div className="absolute inset-0 bg-white/20 rounded-3xl blur-2xl"></div>
                   <div className="relative bg-white/10 backdrop-blur-sm p-8 rounded-3xl border-2 border-white/30">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
                       <div className="text-center">
-                        <div className="text-4xl font-black text-white mb-2">{stats.products}</div>
-                        <div className="text-sm text-white/80 font-semibold">Товаров</div>
+                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.products}</div>
+                        <div className="text-xs lg:text-sm text-white/80 font-semibold">Товаров</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-4xl font-black text-white mb-2">{stats.categories}</div>
-                        <div className="text-sm text-white/80 font-semibold">Категорий</div>
+                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.categories}</div>
+                        <div className="text-xs lg:text-sm text-white/80 font-semibold">Категорий</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-4xl font-black text-white mb-2">{stats.sellers}</div>
-                        <div className="text-sm text-white/80 font-semibold">Продавцов</div>
+                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.sellers}</div>
+                        <div className="text-xs lg:text-sm text-white/80 font-semibold">Продавцов</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-4xl font-black text-white mb-2">{stats.customers}</div>
-                        <div className="text-sm text-white/80 font-semibold">Покупателей</div>
+                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.customers}</div>
+                        <div className="text-xs lg:text-sm text-white/80 font-semibold">Покупателей</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.orders}</div>
+                        <div className="text-xs lg:text-sm text-white/80 font-semibold">Заказов</div>
                       </div>
                     </div>
                   </div>

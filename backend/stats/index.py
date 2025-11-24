@@ -5,7 +5,7 @@ from typing import Dict, Any
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     '''
-    Business: Get marketplace statistics (products, categories, sellers, customers count)
+    Business: Get marketplace statistics (products, categories, sellers, customers, orders count)
     Args: event with httpMethod
           context with request_id
     Returns: HTTP response with statistics data
@@ -62,6 +62,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     cursor.execute(f'SELECT COUNT(*) FROM {schema_name}.customers')
     customers_count = cursor.fetchone()[0]
     
+    cursor.execute(f"SELECT COUNT(*) FROM {schema_name}.orders WHERE status = 'delivered'")
+    orders_count = cursor.fetchone()[0]
+    
     cursor.close()
     conn.close()
     
@@ -69,7 +72,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         'products': products_count,
         'categories': categories_count,
         'sellers': sellers_count,
-        'customers': customers_count
+        'customers': customers_count,
+        'orders': orders_count
     }
     
     return {
