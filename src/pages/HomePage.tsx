@@ -103,6 +103,56 @@ export default function HomePage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
+        <Link 
+          to="/seller"
+          className="block mb-8 sm:mb-12 group relative overflow-hidden bg-gradient-to-br from-violet-600 via-fuchsia-600 to-purple-700 rounded-3xl p-6 sm:p-10 shadow-2xl hover:shadow-violet-500/50 transition-all active:scale-[0.98] touch-manipulation"
+        >
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzBoLTEydjEyaDEyVjMwem0wIDI0aC0xMnYxMmgxMlY1NHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30"></div>
+          
+          <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
+                <Sparkles className="w-4 h-4 text-yellow-300" />
+                <span className="text-white font-bold text-sm">Для бизнеса</span>
+              </div>
+              
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 sm:mb-4">
+                Станьте продавцом на ShopFlow!
+              </h2>
+              <p className="text-base sm:text-lg text-white/90 mb-4 sm:mb-6 max-w-2xl">
+                Начните продавать прямо сейчас • Комиссия всего 5% • Доступ к тысячам покупателей • Простое управление товарами
+              </p>
+              
+              <div className="inline-flex items-center gap-2 bg-white text-violet-600 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-black text-base sm:text-lg group-hover:bg-yellow-300 group-hover:scale-105 transition-all shadow-lg">
+                Узнать больше
+                <TrendingUp className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+            
+            <div className="hidden md:flex items-center justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-white/20 rounded-3xl blur-2xl"></div>
+                <div className="relative bg-white/10 backdrop-blur-sm p-8 rounded-3xl border-2 border-white/30">
+                  <div className="text-center mb-4">
+                    <div className="text-5xl font-black text-white mb-2">10K+</div>
+                    <div className="text-white/80 font-semibold">Покупателей</div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="text-center">
+                      <div className="text-3xl font-black text-white mb-1">500+</div>
+                      <div className="text-sm text-white/80">Продавцов</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-black text-white mb-1">4.8★</div>
+                      <div className="text-sm text-white/80">Рейтинг</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Link>
+
         <div className="mb-12">
           <div className="flex items-center gap-2 mb-3 sm:mb-4">
             <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-violet-600" />
