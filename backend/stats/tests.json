@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "name": "Get marketplace statistics",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    }
+  ]
+}

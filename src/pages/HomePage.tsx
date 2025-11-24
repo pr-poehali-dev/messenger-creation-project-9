@@ -14,22 +14,32 @@ const categoryIcons: Record<string, any> = {
   'beauty': Sparkle
 }
 
+interface Stats {
+  products: number
+  categories: number
+  sellers: number
+}
+
 export default function HomePage() {
   const { addToCart, totalItems } = useCart()
   const { isAuthenticated, customer } = useCustomerAuth()
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
+  const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [cats, prods] = await Promise.all([
+        const [cats, prods, statsRes] = await Promise.all([
           api.getCategories(),
-          api.getProducts()
+          api.getProducts(),
+          fetch('https://functions.poehali.dev/37dbef59-9085-4b45-abb6-4370ec000735')
         ])
+        const statsData = await statsRes.json()
         setCategories(cats)
         setProducts(prods)
+        setStats(statsData)
       } catch (error) {
         console.error('Failed to load data:', error)
       } finally {
@@ -126,7 +136,7 @@ export default function HomePage() {
               </div>
               
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 sm:mb-4">
-                Станьте продавцом на ShopFlow!
+                Станьте продавцом на Peeky!
               </h2>
               <p className="text-base sm:text-lg text-white/90 mb-4 sm:mb-6 max-w-2xl">
                 Начните продавать прямо сейчас • Комиссия всего 5% • Доступ к тысячам покупателей • Простое управление товарами
@@ -137,6 +147,30 @@ export default function HomePage() {
                 <TrendingUp className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
+            
+            {stats && (
+              <div className="hidden md:flex items-center justify-center">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/20 rounded-3xl blur-2xl"></div>
+                  <div className="relative bg-white/10 backdrop-blur-sm p-8 rounded-3xl border-2 border-white/30">
+                    <div className="grid grid-cols-3 gap-6">
+                      <div className="text-center">
+                        <div className="text-4xl font-black text-white mb-2">{stats.products}</div>
+                        <div className="text-sm text-white/80 font-semibold">Товаров</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-4xl font-black text-white mb-2">{stats.categories}</div>
+                        <div className="text-sm text-white/80 font-semibold">Категорий</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-4xl font-black text-white mb-2">{stats.sellers}</div>
+                        <div className="text-sm text-white/80 font-semibold">Продавцов</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </Link>
 
