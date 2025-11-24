@@ -18,6 +18,7 @@ interface Stats {
   products: number
   categories: number
   sellers: number
+  customers: number
 }
 
 export default function HomePage() {
@@ -153,7 +154,7 @@ export default function HomePage() {
                 <div className="relative">
                   <div className="absolute inset-0 bg-white/20 rounded-3xl blur-2xl"></div>
                   <div className="relative bg-white/10 backdrop-blur-sm p-8 rounded-3xl border-2 border-white/30">
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                       <div className="text-center">
                         <div className="text-4xl font-black text-white mb-2">{stats.products}</div>
                         <div className="text-sm text-white/80 font-semibold">Товаров</div>
@@ -165,6 +166,10 @@ export default function HomePage() {
                       <div className="text-center">
                         <div className="text-4xl font-black text-white mb-2">{stats.sellers}</div>
                         <div className="text-sm text-white/80 font-semibold">Продавцов</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-4xl font-black text-white mb-2">{stats.customers}</div>
+                        <div className="text-sm text-white/80 font-semibold">Покупателей</div>
                       </div>
                     </div>
                   </div>
