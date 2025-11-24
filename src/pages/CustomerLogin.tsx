@@ -38,7 +38,7 @@ export default function CustomerLogin() {
               <Sparkles className="w-8 h-8 text-white" />
             </div>
           </div>
-          <span className="text-3xl font-black text-white">ShopFlow</span>
+          <span className="text-3xl font-black text-white">Peeky</span>
         </Link>
 
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20">

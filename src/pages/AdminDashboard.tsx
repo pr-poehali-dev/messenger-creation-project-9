@@ -154,7 +154,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <h1 className="text-2xl font-black bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
-                  ShopFlow Admin
+                  Peeky Admin
                 </h1>
                 <p className="text-sm text-slate-600">{email}</p>
               </div>

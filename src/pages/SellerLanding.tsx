@@ -76,7 +76,7 @@ export default function SellerLanding() {
                 <Store className="w-6 h-6 text-white" />
               </div>
             </div>
-            <h1 className="text-2xl font-black">ShopFlow</h1>
+            <h1 className="text-2xl font-black">Peeky</h1>
           </div>
           <div className="flex items-center gap-4">
             <Link

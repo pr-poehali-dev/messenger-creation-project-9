@@ -52,7 +52,7 @@ export default function SellerLogin() {
                 <Store className="w-8 h-8 text-white" />
               </div>
             </div>
-            <h1 className="text-4xl font-black text-white">ShopFlow</h1>
+            <h1 className="text-4xl font-black text-white">Peeky</h1>
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Вход для продавцов</h2>
           <p className="text-violet-200">Войдите для управления магазином</p>

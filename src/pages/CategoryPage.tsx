@@ -74,7 +74,7 @@ export default function CategoryPage() {
                 </div>
               </div>
               <span className="text-xl sm:text-2xl font-black bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 bg-clip-text text-transparent">
-                ShopFlow
+                Peeky
               </span>
             </Link>
             
