@@ -102,7 +102,7 @@ export default function SellerLanding() {
           
           <h2 className="text-5xl md:text-6xl font-black mb-6 leading-tight">
             Продавайте больше<br />
-            с <span className="bg-gradient-to-r from-violet-300 to-fuchsia-300 bg-clip-text text-transparent">ShopFlow</span>
+            с <span className="bg-gradient-to-r from-violet-300 to-fuchsia-300 bg-clip-text text-transparent">Peeky</span>
           </h2>
           
           <p className="text-xl text-violet-100 mb-10 max-w-2xl mx-auto">
@@ -149,7 +149,7 @@ export default function SellerLanding() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h3 className="text-4xl md:text-5xl font-black text-slate-800 mb-4">
-              Почему выбирают ShopFlow?
+              Почему выбирают Peeky?
             </h3>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Мы создали идеальные условия для роста вашего бизнеса
@@ -263,7 +263,7 @@ export default function SellerLanding() {
                   Присоединяйтесь к сообществу успешных продавцов
                 </h4>
                 <p className="text-violet-100 text-lg mb-8">
-                  Более 500 продавцов уже зарабатывают на ShopFlow. 
+                  Более 500 продавцов уже зарабатывают на Peeky. 
                   Станьте частью растущей экосистемы электронной коммерции.
                 </p>
                 <Link
