@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ShoppingCart, Search, User, Sparkles, TrendingUp, Smartphone, Shirt, BookOpen, Home, Dumbbell, Sparkle } from 'lucide-react'
+import { ShoppingCart, Search, User, Sparkles, TrendingUp, Smartphone, Shirt, BookOpen, Home, Dumbbell, Sparkle, Camera, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { useCustomerAuth } from '../context/CustomerAuthContext'
 import { useState, useEffect, useRef } from 'react'
