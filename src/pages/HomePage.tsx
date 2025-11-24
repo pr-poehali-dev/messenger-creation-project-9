@@ -99,7 +99,7 @@ useEffect(() => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentBanner((prev) => (prev + 1) % 2)
-    }, 5000)
+    }, 8000)
     return () => clearInterval(timer)
   }, [])
 
