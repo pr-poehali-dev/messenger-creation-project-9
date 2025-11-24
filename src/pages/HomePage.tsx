@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { ShoppingCart, Search, User, Sparkles, TrendingUp, Smartphone, Shirt, BookOpen, Home, Dumbbell, Sparkle } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { useCustomerAuth } from '../context/CustomerAuthContext'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { api, Category, Product } from '../services/api'
 
 const categoryIcons: Record<string, any> = {
@@ -20,6 +20,50 @@ interface Stats {
   sellers: number
   customers: number
   orders: number
+}
+
+function AnimatedCounter({ value }: { value: number }) {
+  const [count, setCount] = useState(0)
+  const [hasAnimated, setHasAnimated] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!ref.current || hasAnimated) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true)
+          const duration = 1500
+          const steps = 60
+          const increment = value / steps
+          let current = 0
+
+          const timer = setInterval(() => {
+            current += increment
+            if (current >= value) {
+              setCount(value)
+              clearInterval(timer)
+            } else {
+              setCount(Math.floor(current))
+            }
+          }, duration / steps)
+
+          return () => clearInterval(timer)
+        }
+      },
+      { threshold: 0.5 }
+    )
+
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [value, hasAnimated])
+
+  return (
+    <div ref={ref} className="text-3xl lg:text-4xl font-black text-white mb-2">
+      {count}
+    </div>
+  )
 }
 
 export default function HomePage() {
@@ -157,23 +201,23 @@ export default function HomePage() {
                   <div className="relative bg-white/10 backdrop-blur-sm p-8 rounded-3xl border-2 border-white/30">
                     <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6">
                       <div className="text-center">
-                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.products}</div>
+                        <AnimatedCounter value={stats.products} />
                         <div className="text-xs lg:text-sm text-white/80 font-semibold">Товаров</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.categories}</div>
+                        <AnimatedCounter value={stats.categories} />
                         <div className="text-xs lg:text-sm text-white/80 font-semibold">Категорий</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.sellers}</div>
+                        <AnimatedCounter value={stats.sellers} />
                         <div className="text-xs lg:text-sm text-white/80 font-semibold">Продавцов</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.customers}</div>
+                        <AnimatedCounter value={stats.customers} />
                         <div className="text-xs lg:text-sm text-white/80 font-semibold">Покупателей</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-3xl lg:text-4xl font-black text-white mb-2">{stats.orders}</div>
+                        <AnimatedCounter value={stats.orders} />
                         <div className="text-xs lg:text-sm text-white/80 font-semibold">Заказов</div>
                       </div>
                     </div>
