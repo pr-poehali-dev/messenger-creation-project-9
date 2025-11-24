@@ -1,8 +1,17 @@
 import { Link } from 'react-router-dom'
-import { ShoppingCart, Search, User, Sparkles, TrendingUp } from 'lucide-react'
+import { ShoppingCart, Search, User, Sparkles, TrendingUp, Smartphone, Shirt, BookOpen, Home, Dumbbell, Sparkle } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { useState, useEffect } from 'react'
 import { api, Category, Product } from '../services/api'
+
+const categoryIcons: Record<string, any> = {
+  'electronics': Smartphone,
+  'clothes': Shirt,
+  'books': BookOpen,
+  'home': Home,
+  'sport': Dumbbell,
+  'beauty': Sparkle
+}
 
 export default function HomePage() {
   const { addToCart, totalItems } = useCart()
@@ -102,21 +111,24 @@ export default function HomePage() {
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                to={`/category/${cat.id}`}
-                className="group relative overflow-hidden bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 hover:shadow-2xl hover:shadow-violet-500/20 transition-all active:scale-95 touch-manipulation border border-slate-200/50"
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${cat.gradient} opacity-0 group-active:opacity-5 transition-opacity`}></div>
-                <div className="relative text-center">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 rounded-2xl overflow-hidden bg-slate-100">
-                    <img src={cat.icon} alt={cat.name} className="w-full h-full object-cover" />
+            {categories.map((cat) => {
+              const IconComponent = categoryIcons[cat.id] || Sparkles
+              return (
+                <Link
+                  key={cat.id}
+                  to={`/category/${cat.id}`}
+                  className="group relative overflow-hidden bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 hover:shadow-2xl hover:shadow-violet-500/20 transition-all active:scale-95 touch-manipulation border border-slate-200/50"
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${cat.gradient} opacity-0 group-active:opacity-5 transition-opacity`}></div>
+                  <div className="relative text-center">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 rounded-2xl bg-gradient-to-br from-violet-100 to-fuchsia-100 flex items-center justify-center">
+                      <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 text-violet-600" />
+                    </div>
+                    <div className="font-bold text-sm sm:text-base text-slate-700 group-hover:text-violet-600 transition-colors">{cat.name}</div>
                   </div>
-                  <div className="font-bold text-sm sm:text-base text-slate-700 group-hover:text-violet-600 transition-colors">{cat.name}</div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              )
+            })}
           </div>
         </div>
 
