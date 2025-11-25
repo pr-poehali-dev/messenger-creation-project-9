@@ -274,6 +274,66 @@ useEffect(() => {
           </div>
         </section>
       </main>
+
+      <footer className="bg-slate-900 text-white mt-16">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-8 sm:py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
+            <div>
+              <h4 className="font-black text-base sm:text-lg mb-3 sm:mb-4 text-violet-400">Покупателям</h4>
+              <ul className="space-y-2 text-sm sm:text-base">
+                <li><Link to="/about" className="text-slate-300 hover:text-white transition-colors">О нас</Link></li>
+                <li><Link to="/delivery" className="text-slate-300 hover:text-white transition-colors">Доставка</Link></li>
+                <li><Link to="/payment" className="text-slate-300 hover:text-white transition-colors">Оплата</Link></li>
+                <li><Link to="/returns" className="text-slate-300 hover:text-white transition-colors">Возврат</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-black text-base sm:text-lg mb-3 sm:mb-4 text-violet-400">Продавцам</h4>
+              <ul className="space-y-2 text-sm sm:text-base">
+                <li><Link to="/seller" className="text-slate-300 hover:text-white transition-colors">Стать продавцом</Link></li>
+                <li><Link to="/seller-conditions" className="text-slate-300 hover:text-white transition-colors">Условия</Link></li>
+                <li><Link to="/seller-faq" className="text-slate-300 hover:text-white transition-colors">FAQ</Link></li>
+                <li><Link to="/seller-support" className="text-slate-300 hover:text-white transition-colors">Поддержка</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-black text-base sm:text-lg mb-3 sm:mb-4 text-violet-400">Помощь</h4>
+              <ul className="space-y-2 text-sm sm:text-base">
+                <li><Link to="/faq" className="text-slate-300 hover:text-white transition-colors">Частые вопросы</Link></li>
+                <li><Link to="/contact" className="text-slate-300 hover:text-white transition-colors">Контакты</Link></li>
+                <li><Link to="/support" className="text-slate-300 hover:text-white transition-colors">Служба поддержки</Link></li>
+                <li><Link to="/feedback" className="text-slate-300 hover:text-white transition-colors">Обратная связь</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-black text-base sm:text-lg mb-3 sm:mb-4 text-violet-400">Компания</h4>
+              <ul className="space-y-2 text-sm sm:text-base">
+                <li><Link to="/privacy" className="text-slate-300 hover:text-white transition-colors">Конфиденциальность</Link></li>
+                <li><Link to="/terms" className="text-slate-300 hover:text-white transition-colors">Условия использования</Link></li>
+                <li><Link to="/legal" className="text-slate-300 hover:text-white transition-colors">Правовая информация</Link></li>
+                <li><Link to="/careers" className="text-slate-300 hover:text-white transition-colors">Вакансии</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-700 pt-6 sm:pt-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-violet-400" />
+                <span className="font-bold">© 2024 Peeky. Все права защищены.</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <a href="#" className="hover:text-white transition-colors">Telegram</a>
+                <a href="#" className="hover:text-white transition-colors">VK</a>
+                <a href="#" className="hover:text-white transition-colors">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
