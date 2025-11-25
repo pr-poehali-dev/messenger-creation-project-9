@@ -169,6 +169,28 @@ useEffect(() => {
         </div>
       </header>
 
+      <div className="w-full bg-gray-100 py-3 sm:py-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4">
+          <div className="relative bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg">
+            <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
+              <span className="text-[10px] sm:text-xs text-white/70 bg-black/20 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full font-medium">
+                реклама
+              </span>
+            </div>
+            <div className="px-4 py-8 sm:px-8 sm:py-12 md:px-12 md:py-16 lg:px-16 lg:py-20">
+              <div className="text-center">
+                <h3 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black text-white mb-2 sm:mb-3">
+                  Ваша реклама здесь
+                </h3>
+                <p className="text-xs sm:text-sm md:text-base text-white/90">
+                  Рекламный баннер
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
         <div className="mb-12">
           <div className="flex items-center gap-2 mb-3 sm:mb-4">
