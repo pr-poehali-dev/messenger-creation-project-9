@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ShoppingCart, Search, User, Sparkles, TrendingUp, Smartphone, Shirt, BookOpen, Home, Dumbbell, Sparkle, Camera, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ShoppingCart, Search, User, Sparkles, TrendingUp, Smartphone, Shirt, BookOpen, Home, Dumbbell, Sparkle } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { useCustomerAuth } from '../context/CustomerAuthContext'
 import { useState, useEffect, useRef } from 'react'
@@ -73,7 +73,6 @@ export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
-  const [currentBanner, setCurrentBanner] = useState(0)
 
 useEffect(() => {
     async function loadData() {
@@ -96,12 +95,7 @@ useEffect(() => {
     loadData()
   }, [])
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % 2)
-    }, 8000)
-    return () => clearInterval(timer)
-  }, [])
+
 
   const handleAddToCart = (product: Product) => {
     addToCart({
@@ -178,11 +172,7 @@ useEffect(() => {
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
         <div className="relative mb-8 sm:mb-12">
           <div className="relative overflow-hidden rounded-3xl">
-            <div 
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentBanner * 100}%)` }}
-            >
-              <Link 
+            <Link 
                 to="/seller"
                 className="min-w-full group relative overflow-hidden bg-gradient-to-br from-violet-600 via-fuchsia-600 to-purple-700 rounded-3xl p-6 sm:p-10 shadow-2xl hover:shadow-violet-500/50 transition-all active:scale-[0.98] touch-manipulation"
               >
@@ -242,74 +232,8 @@ useEffect(() => {
                 </div>
               </Link>
 
-              <Link 
-                to="/pic"
-                className="min-w-full group relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl p-6 sm:p-10 shadow-2xl hover:shadow-indigo-500/50 transition-all active:scale-[0.98] touch-manipulation"
-              >
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNCIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzIi8+PC9nPjwvZz48L3N2Zz4=')] opacity-40"></div>
-                
-                <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div className="flex-1 text-center md:text-left">
-                    <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
-                      <Camera className="w-4 h-4 text-yellow-300" />
-                      <span className="text-white font-bold text-sm">Для творческих людей</span>
-                    </div>
-                    
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 sm:mb-4">
-                      Продавайте свои фотографии!
-                    </h2>
-                    <p className="text-base sm:text-lg text-white/90 mb-4 sm:mb-6 max-w-2xl">
-                      Превратите творчество в доход • 70% вам с каждой продажи • Тысячи покупателей • Пассивный доход 24/7
-                    </p>
-                    
-                    <div className="inline-flex items-center gap-2 bg-white text-indigo-600 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-black text-base sm:text-lg group-hover:bg-yellow-300 group-hover:scale-105 transition-all shadow-lg">
-                      Узнать больше
-                      <Camera className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
-                  
-                  <div className="hidden md:flex items-center justify-center">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-white/20 rounded-3xl blur-2xl"></div>
-                      <div className="relative bg-white/10 backdrop-blur-sm p-8 rounded-3xl border-2 border-white/30">
-                        <div className="grid grid-cols-2 gap-6">
-                          <div className="text-center">
-                            <div className="text-3xl lg:text-4xl font-black text-white mb-2">70%</div>
-                            <div className="text-xs lg:text-sm text-white/80 font-semibold">Комиссия</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-3xl lg:text-4xl font-black text-white mb-2">24/7</div>
-                            <div className="text-xs lg:text-sm text-white/80 font-semibold">Продажи</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-3xl lg:text-4xl font-black text-white mb-2">2K+</div>
-                            <div className="text-xs lg:text-sm text-white/80 font-semibold">Авторов</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-3xl lg:text-4xl font-black text-white mb-2">∞</div>
-                            <div className="text-xs lg:text-sm text-white/80 font-semibold">Продаж</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          </div>
 
-          <button
-            onClick={() => setCurrentBanner((prev) => (prev - 1 + 2) % 2)}
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all active:scale-95 z-10"
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-slate-800" />
-          </button>
-          <button
-            onClick={() => setCurrentBanner((prev) => (prev + 1) % 2)}
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all active:scale-95 z-10"
-          >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-slate-800" />
-          </button>
+          </div>
 
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
             <button
