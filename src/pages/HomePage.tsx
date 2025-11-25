@@ -234,21 +234,6 @@ useEffect(() => {
 
 
           </div>
-
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-            <button
-              onClick={() => setCurrentBanner(0)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                currentBanner === 0 ? 'bg-white w-8' : 'bg-white/50'
-              }`}
-            />
-            <button
-              onClick={() => setCurrentBanner(1)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                currentBanner === 1 ? 'bg-white w-8' : 'bg-white/50'
-              }`}
-            />
-          </div>
         </div>
 
         <div className="mb-12">
