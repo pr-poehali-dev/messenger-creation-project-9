@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LogOut, Plus, Edit2, Trash2, Package, FolderOpen, Sparkles, AlertTriangle, Users, ShoppingCart, TrendingUp } from 'lucide-react'
+import { Plus, Package, FolderOpen, AlertTriangle } from 'lucide-react'
+import AdminHeader from '@/components/admin/AdminHeader'
+import AdminStats from '@/components/admin/AdminStats'
+import AdminProductsList from '@/components/admin/AdminProductsList'
+import AdminCategoriesList from '@/components/admin/AdminCategoriesList'
 
 const ADMIN_API = 'https://functions.poehali.dev/f3d74af2-2b4e-4711-b02e-15d39ab212ef'
 const STATS_API = 'https://functions.poehali.dev/37dbef59-9085-4b45-abb6-4370ec000735'
@@ -150,91 +154,10 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      <header className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-2xl blur-sm"></div>
-                <div className="relative bg-gradient-to-br from-violet-600 to-fuchsia-600 p-2 rounded-2xl">
-                  <Sparkles className="w-6 h-6 text-white" />
-                </div>
-              </div>
-              <div>
-                <h1 className="text-2xl font-black bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
-                  Peeky Admin
-                </h1>
-                <p className="text-sm text-slate-600">{email}</p>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl font-semibold transition-all active:scale-95"
-            >
-              <LogOut className="w-5 h-5" />
-              Выйти
-            </button>
-          </div>
-        </div>
-      </header>
+      <AdminHeader email={email} onLogout={handleLogout} />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-3 bg-violet-100 rounded-xl">
-                <Package className="w-6 h-6 text-violet-600" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-green-500" />
-            </div>
-            <p className="text-sm text-slate-600 font-medium mb-1">Товаров</p>
-            <p className="text-3xl font-black text-slate-900">{stats.products}</p>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-3 bg-fuchsia-100 rounded-xl">
-                <FolderOpen className="w-6 h-6 text-fuchsia-600" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-green-500" />
-            </div>
-            <p className="text-sm text-slate-600 font-medium mb-1">Категорий</p>
-            <p className="text-3xl font-black text-slate-900">{stats.categories}</p>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-3 bg-blue-100 rounded-xl">
-                <ShoppingCart className="w-6 h-6 text-blue-600" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-green-500" />
-            </div>
-            <p className="text-sm text-slate-600 font-medium mb-1">Заказов</p>
-            <p className="text-3xl font-black text-slate-900">{stats.orders}</p>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-3 bg-orange-100 rounded-xl">
-                <Users className="w-6 h-6 text-orange-600" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-green-500" />
-            </div>
-            <p className="text-sm text-slate-600 font-medium mb-1">Покупателей</p>
-            <p className="text-3xl font-black text-slate-900">{stats.customers}</p>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-3 bg-green-100 rounded-xl">
-                <Sparkles className="w-6 h-6 text-green-600" />
-              </div>
-              <TrendingUp className="w-5 h-5 text-green-500" />
-            </div>
-            <p className="text-sm text-slate-600 font-medium mb-1">Продавцов</p>
-            <p className="text-3xl font-black text-slate-900">{stats.sellers}</p>
-          </div>
-        </div>
+        <AdminStats stats={stats} />
 
         <div className="flex gap-4 mb-6 flex-wrap">
           <button
@@ -282,73 +205,17 @@ export default function AdminDashboard() {
         </div>
 
         {activeTab === 'products' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all border border-slate-200">
-                <div className="aspect-square bg-slate-100">
-                  <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-lg mb-2 line-clamp-2">{product.name}</h3>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-2xl font-black text-violet-600">{product.price.toLocaleString()} ₽</span>
-                    <span className="text-sm text-slate-600">⭐ {product.rating}</span>
-                  </div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm text-slate-600">Остаток: {product.stock}</span>
-                    <span className="text-sm text-slate-400">•</span>
-                    <span className="text-sm text-slate-600">{product.reviews_count} отз.</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => openModal(product)}
-                      className="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-violet-100 text-slate-700 hover:text-violet-700 font-semibold py-2 rounded-xl transition-all"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                      Изменить
-                    </button>
-                    <button
-                      onClick={() => handleDelete('product', product.id)}
-                      className="flex items-center justify-center bg-red-50 hover:bg-red-100 text-red-600 font-semibold px-4 py-2 rounded-xl transition-all"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <AdminProductsList
+            products={products}
+            onEdit={openModal}
+            onDelete={(id) => handleDelete('product', id)}
+          />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categories.map((category) => (
-              <div key={category.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all border border-slate-200">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100">
-                    <img src={category.image_url} alt={category.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-xl">{category.name}</h3>
-                    <p className="text-sm text-slate-600">{category.slug}</p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => openModal(category)}
-                    className="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-violet-100 text-slate-700 hover:text-violet-700 font-semibold py-2 rounded-xl transition-all"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                    Изменить
-                  </button>
-                  <button
-                    onClick={() => handleDelete('category', category.id)}
-                    className="flex items-center justify-center bg-red-50 hover:bg-red-100 text-red-600 font-semibold px-4 py-2 rounded-xl transition-all"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+          <AdminCategoriesList
+            categories={categories}
+            onEdit={openModal}
+            onDelete={(id) => handleDelete('category', id)}
+          />
         )}
       </main>
 
@@ -436,12 +303,21 @@ function Modal({
           ) : (
             <>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Название товара</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Название</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 transition-all"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Описание</label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 transition-all min-h-[100px]"
                   required
                 />
               </div>
@@ -478,6 +354,7 @@ function Modal({
                     value={formData.rating}
                     onChange={(e) => setFormData({ ...formData, rating: Number(e.target.value) })}
                     className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 transition-all"
+                    required
                   />
                 </div>
                 <div>
@@ -487,6 +364,7 @@ function Modal({
                     value={formData.reviews_count}
                     onChange={(e) => setFormData({ ...formData, reviews_count: Number(e.target.value) })}
                     className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 transition-all"
+                    required
                   />
                 </div>
               </div>
@@ -500,9 +378,7 @@ function Modal({
                 >
                   <option value="">Выберите категорию</option>
                   {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                 </select>
               </div>
@@ -513,16 +389,6 @@ function Modal({
                   value={formData.image_url}
                   onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 transition-all"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Описание</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-violet-500 transition-all"
-                  rows={4}
                   required
                 />
               </div>
@@ -539,9 +405,9 @@ function Modal({
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white font-bold rounded-xl transition-all shadow-lg"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white font-bold rounded-xl transition-all"
             >
-              Сохранить
+              {item ? 'Сохранить' : 'Добавить'}
             </button>
           </div>
         </form>
