@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LogOut, Plus, Edit2, Trash2, Package, FolderOpen, Sparkles } from 'lucide-react'
+import { LogOut, Plus, Edit2, Trash2, Package, FolderOpen, Sparkles, AlertTriangle } from 'lucide-react'
 
 const ADMIN_API = 'https://functions.poehali.dev/f3d74af2-2b4e-4711-b02e-15d39ab212ef'
 
@@ -171,7 +171,7 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex gap-4 mb-6">
+        <div className="flex gap-4 mb-6 flex-wrap">
           <button
             onClick={() => setActiveTab('products')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
@@ -193,6 +193,13 @@ export default function AdminDashboard() {
           >
             <FolderOpen className="w-5 h-5" />
             Категории ({categories.length})
+          </button>
+          <button
+            onClick={() => navigate('/admin/clear-data')}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all bg-red-50 text-red-600 hover:bg-red-100 ml-auto"
+          >
+            <AlertTriangle className="w-5 h-5" />
+            Очистить данные
           </button>
         </div>
 
