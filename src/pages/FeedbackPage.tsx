@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom'
 import { MessageSquare, Star } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function FeedbackPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',

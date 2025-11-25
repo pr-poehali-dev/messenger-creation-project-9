@@ -1,7 +1,12 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Briefcase, Users, TrendingUp, Heart } from 'lucide-react'
 
 export default function CareersPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const vacancies = [
     {
       title: 'Frontend разработчик',

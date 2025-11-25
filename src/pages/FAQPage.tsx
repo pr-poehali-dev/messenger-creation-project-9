@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom'
 import { HelpCircle, ChevronDown } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const faqs = [
     {

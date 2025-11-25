@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { 
   Store, TrendingUp, DollarSign, BarChart3, 
@@ -6,6 +7,10 @@ import {
 } from 'lucide-react'
 
 export default function SellerLanding() {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const benefits = [
     {
       icon: DollarSign,

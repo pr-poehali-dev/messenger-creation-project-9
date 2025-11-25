@@ -1,7 +1,11 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Sparkles, ShoppingCart, Users, TrendingUp, Award } from 'lucide-react'
 
 export default function AboutPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
   return (
     <div className="min-h-screen bg-gradient-to-b from-violet-50 to-white">
       <div className="max-w-4xl mx-auto px-4 py-12">
