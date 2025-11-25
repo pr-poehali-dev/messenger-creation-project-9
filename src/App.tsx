@@ -34,6 +34,9 @@ import PrivacyPage from './pages/PrivacyPage'
 import TermsPage from './pages/TermsPage'
 import LegalPage from './pages/LegalPage'
 import CareersPage from './pages/CareersPage'
+import NewsPage from './pages/NewsPage'
+import NewsDetailPage from './pages/NewsDetailPage'
+import AdminNewsPage from './pages/AdminNewsPage'
 
 export default function App() {
   return (
@@ -51,6 +54,9 @@ export default function App() {
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/clear-data" element={<AdminClearData />} />
+            <Route path="/admin/news" element={<AdminNewsPage />} />
+            <Route path="/news" element={<NewsPage />} />
+            <Route path="/news/:slug" element={<NewsDetailPage />} />
             <Route path="/seller" element={<SellerLanding />} />
             <Route path="/seller/register" element={<SellerRegister />} />
             <Route path="/seller/login" element={<SellerLogin />} />
