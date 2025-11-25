@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Package, FolderOpen, AlertTriangle } from 'lucide-react'
+import { Plus, Package, FolderOpen, AlertTriangle, Newspaper } from 'lucide-react'
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminStats from '@/components/admin/AdminStats'
 import AdminProductsList from '@/components/admin/AdminProductsList'
@@ -181,6 +181,13 @@ export default function AdminDashboard() {
           >
             <FolderOpen className="w-5 h-5" />
             Категории ({categories.length})
+          </button>
+          <button
+            onClick={() => navigate('/admin/news')}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all bg-blue-50 text-blue-600 hover:bg-blue-100"
+          >
+            <Newspaper className="w-5 h-5" />
+            Новости
           </button>
           <button
             onClick={() => navigate('/admin/clear-data')}
