@@ -18,6 +18,21 @@ import PicSellerLanding from './pages/PicSellerLanding'
 import PicSellerRegister from './pages/PicSellerRegister'
 import PicSellerLogin from './pages/PicSellerLogin'
 import PicSellerDashboard from './pages/PicSellerDashboard'
+import AboutPage from './pages/AboutPage'
+import DeliveryPage from './pages/DeliveryPage'
+import PaymentPage from './pages/PaymentPage'
+import ReturnsPage from './pages/ReturnsPage'
+import SellerConditionsPage from './pages/SellerConditionsPage'
+import SellerFAQPage from './pages/SellerFAQPage'
+import SellerSupportPage from './pages/SellerSupportPage'
+import FAQPage from './pages/FAQPage'
+import ContactPage from './pages/ContactPage'
+import SupportPage from './pages/SupportPage'
+import FeedbackPage from './pages/FeedbackPage'
+import PrivacyPage from './pages/PrivacyPage'
+import TermsPage from './pages/TermsPage'
+import LegalPage from './pages/LegalPage'
+import CareersPage from './pages/CareersPage'
 
 export default function App() {
   return (
@@ -42,6 +57,21 @@ export default function App() {
             <Route path="/pic/register" element={<PicSellerRegister />} />
             <Route path="/pic/login" element={<PicSellerLogin />} />
             <Route path="/pic/dashboard" element={<PicSellerDashboard />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/delivery" element={<DeliveryPage />} />
+            <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/returns" element={<ReturnsPage />} />
+            <Route path="/seller-conditions" element={<SellerConditionsPage />} />
+            <Route path="/seller-faq" element={<SellerFAQPage />} />
+            <Route path="/seller-support" element={<SellerSupportPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/support" element={<SupportPage />} />
+            <Route path="/feedback" element={<FeedbackPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/legal" element={<LegalPage />} />
+            <Route path="/careers" element={<CareersPage />} />
           </Routes>
         </BrowserRouter>
       </CartProvider>
