@@ -150,14 +150,14 @@ export default function Home() {
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-12 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-full mb-4 animate-fade-in">
-            <Icon name="TrendingUp" size={16} className="text-primary" />
-            <span className="text-sm font-medium text-purple-900 dark:text-purple-300">Топ товары сезона</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-800/50 dark:to-pink-800/50 rounded-full mb-4 animate-fade-in">
+            <Icon name="TrendingUp" size={16} className="text-primary dark:text-purple-300" />
+            <span className="text-sm font-medium text-purple-900 dark:text-purple-100">Топ товары сезона</span>
           </div>
-          <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-foreground via-purple-600 dark:via-purple-400 to-foreground bg-clip-text text-transparent">
+          <h2 className="text-5xl font-bold mb-4 text-gray-900 dark:text-white">
             Откройте для себя лучшее
           </h2>
-          <p className="text-lg text-muted-foreground mb-8">
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
             Тщательно отобранные товары от проверенных продавцов
           </p>
           
