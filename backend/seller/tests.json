@@ -1,0 +1,17 @@
+{
+  "tests": [
+    {
+      "name": "Register seller",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Test Store"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "seller": "object"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

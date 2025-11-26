@@ -1,0 +1,18 @@
+{
+  "tests": [
+    {
+      "name": "Customer login",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "phone": "+79991234567",
+        "name": "Test User"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "user": "object"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
