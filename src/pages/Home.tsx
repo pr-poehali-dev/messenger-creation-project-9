@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import ProductCard from '@/components/ProductCard';
 import ThemeToggle from '@/components/ThemeToggle';
+import Footer from '@/components/Footer';
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 
@@ -206,21 +207,7 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="border-t border-purple-100 dark:border-purple-900/30 bg-white/50 dark:bg-gray-950/50 backdrop-blur-xl mt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Icon name="Sparkles" size={20} className="text-primary" />
-              <span className="text-sm text-muted-foreground">© 2024 Peeky. Все права защищены.</span>
-            </div>
-            <div className="flex gap-6">
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">О нас</a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Помощь</a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Контакты</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

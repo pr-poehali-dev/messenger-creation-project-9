@@ -177,6 +177,8 @@ export default function SellerAuthForm({
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

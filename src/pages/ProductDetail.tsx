@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
+import Footer from '@/components/Footer';
 import { useState, useEffect } from 'react';
 
 interface Product {
@@ -248,6 +249,8 @@ export default function ProductDetail() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

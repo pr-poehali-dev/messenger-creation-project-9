@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
+import Footer from '@/components/Footer';
 
 interface SellerInfoPageProps {
   onNavigateToAuth: () => void;
@@ -89,6 +90,8 @@ export default function SellerInfoPage({ onNavigateToAuth }: SellerInfoPageProps
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }
