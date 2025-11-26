@@ -26,7 +26,7 @@ export default function Seller() {
           </div>
           
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-purple-600 dark:via-purple-400 to-foreground bg-clip-text text-transparent">
-            Станьте продавцом на MarketHub
+            Станьте продавцом на Peeky
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
@@ -290,7 +290,7 @@ export default function Seller() {
         <div className="text-center bg-white dark:bg-gray-900 rounded-3xl p-12 border border-purple-100 dark:border-purple-900/30 shadow-xl">
           <h2 className="text-4xl font-bold mb-4">Готовы начать?</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Присоединяйтесь к MarketHub сегодня и откройте новые возможности для вашего бизнеса
+            Присоединяйтесь к Peeky сегодня и откройте новые возможности для вашего бизнеса
           </p>
           <Button className="h-16 px-12 bg-gradient-to-r from-primary to-accent text-white shadow-2xl hover:shadow-3xl text-xl">
             <Icon name="Rocket" size={24} className="mr-3" />
@@ -307,7 +307,7 @@ export default function Seller() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Icon name="Sparkles" size={20} className="text-primary" />
-              <span className="text-sm text-muted-foreground">© 2024 MarketHub. Все права защищены.</span>
+              <span className="text-sm text-muted-foreground">© 2024 Peeky. Все права защищены.</span>
             </div>
             <div className="flex gap-6">
               <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Поддержка</a>

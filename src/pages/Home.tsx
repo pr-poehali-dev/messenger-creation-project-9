@@ -112,7 +112,7 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-purple-600 to-accent bg-clip-text text-transparent">
-                  MarketHub
+                  Peeky
                 </h1>
                 <p className="text-xs text-muted-foreground">Стиль и качество</p>
               </div>
@@ -211,7 +211,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Icon name="Sparkles" size={20} className="text-primary" />
-              <span className="text-sm text-muted-foreground">© 2024 MarketHub. Все права защищены.</span>
+              <span className="text-sm text-muted-foreground">© 2024 Peeky. Все права защищены.</span>
             </div>
             <div className="flex gap-6">
               <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">О нас</a>
