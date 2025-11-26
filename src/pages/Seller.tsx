@@ -3,6 +3,7 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import ThemeToggle from '@/components/ThemeToggle';
 import { useState, useEffect } from 'react';
 
 interface Product {
@@ -85,13 +86,16 @@ export default function Seller() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20">
-      <header className="backdrop-blur-xl bg-white/80 border-b border-purple-100/50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30">
         <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
           <Link to="/" className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors group">
             <Icon name="ArrowLeft" size={20} className="group-hover:-translate-x-1 transition-transform" />
             <span className="font-medium">На главную</span>
           </Link>
+          <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -100,7 +104,7 @@ export default function Seller() {
           <div className="max-w-md mx-auto animate-scale-in">
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-2xl"></div>
-              <div className="relative bg-white rounded-3xl shadow-2xl border border-purple-100 overflow-hidden">
+              <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-purple-100 dark:border-purple-900/30 overflow-hidden">
                 <div className="bg-gradient-to-r from-primary to-accent p-8 text-center">
                   <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-4">
                     <Icon name="Store" size={40} className="text-white" />
@@ -120,7 +124,7 @@ export default function Seller() {
                       placeholder="Мой магазин"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="h-12 rounded-xl border-2 border-purple-100 focus:border-primary"
+                      className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary dark:bg-gray-800"
                     />
                   </div>
 
@@ -144,7 +148,7 @@ export default function Seller() {
           </div>
         ) : (
           <div className="animate-fade-in">
-            <div className="bg-white rounded-3xl shadow-xl border border-purple-100 p-8 mb-8">
+            <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-purple-100 dark:border-purple-900/30 p-8 mb-8">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-r from-primary to-accent flex items-center justify-center">
@@ -175,7 +179,7 @@ export default function Seller() {
             </div>
 
             {showAddProduct && (
-              <div className="bg-white rounded-3xl shadow-xl border border-purple-100 p-8 mb-8 animate-scale-in">
+              <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-purple-100 dark:border-purple-900/30 p-8 mb-8 animate-scale-in">
                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                   <Icon name="Plus" size={24} className="text-primary" />
                   Новый товар
@@ -191,7 +195,7 @@ export default function Seller() {
                     placeholder="Описание товара"
                     value={productDesc}
                     onChange={(e) => setProductDesc(e.target.value)}
-                    className="rounded-xl border-2 border-purple-100 min-h-24"
+                    className="rounded-xl border-2 border-purple-100 dark:border-purple-900 min-h-24 dark:bg-gray-800"
                   />
                   <Input
                     type="number"
@@ -217,7 +221,7 @@ export default function Seller() {
                     <Button 
                       onClick={() => setShowAddProduct(false)} 
                       variant="outline"
-                      className="border-2 border-purple-100"
+                      className="border-2 border-purple-100 dark:border-purple-900"
                     >
                       Отмена
                     </Button>
@@ -229,8 +233,8 @@ export default function Seller() {
             {products.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {products.map((product) => (
-                  <div key={product.id} className="bg-white rounded-2xl border border-purple-100 overflow-hidden hover:shadow-xl transition-shadow">
-                    <div className="aspect-square bg-gradient-to-br from-purple-50 to-pink-50">
+                  <div key={product.id} className="bg-white dark:bg-gray-900 rounded-2xl border border-purple-100 dark:border-purple-900/30 overflow-hidden hover:shadow-xl transition-shadow">
+                    <div className="aspect-square bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/20">
                       <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="p-4">
@@ -245,7 +249,7 @@ export default function Seller() {
               </div>
             ) : !showAddProduct && (
               <div className="text-center py-20">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center mx-auto mb-6">
                   <Icon name="Package" size={40} className="text-primary" />
                 </div>
                 <h3 className="text-2xl font-bold mb-2">Нет товаров</h3>

@@ -26,6 +26,28 @@
     --radius: 0.75rem;
   }
 
+  .dark {
+    --background: 240 15% 8%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 12%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 280 85% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 100% 70%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 10% 18%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 340 85% 70%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 10% 20%;
+    --input: 240 10% 20%;
+    --ring: 280 85% 65%;
+  }
+
   * {
     margin: 0;
     padding: 0;

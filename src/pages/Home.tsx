@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import ProductCard from '@/components/ProductCard';
+import ThemeToggle from '@/components/ThemeToggle';
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 
@@ -98,8 +99,8 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20">
-      <header className="backdrop-blur-xl bg-white/80 border-b border-purple-100/50 sticky top-0 z-50 shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3 group">
@@ -118,9 +119,10 @@ export default function Home() {
             </Link>
             
             <nav className="hidden md:flex items-center gap-2">
+              <ThemeToggle />
               <Link 
                 to="/seller" 
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-purple-50 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
               >
                 <Icon name="Store" size={18} />
                 Для продавцов
@@ -134,22 +136,25 @@ export default function Home() {
               </Link>
             </nav>
 
-            <Link to="/profile" className="md:hidden">
-              <div className="p-2 rounded-xl bg-gradient-to-r from-primary to-accent text-white">
-                <Icon name="User" size={20} />
-              </div>
-            </Link>
+            <div className="md:hidden flex items-center gap-2">
+              <ThemeToggle />
+              <Link to="/profile">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-primary to-accent text-white flex items-center justify-center shadow-lg">
+                  <Icon name="User" size={20} />
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-12 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full mb-4 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-full mb-4 animate-fade-in">
             <Icon name="TrendingUp" size={16} className="text-primary" />
-            <span className="text-sm font-medium text-purple-900">Топ товары сезона</span>
+            <span className="text-sm font-medium text-purple-900 dark:text-purple-300">Топ товары сезона</span>
           </div>
-          <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-foreground via-purple-900 to-foreground bg-clip-text text-transparent">
+          <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-foreground via-purple-600 dark:via-purple-400 to-foreground bg-clip-text text-transparent">
             Откройте для себя лучшее
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
@@ -163,7 +168,7 @@ export default function Home() {
               placeholder="Найти товар..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 pr-4 py-6 text-base rounded-2xl border-2 border-purple-100 focus:border-primary shadow-sm"
+              className="pl-12 pr-4 py-6 text-base rounded-2xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary shadow-sm dark:bg-gray-900/50"
             />
           </div>
         </div>
@@ -192,7 +197,7 @@ export default function Home() {
 
         {!loading && filteredProducts.length === 0 && (
           <div className="text-center py-20">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 mb-6">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 mb-6">
               <Icon name="Search" size={40} className="text-primary" />
             </div>
             <h3 className="text-2xl font-bold mb-2">Ничего не найдено</h3>
@@ -201,7 +206,7 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="border-t border-purple-100 bg-white/50 backdrop-blur-xl mt-20">
+      <footer className="border-t border-purple-100 dark:border-purple-900/30 bg-white/50 dark:bg-gray-950/50 backdrop-blur-xl mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">

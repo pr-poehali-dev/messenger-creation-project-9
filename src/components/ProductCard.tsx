@@ -17,14 +17,14 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link to={`/product/${product.id}`}>
-      <div className="group relative bg-white rounded-3xl overflow-hidden transition-all hover:shadow-2xl hover:-translate-y-2 cursor-pointer border border-purple-100/50">
+      <div className="group relative bg-white dark:bg-gray-900 rounded-3xl overflow-hidden transition-all hover:shadow-2xl hover:-translate-y-2 cursor-pointer border border-purple-100/50 dark:border-purple-900/30">
         <div className="absolute top-3 right-3 z-10">
-          <div className="p-2 rounded-full bg-white/90 backdrop-blur-sm shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
             <Icon name="Heart" size={18} className="text-accent" />
           </div>
         </div>
 
-        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50">
+        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/20">
           <img 
             src={product.image} 
             alt={product.name} 
@@ -45,7 +45,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.description}
           </p>
           
-          <div className="flex items-center justify-between pt-3 border-t border-purple-100">
+          <div className="flex items-center justify-between pt-3 border-t border-purple-100 dark:border-purple-900/30">
             <div>
               <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 {product.price.toLocaleString()} ₽
