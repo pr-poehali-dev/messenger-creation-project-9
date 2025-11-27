@@ -25,7 +25,7 @@ export default function SwipeIndicator() {
     <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 animate-fade-in md:hidden">
       <div className="relative">
         <div className="absolute -inset-2 bg-gradient-to-r from-primary/20 to-accent/20 rounded-2xl blur-xl"></div>
-        <div className="relative flex items-center gap-3 px-6 py-4 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-purple-100 dark:border-purple-900/50">
+        <div className="relative flex items-center gap-3 px-6 py-4 bg-white dark:bg-[#252538] rounded-2xl shadow-2xl border border-purple-100 dark:border-purple-800/30">
           <div className="flex items-center gap-2">
             <div className="animate-bounce">
               <Icon name="ChevronLeft" size={20} className="text-primary" />
@@ -44,7 +44,7 @@ export default function SwipeIndicator() {
               setShow(false);
               localStorage.setItem('hasSeenSwipeHint', 'true');
             }}
-            className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-[#2a2a40]"
           >
             <Icon name="X" size={16} className="text-muted-foreground" />
           </button>

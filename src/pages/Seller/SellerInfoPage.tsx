@@ -11,8 +11,8 @@ interface SellerInfoPageProps {
 
 export default function SellerInfoPage({ onNavigateToAuth }: SellerInfoPageProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
-      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-900/40 dark:to-pink-900/40">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-[#1a1a2e]/80 border-b border-purple-100/50 dark:border-purple-800/30 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors group">
@@ -60,7 +60,7 @@ export default function SellerInfoPage({ onNavigateToAuth }: SellerInfoPageProps
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 mb-16">
-          <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 border border-purple-100 dark:border-purple-900/30 shadow-lg hover:shadow-2xl transition-all animate-scale-in">
+          <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 border border-purple-100 dark:border-purple-800/30 shadow-lg hover:shadow-2xl transition-all animate-scale-in">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mb-6">
               <Icon name="Users" size={32} className="text-primary" />
             </div>

@@ -6,8 +6,8 @@ import MobileNav from '@/components/MobileNav';
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
-      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-900/40 dark:to-pink-900/40">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-[#1a1a2e]/80 border-b border-purple-100/50 dark:border-purple-800/30 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3 group">
@@ -41,7 +41,7 @@ export default function About() {
           </h1>
 
           <div className="space-y-8">
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <div className="flex items-start gap-4 mb-6">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
                   <Icon name="Target" size={32} className="text-white" />
@@ -57,7 +57,7 @@ export default function About() {
 
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900/30 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center mx-auto mb-4">
                   <Icon name="Users" size={32} className="text-primary" />
                 </div>
                 <h3 className="text-3xl font-bold text-primary mb-2">5M+</h3>
@@ -65,7 +65,7 @@ export default function About() {
               </div>
 
               <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900/30 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center mx-auto mb-4">
                   <Icon name="Store" size={32} className="text-primary" />
                 </div>
                 <h3 className="text-3xl font-bold text-primary mb-2">50K+</h3>
@@ -73,7 +73,7 @@ export default function About() {
               </div>
 
               <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900/30 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center mx-auto mb-4">
                   <Icon name="Package" size={32} className="text-primary" />
                 </div>
                 <h3 className="text-3xl font-bold text-primary mb-2">2M+</h3>
@@ -81,14 +81,14 @@ export default function About() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="Star" size={28} className="text-primary" />
                 Наши преимущества
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="Shield" size={24} className="text-primary" />
                   </div>
                   <div>
@@ -98,7 +98,7 @@ export default function About() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="Zap" size={24} className="text-primary" />
                   </div>
                   <div>
@@ -108,7 +108,7 @@ export default function About() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="Award" size={24} className="text-primary" />
                   </div>
                   <div>
@@ -118,7 +118,7 @@ export default function About() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="HeadphonesIcon" size={24} className="text-primary" />
                   </div>
                   <div>

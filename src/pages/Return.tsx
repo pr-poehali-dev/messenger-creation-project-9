@@ -6,8 +6,8 @@ import MobileNav from '@/components/MobileNav';
 
 export default function Return() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
-      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-900/40 dark:to-pink-900/40">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-[#1a1a2e]/80 border-b border-purple-100/50 dark:border-purple-800/30 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3 group">
@@ -41,8 +41,8 @@ export default function Return() {
           </h1>
 
           <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800 mb-6">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/40 dark:to-emerald-900/40 border-2 border-green-200 dark:border-green-800 mb-6">
                 <div className="flex items-start gap-4">
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
                     <Icon name="CheckCircle" size={32} className="text-white" />
@@ -64,7 +64,7 @@ export default function Return() {
               </h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="Package" size={20} className="text-primary" />
                   </div>
                   <div>
@@ -76,7 +76,7 @@ export default function Return() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="FileText" size={20} className="text-primary" />
                   </div>
                   <div>
@@ -88,7 +88,7 @@ export default function Return() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="XCircle" size={20} className="text-primary" />
                   </div>
                   <div>
@@ -101,13 +101,13 @@ export default function Return() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="ListOrdered" size={28} className="text-primary" />
                 Как оформить возврат
               </h2>
               <div className="grid md:grid-cols-3 gap-6">
-                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-900/30">
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 border border-purple-100 dark:border-purple-800/30">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xl mb-4">
                     1
                   </div>
@@ -117,7 +117,7 @@ export default function Return() {
                   </p>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-900/30">
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 border border-purple-100 dark:border-purple-800/30">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xl mb-4">
                     2
                   </div>
@@ -127,7 +127,7 @@ export default function Return() {
                   </p>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-900/30">
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 border border-purple-100 dark:border-purple-800/30">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xl mb-4">
                     3
                   </div>
@@ -139,7 +139,7 @@ export default function Return() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="Repeat" size={28} className="text-primary" />
                 Обмен товара
@@ -163,14 +163,14 @@ export default function Return() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="DollarSign" size={28} className="text-primary" />
                 Возврат денежных средств
               </h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="Clock" size={20} className="text-primary" />
                   </div>
                   <div>
@@ -182,7 +182,7 @@ export default function Return() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="CreditCard" size={20} className="text-primary" />
                   </div>
                   <div>
@@ -194,7 +194,7 @@ export default function Return() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="Truck" size={20} className="text-primary" />
                   </div>
                   <div>
@@ -207,7 +207,7 @@ export default function Return() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="AlertCircle" size={28} className="text-primary" />
                 Товары, не подлежащие возврату

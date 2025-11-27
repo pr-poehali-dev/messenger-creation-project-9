@@ -60,8 +60,8 @@ export default function SellerDashboard({
   onLogout
 }: SellerDashboardProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
-      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-900/40 dark:to-pink-900/40">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-[#1a1a2e]/80 border-b border-purple-100/50 dark:border-purple-800/30 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors group">
@@ -84,7 +84,7 @@ export default function SellerDashboard({
       </header>
 
       <main className="container mx-auto px-4 py-12 max-w-6xl">
-        <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-purple-100 dark:border-purple-900/30 p-8 mb-8 animate-fade-in">
+        <div className="bg-white dark:bg-[#252538] rounded-3xl shadow-xl border border-purple-100 dark:border-purple-800/30 p-8 mb-8 animate-fade-in">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-r from-primary to-accent flex items-center justify-center">
@@ -116,22 +116,22 @@ export default function SellerDashboard({
         </div>
 
         <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-purple-100 dark:border-purple-900/30 text-center">
+          <div className="bg-white dark:bg-[#252538] rounded-2xl p-6 border border-purple-100 dark:border-purple-800/30 text-center">
             <Icon name="Package" size={32} className="text-primary mx-auto mb-3" />
             <div className="text-3xl font-bold text-primary mb-1">{products.length}</div>
             <div className="text-sm text-muted-foreground">Товаров</div>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-purple-100 dark:border-purple-900/30 text-center">
+          <div className="bg-white dark:bg-[#252538] rounded-2xl p-6 border border-purple-100 dark:border-purple-800/30 text-center">
             <Icon name="ShoppingCart" size={32} className="text-primary mx-auto mb-3" />
             <div className="text-3xl font-bold text-primary mb-1">0</div>
             <div className="text-sm text-muted-foreground">Заказов</div>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-purple-100 dark:border-purple-900/30 text-center">
+          <div className="bg-white dark:bg-[#252538] rounded-2xl p-6 border border-purple-100 dark:border-purple-800/30 text-center">
             <Icon name="Eye" size={32} className="text-primary mx-auto mb-3" />
             <div className="text-3xl font-bold text-primary mb-1">0</div>
             <div className="text-sm text-muted-foreground">Просмотров</div>
           </div>
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-purple-100 dark:border-purple-900/30 text-center">
+          <div className="bg-white dark:bg-[#252538] rounded-2xl p-6 border border-purple-100 dark:border-purple-800/30 text-center">
             <Icon name="DollarSign" size={32} className="text-primary mx-auto mb-3" />
             <div className="text-3xl font-bold text-primary mb-1">0 ₽</div>
             <div className="text-sm text-muted-foreground">Продаж</div>
@@ -139,7 +139,7 @@ export default function SellerDashboard({
         </div>
 
         {showAddProduct && (
-          <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-purple-100 dark:border-purple-900/30 p-8 mb-8 animate-scale-in">
+          <div className="bg-white dark:bg-[#252538] rounded-3xl shadow-xl border border-purple-100 dark:border-purple-800/30 p-8 mb-8 animate-scale-in">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <Icon name="Plus" size={24} className="text-primary" />
@@ -158,26 +158,26 @@ export default function SellerDashboard({
                 placeholder="Название товара"
                 value={productName}
                 onChange={(e) => onProductNameChange(e.target.value)}
-                className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900"
+                className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30"
               />
               <Textarea
                 placeholder="Описание товара"
                 value={productDesc}
                 onChange={(e) => onProductDescChange(e.target.value)}
-                className="rounded-xl border-2 border-purple-100 dark:border-purple-900 min-h-24 dark:bg-gray-800"
+                className="rounded-xl border-2 border-purple-100 dark:border-purple-800/30 min-h-24 dark:bg-[#2a2a40]"
               />
               <Input
                 type="number"
                 placeholder="Цена в рублях"
                 value={productPrice}
                 onChange={(e) => onProductPriceChange(e.target.value)}
-                className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900"
+                className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30"
               />
               <Input
                 placeholder="URL изображения"
                 value={productImage}
                 onChange={(e) => onProductImageChange(e.target.value)}
-                className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900"
+                className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30"
               />
               <Button 
                 onClick={onAddProduct}
@@ -190,7 +190,7 @@ export default function SellerDashboard({
           </div>
         )}
 
-        <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-purple-100 dark:border-purple-900/30 p-8">
+        <div className="bg-white dark:bg-[#252538] rounded-3xl shadow-xl border border-purple-100 dark:border-purple-800/30 p-8">
           <h2 className="text-2xl font-bold mb-6">Мои товары</h2>
           
           {products.length === 0 ? (

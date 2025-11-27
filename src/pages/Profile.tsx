@@ -95,8 +95,8 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
-      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-900/40 dark:to-pink-900/40">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-[#1a1a2e]/80 border-b border-purple-100/50 dark:border-purple-800/30">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors group">
@@ -138,7 +138,7 @@ export default function Profile() {
                         placeholder="Иван Иванов"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary dark:bg-gray-800"
+                        className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30 focus:border-primary dark:bg-[#2a2a40]"
                       />
                     </div>
                   )}
@@ -153,7 +153,7 @@ export default function Profile() {
                       placeholder="email@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary dark:bg-gray-800"
+                      className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30 focus:border-primary dark:bg-[#2a2a40]"
                     />
                   </div>
 
@@ -168,7 +168,7 @@ export default function Profile() {
                         placeholder="+7 (999) 123-45-67"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary dark:bg-gray-800"
+                        className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30 focus:border-primary dark:bg-[#2a2a40]"
                       />
                     </div>
                   )}
@@ -183,7 +183,7 @@ export default function Profile() {
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary dark:bg-gray-800"
+                      className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30 focus:border-primary dark:bg-[#2a2a40]"
                     />
                   </div>
 

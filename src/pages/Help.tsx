@@ -36,8 +36,8 @@ export default function Help() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
-      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-900/40 dark:to-pink-900/40">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-[#1a1a2e]/80 border-b border-purple-100/50 dark:border-purple-800/30 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3 group">
@@ -72,7 +72,7 @@ export default function Help() {
 
           <div className="space-y-6">
             <div className="grid md:grid-cols-3 gap-6">
-              <Link to="/delivery" className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900/30 hover:scale-105 transition-transform group">
+              <Link to="/delivery" className="bg-white dark:bg-[#252538] rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-800/30 hover:scale-105 transition-transform group">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
                   <Icon name="Truck" size={32} className="text-white" />
                 </div>
@@ -100,7 +100,7 @@ export default function Help() {
               </Link>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-2xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="MessageSquare" size={28} className="text-primary" />
                 Часто задаваемые вопросы
@@ -110,7 +110,7 @@ export default function Help() {
                   <div key={index} className="border border-purple-100 dark:border-purple-900/30 rounded-xl overflow-hidden">
                     <button
                       onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                      className="w-full flex items-center justify-between p-4 text-left hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
+                      className="w-full flex items-center justify-between p-4 text-left hover:bg-purple-50 dark:hover:bg-purple-800/30 transition-colors"
                     >
                       <span className="font-bold text-gray-900 dark:text-white">{faq.question}</span>
                       <Icon 
@@ -120,7 +120,7 @@ export default function Help() {
                       />
                     </button>
                     {openFaq === index && (
-                      <div className="p-4 pt-0 text-muted-foreground border-t border-purple-100 dark:border-purple-900/30 bg-purple-50/50 dark:bg-purple-900/10">
+                      <div className="p-4 pt-0 text-muted-foreground border-t border-purple-100 dark:border-purple-800/30 bg-purple-50/50 dark:bg-purple-800/30">
                         {faq.answer}
                       </div>
                     )}
@@ -129,14 +129,14 @@ export default function Help() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-2xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="Headphones" size={28} className="text-primary" />
                 Служба поддержки
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="Phone" size={24} className="text-primary" />
                   </div>
                   <div>
@@ -147,7 +147,7 @@ export default function Help() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
                     <Icon name="Mail" size={24} className="text-primary" />
                   </div>
                   <div>

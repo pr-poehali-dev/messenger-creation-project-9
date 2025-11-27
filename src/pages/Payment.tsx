@@ -6,8 +6,8 @@ import MobileNav from '@/components/MobileNav';
 
 export default function Payment() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
-      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-900/40 dark:to-pink-900/40">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-[#1a1a2e]/80 border-b border-purple-100/50 dark:border-purple-800/30 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-3 group">
@@ -41,15 +41,15 @@ export default function Payment() {
           </h1>
 
           <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="Wallet" size={28} className="text-primary" />
                 Доступные способы оплаты
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-900/30">
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 border border-purple-100 dark:border-purple-800/30">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#2a2a40] flex items-center justify-center">
                       <Icon name="CreditCard" size={24} className="text-primary" />
                     </div>
                     <h3 className="font-bold text-lg text-gray-900 dark:text-white">Банковской картой</h3>
@@ -63,9 +63,9 @@ export default function Payment() {
                   </div>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-900/30">
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 border border-purple-100 dark:border-purple-800/30">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#2a2a40] flex items-center justify-center">
                       <Icon name="Smartphone" size={24} className="text-primary" />
                     </div>
                     <h3 className="font-bold text-lg text-gray-900 dark:text-white">СБП</h3>
@@ -79,9 +79,9 @@ export default function Payment() {
                   </div>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-900/30">
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 border border-purple-100 dark:border-purple-800/30">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#2a2a40] flex items-center justify-center">
                       <Icon name="Wallet" size={24} className="text-primary" />
                     </div>
                     <h3 className="font-bold text-lg text-gray-900 dark:text-white">Электронные кошельки</h3>
@@ -95,9 +95,9 @@ export default function Payment() {
                   </div>
                 </div>
 
-                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-900/30">
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 border border-purple-100 dark:border-purple-800/30">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#2a2a40] flex items-center justify-center">
                       <Icon name="HandCoins" size={24} className="text-primary" />
                     </div>
                     <h3 className="font-bold text-lg text-gray-900 dark:text-white">При получении</h3>
@@ -113,7 +113,7 @@ export default function Payment() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="Shield" size={28} className="text-primary" />
                 Безопасность платежей
@@ -121,7 +121,7 @@ export default function Payment() {
               <div className="p-6 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#2a2a40] flex items-center justify-center flex-shrink-0">
                       <Icon name="Lock" size={24} className="text-green-600" />
                     </div>
                     <div>
@@ -133,7 +133,7 @@ export default function Payment() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#2a2a40] flex items-center justify-center flex-shrink-0">
                       <Icon name="ShieldCheck" size={24} className="text-green-600" />
                     </div>
                     <div>
@@ -145,7 +145,7 @@ export default function Payment() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#2a2a40] flex items-center justify-center flex-shrink-0">
                       <Icon name="Eye" size={24} className="text-green-600" />
                     </div>
                     <div>
@@ -157,7 +157,7 @@ export default function Payment() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#2a2a40] flex items-center justify-center flex-shrink-0">
                       <Icon name="Award" size={24} className="text-green-600" />
                     </div>
                     <div>
@@ -171,7 +171,7 @@ export default function Payment() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 shadow-lg border border-purple-100 dark:border-purple-800/30">
               <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-3">
                 <Icon name="Info" size={28} className="text-primary" />
                 Важная информация

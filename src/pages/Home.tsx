@@ -103,8 +103,8 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
-      <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50 shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:from-[#1a1a2e] dark:via-[#252538] dark:to-[#2a2a40]">
+      <header className="backdrop-blur-xl bg-white/80 dark:bg-[#1a1a2e]/95 border-b border-purple-100/50 dark:border-purple-800/30 sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2 md:gap-3 group">
@@ -127,7 +127,7 @@ export default function Home() {
               <ThemeToggle />
               <Link 
                 to="/seller" 
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-purple-50 dark:hover:bg-purple-800/30 transition-colors"
               >
                 <Icon name="Store" size={18} />
                 Для продавцов
@@ -155,25 +155,25 @@ export default function Home() {
 
       <main className="container mx-auto px-4 py-6 md:py-8 pb-20 md:pb-8">
         <div className="mb-8 md:mb-12 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-800/50 dark:to-pink-800/50 rounded-full mb-3 md:mb-4 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-700/40 dark:to-pink-700/40 rounded-full mb-3 md:mb-4 animate-fade-in">
             <Icon name="TrendingUp" size={14} className="text-primary dark:text-purple-300 md:w-4 md:h-4" />
-            <span className="text-xs md:text-sm font-medium text-purple-900 dark:text-purple-100">Топ товары сезона</span>
+            <span className="text-xs md:text-sm font-medium text-purple-900 dark:text-purple-200">Топ товары сезона</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900 dark:text-white px-4">
             Откройте для себя лучшее
           </h2>
-          <p className="text-sm md:text-lg text-gray-600 dark:text-gray-300 mb-6 md:mb-8 px-4">
+          <p className="text-sm md:text-lg text-gray-600 dark:text-gray-400 mb-6 md:mb-8 px-4">
             Тщательно отобранные товары от проверенных продавцов
           </p>
           
           <div className="relative max-w-xl mx-auto">
-            <Icon name="Search" size={18} className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Icon name="Search" size={18} className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-muted-foreground dark:text-gray-500" />
             <Input
               type="text"
               placeholder="Найти товар..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 md:pl-12 pr-4 py-3 md:py-6 text-sm md:text-base rounded-xl md:rounded-2xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary shadow-sm dark:bg-gray-900/50"
+              className="pl-10 md:pl-12 pr-4 py-3 md:py-6 text-sm md:text-base rounded-xl md:rounded-2xl border-2 border-purple-100 dark:border-purple-700/40 focus:border-primary shadow-sm dark:bg-[#3a3a52]/50 dark:text-white dark:placeholder:text-gray-500"
             />
           </div>
         </div>

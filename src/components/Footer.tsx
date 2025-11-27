@@ -3,7 +3,7 @@ import Icon from '@/components/ui/icon';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-purple-100 dark:border-purple-900/30 bg-white/50 dark:bg-gray-950/50 backdrop-blur-xl mt-12 md:mt-20 mb-16 md:mb-0">
+    <footer className="border-t border-purple-100 dark:border-purple-800/30 bg-white/50 dark:bg-[#1a1a2e]/50 backdrop-blur-xl mt-12 md:mt-20 mb-16 md:mb-0">
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
           <div>
@@ -19,13 +19,13 @@ export default function Footer() {
               Современный маркетплейс с лучшими товарами и проверенными продавцами. Покупайте с удовольствием!
             </p>
             <div className="flex gap-3">
-              <a href="#" className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center hover:scale-110 transition-transform">
+              <a href="#" className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center hover:scale-110 transition-transform">
                 <Icon name="Mail" size={18} className="text-primary" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center hover:scale-110 transition-transform">
+              <a href="#" className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center hover:scale-110 transition-transform">
                 <Icon name="Phone" size={18} className="text-primary" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center hover:scale-110 transition-transform">
+              <a href="#" className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center hover:scale-110 transition-transform">
                 <Icon name="MessageCircle" size={18} className="text-primary" />
               </a>
             </div>
@@ -104,7 +104,7 @@ export default function Footer() {
                 </Link>
               </li>
             </ul>
-            <div className="mt-6 p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-900/30">
+            <div className="mt-6 p-4 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40 border border-purple-100 dark:border-purple-800/30">
               <div className="flex items-center gap-2 text-primary mb-1">
                 <Icon name="Phone" size={16} />
                 <span className="font-bold text-sm">8 (800) 555-35-35</span>
@@ -114,7 +114,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-6 border-t border-purple-100 dark:border-purple-900/30">
+        <div className="pt-6 border-t border-purple-100 dark:border-purple-800/30">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Icon name="Sparkles" size={16} className="text-primary" />

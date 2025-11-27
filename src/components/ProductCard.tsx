@@ -17,14 +17,14 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link to={`/product/${product.id}`}>
-      <div className="group relative bg-white dark:bg-gray-900 rounded-xl md:rounded-2xl overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer border border-purple-100/50 dark:border-purple-900/30 active:scale-95 md:active:scale-100">
+      <div className="group relative bg-white dark:bg-[#252538] rounded-xl md:rounded-2xl overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer border border-purple-100/50 dark:border-purple-800/30 active:scale-95 md:active:scale-100">
         <div className="absolute top-2 md:top-3 right-2 md:right-3 z-10">
-          <div className="p-1.5 md:p-2 rounded-full bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm shadow-lg">
+          <div className="p-1.5 md:p-2 rounded-full bg-white/95 dark:bg-[#1a1a2e]/95 backdrop-blur-sm shadow-lg">
             <Icon name="Heart" size={14} className="text-accent md:w-4 md:h-4" />
           </div>
         </div>
 
-        <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/20">
+        <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/40 dark:to-pink-900/40">
           <img 
             src={product.image} 
             alt={product.name} 
@@ -56,10 +56,10 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.price.toLocaleString()} ₽
             </div>
             <div className="flex items-center gap-1 md:gap-1.5">
-              <div className="p-1 md:p-1.5 rounded-full bg-purple-50 dark:bg-purple-900/20">
+              <div className="p-1 md:p-1.5 rounded-full bg-purple-50 dark:bg-purple-800/30">
                 <Icon name="Star" size={12} className="text-amber-500 md:w-3.5 md:h-3.5" />
               </div>
-              <div className="p-1 md:p-1.5 rounded-full bg-purple-50 dark:bg-purple-900/20">
+              <div className="p-1 md:p-1.5 rounded-full bg-purple-50 dark:bg-purple-800/30">
                 <Icon name="Eye" size={12} className="text-primary md:w-3.5 md:h-3.5" />
               </div>
               <div className="p-1 md:p-1.5 rounded-full bg-gradient-to-r from-primary to-accent">
@@ -68,7 +68,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
           
-          <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg bg-purple-50 dark:bg-purple-900/20">
+          <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg bg-purple-50 dark:bg-purple-800/30">
             <Icon name="Store" size={10} className="text-primary md:w-3 md:h-3" />
             <span className="text-[10px] md:text-xs text-foreground font-medium truncate">{product.seller_name}</span>
           </div>

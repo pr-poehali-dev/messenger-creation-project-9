@@ -61,7 +61,7 @@ export default function SwipeableProductGrid({ products }: SwipeableProductGridP
           disabled={currentPage === 0}
           className={`p-2 rounded-full ${
             currentPage === 0 
-              ? 'bg-gray-100 dark:bg-gray-800 text-gray-400' 
+              ? 'bg-gray-100 dark:bg-[#2a2a40] text-gray-400' 
               : 'bg-gradient-to-r from-primary to-accent text-white active:scale-95'
           } transition-all`}
         >
@@ -76,7 +76,7 @@ export default function SwipeableProductGrid({ products }: SwipeableProductGridP
               className={`h-2 rounded-full transition-all ${
                 index === currentPage 
                   ? 'w-6 bg-gradient-to-r from-primary to-accent' 
-                  : 'w-2 bg-gray-300 dark:bg-gray-600'
+                  : 'w-2 bg-gray-300 dark:bg-[#2a2a40]'
               }`}
             />
           ))}
@@ -87,7 +87,7 @@ export default function SwipeableProductGrid({ products }: SwipeableProductGridP
           disabled={currentPage === totalPages - 1}
           className={`p-2 rounded-full ${
             currentPage === totalPages - 1 
-              ? 'bg-gray-100 dark:bg-gray-800 text-gray-400' 
+              ? 'bg-gray-100 dark:bg-[#2a2a40] text-gray-400' 
               : 'bg-gradient-to-r from-primary to-accent text-white active:scale-95'
           } transition-all`}
         >
@@ -136,7 +136,7 @@ export default function SwipeableProductGrid({ products }: SwipeableProductGridP
           </div>
         </div>
         
-        <div className="flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-100 dark:border-blue-900/30">
+        <div className="flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/40 dark:to-purple-900/40 rounded-xl border border-blue-100 dark:border-blue-800/30">
           <Icon name="HandMetal" size={18} className="text-blue-600 dark:text-blue-400" />
           <span className="text-xs text-blue-900 dark:text-blue-300 font-medium">
             Свайпните влево/вправо для просмотра
