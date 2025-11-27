@@ -81,7 +81,7 @@ export default function Help() {
                 <Icon name="ArrowRight" size={20} className="text-primary mt-4 group-hover:translate-x-2 transition-transform" />
               </Link>
 
-              <Link to="/payment" className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900/30 hover:scale-105 transition-transform group">
+              <Link to="/payment" className="bg-white dark:bg-[#252538] rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-800/30 hover:scale-105 transition-transform group">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
                   <Icon name="CreditCard" size={32} className="text-white" />
                 </div>
@@ -90,7 +90,7 @@ export default function Help() {
                 <Icon name="ArrowRight" size={20} className="text-primary mt-4 group-hover:translate-x-2 transition-transform" />
               </Link>
 
-              <Link to="/return" className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-900/30 hover:scale-105 transition-transform group">
+              <Link to="/return" className="bg-white dark:bg-[#252538] rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-purple-800/30 hover:scale-105 transition-transform group">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
                   <Icon name="RotateCcw" size={32} className="text-white" />
                 </div>
@@ -107,7 +107,7 @@ export default function Help() {
               </h2>
               <div className="space-y-4">
                 {faqs.map((faq, index) => (
-                  <div key={index} className="border border-purple-100 dark:border-purple-900/30 rounded-xl overflow-hidden">
+                  <div key={index} className="border border-purple-100 dark:border-purple-800/30 rounded-xl overflow-hidden">
                     <button
                       onClick={() => setOpenFaq(openFaq === index ? null : index)}
                       className="w-full flex items-center justify-between p-4 text-left hover:bg-purple-50 dark:hover:bg-purple-800/30 transition-colors"
@@ -136,7 +136,7 @@ export default function Help() {
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-800/30 dark:to-pink-800/30 flex items-center justify-center flex-shrink-0">
                     <Icon name="Phone" size={24} className="text-primary" />
                   </div>
                   <div>
@@ -147,7 +147,7 @@ export default function Help() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-800/30 dark:to-pink-800/30 flex items-center justify-center flex-shrink-0">
                     <Icon name="Mail" size={24} className="text-primary" />
                   </div>
                   <div>

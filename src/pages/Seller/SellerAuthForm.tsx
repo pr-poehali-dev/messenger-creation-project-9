@@ -117,7 +117,7 @@ export default function SellerAuthForm({
                     placeholder="email@example.com"
                     value={email}
                     onChange={(e) => onEmailChange(e.target.value)}
-                    className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary dark:bg-gray-800"
+                    className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30 focus:border-primary dark:bg-[#2a2a40]"
                   />
                 </div>
 
@@ -132,7 +132,7 @@ export default function SellerAuthForm({
                       placeholder="+7 (999) 123-45-67"
                       value={phone}
                       onChange={(e) => onPhoneChange(e.target.value)}
-                      className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary dark:bg-gray-800"
+                      className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30 focus:border-primary dark:bg-[#2a2a40]"
                     />
                   </div>
                 )}
@@ -147,7 +147,7 @@ export default function SellerAuthForm({
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => onPasswordChange(e.target.value)}
-                    className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary dark:bg-gray-800"
+                    className="h-12 rounded-xl border-2 border-purple-100 dark:border-purple-800/30 focus:border-primary dark:bg-[#2a2a40]"
                   />
                 </div>
 

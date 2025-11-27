@@ -164,7 +164,7 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-900/40 dark:to-pink-900/40 flex flex-col items-center justify-center gap-6">
-        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 flex items-center justify-center">
+        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-800/30 dark:to-pink-800/30 flex items-center justify-center">
           <Icon name="PackageX" size={40} className="text-primary" />
         </div>
         <div className="text-center">
@@ -207,7 +207,7 @@ export default function ProductDetail() {
           {prevProduct ? (
             <button
               onClick={() => navigate(`/product/${prevProduct.id}`)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 text-sm font-medium text-purple-900 dark:text-purple-300 active:scale-95 transition-transform"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-800/30 dark:to-pink-800/30 text-sm font-medium text-purple-900 dark:text-purple-300 active:scale-95 transition-transform"
             >
               <Icon name="ChevronLeft" size={18} />
               Пред.
@@ -226,7 +226,7 @@ export default function ProductDetail() {
           {nextProduct ? (
             <button
               onClick={() => navigate(`/product/${nextProduct.id}`)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 text-sm font-medium text-purple-900 dark:text-purple-300 active:scale-95 transition-transform"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-800/30 dark:to-pink-800/30 text-sm font-medium text-purple-900 dark:text-purple-300 active:scale-95 transition-transform"
             >
               След.
               <Icon name="ChevronRight" size={18} />

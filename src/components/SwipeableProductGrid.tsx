@@ -128,7 +128,7 @@ export default function SwipeableProductGrid({ products }: SwipeableProductGridP
 
       <div className="mt-4 space-y-2">
         <div className="flex items-center justify-center">
-          <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 rounded-full shadow-sm border border-purple-100 dark:border-purple-900/30">
+          <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#252538] rounded-full shadow-sm border border-purple-100 dark:border-purple-800/30">
             <Icon name="Package" size={14} className="text-primary" />
             <span className="text-xs font-bold text-foreground">
               {startIndex + 1}-{Math.min(startIndex + itemsPerPage, products.length)} из {products.length}

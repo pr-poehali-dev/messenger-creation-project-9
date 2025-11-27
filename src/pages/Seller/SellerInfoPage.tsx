@@ -70,7 +70,7 @@ export default function SellerInfoPage({ onNavigateToAuth }: SellerInfoPageProps
             </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 border border-purple-100 dark:border-purple-900/30 shadow-lg hover:shadow-2xl transition-all animate-scale-in" style={{ animationDelay: '100ms' }}>
+          <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 border border-purple-100 dark:border-purple-800/30 shadow-lg hover:shadow-2xl transition-all animate-scale-in" style={{ animationDelay: '100ms' }}>
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mb-6">
               <Icon name="Percent" size={32} className="text-primary" />
             </div>
@@ -80,7 +80,7 @@ export default function SellerInfoPage({ onNavigateToAuth }: SellerInfoPageProps
             </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 border border-purple-100 dark:border-purple-900/30 shadow-lg hover:shadow-2xl transition-all animate-scale-in" style={{ animationDelay: '200ms' }}>
+          <div className="bg-white dark:bg-[#252538] rounded-3xl p-8 border border-purple-100 dark:border-purple-800/30 shadow-lg hover:shadow-2xl transition-all animate-scale-in" style={{ animationDelay: '200ms' }}>
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mb-6">
               <Icon name="Zap" size={32} className="text-primary" />
             </div>

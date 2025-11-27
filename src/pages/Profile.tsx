@@ -113,7 +113,7 @@ export default function Profile() {
           <div className="w-full max-w-md animate-scale-in">
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-2xl"></div>
-              <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-purple-100 dark:border-purple-900/30 overflow-hidden">
+              <div className="relative bg-white dark:bg-[#252538] rounded-3xl shadow-2xl border border-purple-100 dark:border-purple-800/30 overflow-hidden">
                 <div className="bg-gradient-to-r from-primary to-accent p-8 text-center">
                   <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-4">
                     <Icon name="User" size={40} className="text-white" />
@@ -211,7 +211,7 @@ export default function Profile() {
                     </button>
                   </div>
 
-                  <div className="pt-4 text-center border-t border-purple-100 dark:border-purple-900/30">
+                  <div className="pt-4 text-center border-t border-purple-100 dark:border-purple-800/30">
                     <p className="text-xs text-muted-foreground">
                       Продолжая, вы соглашаетесь с условиями использования
                     </p>
@@ -224,7 +224,7 @@ export default function Profile() {
           <div className="w-full max-w-4xl animate-scale-in">
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-2xl"></div>
-              <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-purple-100 dark:border-purple-900/30 overflow-hidden">
+              <div className="relative bg-white dark:bg-[#252538] rounded-3xl shadow-2xl border border-purple-100 dark:border-purple-800/30 overflow-hidden">
                 <div className="bg-gradient-to-r from-primary to-accent p-8">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-6">
@@ -276,7 +276,7 @@ export default function Profile() {
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4 mb-8">
-                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-900/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
+                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-800/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
                           <Icon name="Package" size={24} className="text-primary" />
@@ -289,7 +289,7 @@ export default function Profile() {
                       <Icon name="ChevronRight" size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
                     </Link>
 
-                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-900/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
+                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-800/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
                           <Icon name="Heart" size={24} className="text-primary" />
@@ -302,7 +302,7 @@ export default function Profile() {
                       <Icon name="ChevronRight" size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
                     </Link>
 
-                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-900/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
+                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-800/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
                           <Icon name="MapPin" size={24} className="text-primary" />
@@ -315,7 +315,7 @@ export default function Profile() {
                       <Icon name="ChevronRight" size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
                     </Link>
 
-                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-900/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
+                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-800/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
                           <Icon name="CreditCard" size={24} className="text-primary" />
@@ -328,7 +328,7 @@ export default function Profile() {
                       <Icon name="ChevronRight" size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
                     </Link>
 
-                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-900/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
+                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-800/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
                           <Icon name="Bell" size={24} className="text-primary" />
@@ -341,7 +341,7 @@ export default function Profile() {
                       <Icon name="ChevronRight" size={20} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
                     </Link>
 
-                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-900/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
+                    <Link to="/" className="flex items-center justify-between p-5 rounded-2xl border-2 border-purple-100 dark:border-purple-800/30 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
                           <Icon name="Settings" size={24} className="text-primary" />
@@ -355,7 +355,7 @@ export default function Profile() {
                     </Link>
                   </div>
 
-                  <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-900/30">
+                  <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-100 dark:border-purple-800/30">
                     <div className="flex items-start gap-4">
                       <Icon name="Info" size={24} className="text-primary flex-shrink-0" />
                       <div>
