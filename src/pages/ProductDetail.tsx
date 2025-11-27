@@ -101,12 +101,36 @@ export default function ProductDetail() {
   }, [id]);
 
   const handleBuy = () => {
-    const user = localStorage.getItem('user');
-    if (!user) {
-      navigate('/profile');
-      return;
+    if (!product) return;
+    
+    const savedCart = localStorage.getItem('cart');
+    const cart = savedCart ? JSON.parse(savedCart) : [];
+    
+    const existingItem = cart.find((item: any) => item.id === product.id);
+    
+    if (existingItem) {
+      existingItem.quantity += quantity;
+    } else {
+      cart.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: quantity,
+        seller_name: product.seller_name
+      });
     }
-    alert('Товар добавлен в корзину!');
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    const haptic = () => {
+      if ('vibrate' in navigator) {
+        navigator.vibrate([50, 30, 50]);
+      }
+    };
+    haptic();
+    
+    alert(`✓ ${product.name} добавлен в корзину!`);
   };
 
   const currentIndex = mockProducts.findIndex(p => p.id === id);

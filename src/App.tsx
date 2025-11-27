@@ -3,6 +3,7 @@ import { Suspense, lazy } from 'react';
 
 const Home = lazy(() => import('./pages/Home'));
 const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const Cart = lazy(() => import('./pages/Cart'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Seller = lazy(() => import('./pages/Seller'));
 const About = lazy(() => import('./pages/About'));
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/test" element={<Test />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/seller" element={<Seller />} />
           <Route path="/about" element={<About />} />

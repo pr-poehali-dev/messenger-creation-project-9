@@ -133,6 +133,13 @@ export default function Home() {
                 Для продавцов
               </Link>
               <Link 
+                to="/cart" 
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-purple-50 dark:hover:bg-purple-800/30 transition-colors"
+              >
+                <Icon name="ShoppingCart" size={18} />
+                Корзина
+              </Link>
+              <Link 
                 to="/profile" 
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-accent text-white shadow-lg hover:shadow-xl transition-all"
               >
