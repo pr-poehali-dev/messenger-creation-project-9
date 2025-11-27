@@ -16,17 +16,35 @@ export default function ThemeToggle() {
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     
-    document.documentElement.classList.add('animate-theme-switch');
+    document.documentElement.style.transition = 'none';
     
-    setTimeout(() => {
-      setTheme(newTheme);
-      localStorage.setItem('theme', newTheme);
-      document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    const clone = document.documentElement.cloneNode(true) as HTMLElement;
+    clone.classList.add('theme-transition-clone');
+    clone.style.position = 'fixed';
+    clone.style.top = '0';
+    clone.style.left = '0';
+    clone.style.width = '100%';
+    clone.style.height = '100%';
+    clone.style.pointerEvents = 'none';
+    clone.style.zIndex = '9999';
+    clone.style.overflow = 'hidden';
+    
+    document.body.appendChild(clone);
+    
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    requestAnimationFrame(() => {
+      document.documentElement.style.transition = '';
+      
+      clone.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+      clone.style.opacity = '0';
       
       setTimeout(() => {
-        document.documentElement.classList.remove('animate-theme-switch');
-      }, 400);
-    }, 50);
+        document.body.removeChild(clone);
+      }, 500);
+    });
   };
 
   return (
