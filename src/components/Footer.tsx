@@ -3,9 +3,9 @@ import Icon from '@/components/ui/icon';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-purple-100 dark:border-purple-900/30 bg-white/50 dark:bg-gray-950/50 backdrop-blur-xl mt-20">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+    <footer className="border-t border-purple-100 dark:border-purple-900/30 bg-white/50 dark:bg-gray-950/50 backdrop-blur-xl mt-12 md:mt-20 mb-16 md:mb-0">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
           <div>
             <div className="flex items-center gap-3 mb-4">
               <div className="bg-gradient-to-br from-primary to-accent p-2 rounded-2xl">

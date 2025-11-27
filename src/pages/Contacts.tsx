@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import ThemeToggle from '@/components/ThemeToggle';
 import Footer from '@/components/Footer';
+import MobileNav from '@/components/MobileNav';
 
 export default function Contacts() {
   return (
@@ -152,6 +153,7 @@ export default function Contacts() {
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 }

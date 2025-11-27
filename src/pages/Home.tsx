@@ -3,6 +3,7 @@ import Icon from '@/components/ui/icon';
 import ProductCard from '@/components/ProductCard';
 import ThemeToggle from '@/components/ThemeToggle';
 import Footer from '@/components/Footer';
+import MobileNav from '@/components/MobileNav';
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 
@@ -102,20 +103,21 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
       <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-3 group">
+            <Link to="/" className="flex items-center gap-2 md:gap-3 group">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent blur-lg opacity-50 group-hover:opacity-70 transition-opacity"></div>
-                <div className="relative bg-gradient-to-br from-primary to-accent p-2 rounded-2xl shadow-lg">
-                  <Icon name="Sparkles" size={28} className="text-white" />
+                <div className="relative bg-gradient-to-br from-primary to-accent p-1.5 md:p-2 rounded-xl md:rounded-2xl shadow-lg">
+                  <Icon name="Sparkles" size={20} className="text-white md:hidden" />
+                  <Icon name="Sparkles" size={28} className="text-white hidden md:block" />
                 </div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-purple-600 to-accent bg-clip-text text-transparent">
+                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary via-purple-600 to-accent bg-clip-text text-transparent">
                   Peeky
                 </h1>
-                <p className="text-xs text-muted-foreground">Стиль и качество</p>
+                <p className="text-[10px] md:text-xs text-muted-foreground">Стиль и качество</p>
               </div>
             </Link>
             
@@ -140,8 +142,8 @@ export default function Home() {
             <div className="md:hidden flex items-center gap-2">
               <ThemeToggle />
               <Link to="/profile">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-primary to-accent text-white flex items-center justify-center shadow-lg">
-                  <Icon name="User" size={20} />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-primary to-accent text-white flex items-center justify-center shadow-lg">
+                  <Icon name="User" size={18} />
                 </div>
               </Link>
             </div>
@@ -149,27 +151,27 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-12 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-800/50 dark:to-pink-800/50 rounded-full mb-4 animate-fade-in">
-            <Icon name="TrendingUp" size={16} className="text-primary dark:text-purple-300" />
-            <span className="text-sm font-medium text-purple-900 dark:text-purple-100">Топ товары сезона</span>
+      <main className="container mx-auto px-4 py-6 md:py-8 pb-20 md:pb-8">
+        <div className="mb-8 md:mb-12 text-center max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-800/50 dark:to-pink-800/50 rounded-full mb-3 md:mb-4 animate-fade-in">
+            <Icon name="TrendingUp" size={14} className="text-primary dark:text-purple-300 md:w-4 md:h-4" />
+            <span className="text-xs md:text-sm font-medium text-purple-900 dark:text-purple-100">Топ товары сезона</span>
           </div>
-          <h2 className="text-5xl font-bold mb-4 text-gray-900 dark:text-white">
+          <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900 dark:text-white px-4">
             Откройте для себя лучшее
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
+          <p className="text-sm md:text-lg text-gray-600 dark:text-gray-300 mb-6 md:mb-8 px-4">
             Тщательно отобранные товары от проверенных продавцов
           </p>
           
           <div className="relative max-w-xl mx-auto">
-            <Icon name="Search" size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Icon name="Search" size={18} className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Найти товар..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 pr-4 py-6 text-base rounded-2xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary shadow-sm dark:bg-gray-900/50"
+              className="pl-10 md:pl-12 pr-4 py-3 md:py-6 text-sm md:text-base rounded-xl md:rounded-2xl border-2 border-purple-100 dark:border-purple-900 focus:border-primary shadow-sm dark:bg-gray-900/50"
             />
           </div>
         </div>
@@ -208,6 +210,7 @@ export default function Home() {
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 }

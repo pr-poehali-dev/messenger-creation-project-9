@@ -3,6 +3,7 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
 import Footer from '@/components/Footer';
+import MobileNav from '@/components/MobileNav';
 
 interface SellerInfoPageProps {
   onNavigateToAuth: () => void;
@@ -92,6 +93,7 @@ export default function SellerInfoPage({ onNavigateToAuth }: SellerInfoPageProps
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ThemeToggle from '@/components/ThemeToggle';
 import Footer from '@/components/Footer';
+import MobileNav from '@/components/MobileNav';
 import { useState, useEffect } from 'react';
 
 interface User {
@@ -380,6 +381,7 @@ export default function Profile() {
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 }

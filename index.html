@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover, minimum-scale=1.0"/>
     <meta name="mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -39,15 +39,25 @@
 
 <body>
 <div id="root">
-  <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(to bottom right, #faf5ff, #fce7f3, #eff6ff); font-family: system-ui, -apple-system, sans-serif;">
-    <div style="text-align: center;">
-      <div style="width: 64px; height: 64px; margin: 0 auto 20px; border: 4px solid #e9d5ff; border-top-color: #9333ea; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-      <p style="color: #7c3aed; font-size: 18px; font-weight: 600;">Загрузка...</p>
+  <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; min-height: 100dvh; background: linear-gradient(to bottom right, #faf5ff, #fce7f3, #eff6ff); font-family: system-ui, -apple-system, sans-serif; overflow: hidden;">
+    <div style="text-align: center; padding: 20px;">
+      <div style="width: 48px; height: 48px; margin: 0 auto 16px; border: 3px solid #e9d5ff; border-top-color: #9333ea; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+      <p style="color: #7c3aed; font-size: 16px; font-weight: 600; margin: 0;">Загрузка...</p>
     </div>
   </div>
   <style>
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </div>

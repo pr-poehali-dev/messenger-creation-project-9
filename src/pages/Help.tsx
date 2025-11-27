@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import ThemeToggle from '@/components/ThemeToggle';
 import Footer from '@/components/Footer';
+import MobileNav from '@/components/MobileNav';
 import { useState } from 'react';
 
 export default function Help() {
@@ -175,6 +176,7 @@ export default function Help() {
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import ThemeToggle from '@/components/ThemeToggle';
 import Footer from '@/components/Footer';
+import MobileNav from '@/components/MobileNav';
 
 export default function Payment() {
   return (
@@ -243,6 +244,7 @@ export default function Payment() {
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
 import Footer from '@/components/Footer';
+import MobileNav from '@/components/MobileNav';
 import { useState, useEffect } from 'react';
 
 interface Product {
@@ -251,6 +252,7 @@ export default function ProductDetail() {
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 }

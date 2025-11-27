@@ -73,6 +73,21 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: pan-x pan-y;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    #root {
+      min-height: -webkit-fill-available;
+    }
   }
 
   button,

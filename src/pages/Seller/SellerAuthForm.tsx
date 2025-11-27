@@ -2,6 +2,8 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ThemeToggle from '@/components/ThemeToggle';
+import MobileNav from '@/components/MobileNav';
+import Footer from '@/components/Footer';
 
 interface SellerAuthFormProps {
   isLogin: boolean;
@@ -179,6 +181,7 @@ export default function SellerAuthForm({
       </main>
 
       <Footer />
+      <MobileNav />
     </div>
   );
 }
