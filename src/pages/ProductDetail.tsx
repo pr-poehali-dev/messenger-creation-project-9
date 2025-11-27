@@ -284,7 +284,7 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <div className="space-y-6 p-8 bg-white dark:bg-gray-900 rounded-3xl shadow-lg border border-purple-100 dark:border-purple-900/30">
+            <div className="space-y-6 p-8 bg-white dark:bg-[#252538] rounded-3xl shadow-lg border border-purple-100 dark:border-purple-800/30">
               <div className="flex items-baseline gap-3">
                 <span className="text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                   {(product.price * quantity).toLocaleString()} ₽
