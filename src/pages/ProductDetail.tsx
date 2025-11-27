@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/ThemeToggle';
 import Footer from '@/components/Footer';
 import MobileNav from '@/components/MobileNav';
+import SwipeIndicator from '@/components/SwipeIndicator';
 import { useState, useEffect } from 'react';
+import { useSwipeable } from 'react-swipeable';
 
 interface Product {
   id: string;
@@ -88,6 +90,7 @@ export default function ProductDetail() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -105,6 +108,47 @@ export default function ProductDetail() {
     }
     alert('Товар добавлен в корзину!');
   };
+
+  const currentIndex = mockProducts.findIndex(p => p.id === id);
+  const prevProduct = currentIndex > 0 ? mockProducts[currentIndex - 1] : null;
+  const nextProduct = currentIndex < mockProducts.length - 1 ? mockProducts[currentIndex + 1] : null;
+
+  const hapticFeedback = () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(15);
+    }
+  };
+
+  const handleSwipeLeft = () => {
+    if (nextProduct) {
+      hapticFeedback();
+      setSwipeDirection('left');
+      setTimeout(() => {
+        navigate(`/product/${nextProduct.id}`);
+        setSwipeDirection(null);
+      }, 200);
+    }
+  };
+
+  const handleSwipeRight = () => {
+    if (prevProduct) {
+      hapticFeedback();
+      setSwipeDirection('right');
+      setTimeout(() => {
+        navigate(`/product/${prevProduct.id}`);
+        setSwipeDirection(null);
+      }, 200);
+    }
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleSwipeLeft,
+    onSwipedRight: handleSwipeRight,
+    trackMouse: false,
+    preventScrollOnSwipe: false,
+    trackTouch: true,
+    delta: 50
+  });
 
   if (loading) {
     return (
@@ -138,7 +182,14 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10">
+    <div 
+      {...swipeHandlers}
+      className={`min-h-screen bg-gradient-to-br from-background via-purple-50/30 to-pink-50/20 dark:via-purple-950/20 dark:to-pink-950/10 transition-transform duration-200 ${
+        swipeDirection === 'left' ? '-translate-x-8 opacity-80' : 
+        swipeDirection === 'right' ? 'translate-x-8 opacity-80' : 
+        ''
+      }`}
+    >
       <header className="backdrop-blur-xl bg-white/80 dark:bg-gray-950/80 border-b border-purple-100/50 dark:border-purple-900/30 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -151,7 +202,48 @@ export default function ProductDetail() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-8 md:py-12">
+        <div className="md:hidden flex items-center justify-between mb-4 px-2">
+          {prevProduct ? (
+            <button
+              onClick={() => navigate(`/product/${prevProduct.id}`)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-sm font-medium text-purple-900 dark:text-purple-300 active:scale-95 transition-transform"
+            >
+              <Icon name="ChevronLeft" size={18} />
+              Пред.
+            </button>
+          ) : (
+            <div></div>
+          )}
+          
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-gray-900 shadow-sm border border-purple-100 dark:border-purple-900/30">
+            <Icon name="Zap" size={14} className="text-accent" />
+            <span className="text-xs font-medium text-muted-foreground">
+              {currentIndex + 1} / {mockProducts.length}
+            </span>
+          </div>
+          
+          {nextProduct ? (
+            <button
+              onClick={() => navigate(`/product/${nextProduct.id}`)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 text-sm font-medium text-purple-900 dark:text-purple-300 active:scale-95 transition-transform"
+            >
+              След.
+              <Icon name="ChevronRight" size={18} />
+            </button>
+          ) : (
+            <div></div>
+          )}
+        </div>
+        
+        <div className="md:hidden mb-4 px-2">
+          <div className="flex items-center gap-2 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-100 dark:border-blue-900/30">
+            <Icon name="HandMetal" size={18} className="text-blue-600 dark:text-blue-400" />
+            <span className="text-xs text-blue-900 dark:text-blue-300 font-medium">
+              Свайпните влево/вправо для перехода между товарами
+            </span>
+          </div>
+        </div>
         <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
           <div className="relative group">
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-accent/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -253,6 +345,7 @@ export default function ProductDetail() {
 
       <Footer />
       <MobileNav />
+      <SwipeIndicator />
     </div>
   );
 }

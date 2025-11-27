@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import ProductCard from '@/components/ProductCard';
+import SwipeableProductGrid from '@/components/SwipeableProductGrid';
+import SwipeIndicator from '@/components/SwipeIndicator';
 import ThemeToggle from '@/components/ThemeToggle';
 import Footer from '@/components/Footer';
 import MobileNav from '@/components/MobileNav';
@@ -185,17 +187,21 @@ export default function Home() {
             <p className="mt-4 text-muted-foreground">Загружаем товары...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in">
-            {filteredProducts.map((product, index) => (
-              <div
-                key={product.id}
-                style={{ animationDelay: `${index * 50}ms` }}
-                className="animate-scale-in"
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
-          </div>
+          <>
+            <SwipeableProductGrid products={filteredProducts} />
+            
+            <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in">
+              {filteredProducts.map((product, index) => (
+                <div
+                  key={product.id}
+                  style={{ animationDelay: `${index * 50}ms` }}
+                  className="animate-scale-in"
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+          </>
         )}
 
         {!loading && filteredProducts.length === 0 && (
@@ -211,6 +217,7 @@ export default function Home() {
 
       <Footer />
       <MobileNav />
+      <SwipeIndicator />
     </div>
   );
 }
