@@ -13,38 +13,87 @@ export default function ThemeToggle() {
     document.documentElement.classList.toggle('dark', initialTheme === 'dark');
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     
-    document.documentElement.style.transition = 'none';
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
     
-    const clone = document.documentElement.cloneNode(true) as HTMLElement;
-    clone.classList.add('theme-transition-clone');
-    clone.style.position = 'fixed';
-    clone.style.top = '0';
-    clone.style.left = '0';
-    clone.style.width = '100%';
-    clone.style.height = '100%';
-    clone.style.pointerEvents = 'none';
-    clone.style.zIndex = '9999';
-    clone.style.overflow = 'hidden';
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.zIndex = '99999';
+    overlay.style.overflow = 'hidden';
     
-    document.body.appendChild(clone);
+    const circle = document.createElement('div');
+    const maxRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
     
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    circle.style.position = 'absolute';
+    circle.style.left = `${x}px`;
+    circle.style.top = `${y}px`;
+    circle.style.width = '0';
+    circle.style.height = '0';
+    circle.style.borderRadius = '50%';
+    circle.style.transform = 'translate(-50%, -50%)';
+    circle.style.transition = 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+    
+    if (newTheme === 'dark') {
+      circle.style.background = 'radial-gradient(circle, #1a1a2e 0%, #252538 50%, #2a2a40 100%)';
+    } else {
+      circle.style.background = 'radial-gradient(circle, #faf5ff 0%, #fce7f3 50%, #eff6ff 100%)';
+    }
+    
+    overlay.appendChild(circle);
+    document.body.appendChild(overlay);
+    
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.style.position = 'absolute';
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+      particle.style.width = '4px';
+      particle.style.height = '4px';
+      particle.style.borderRadius = '50%';
+      particle.style.background = newTheme === 'dark' ? '#9333ea' : '#f59e0b';
+      particle.style.opacity = '1';
+      particle.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      
+      overlay.appendChild(particle);
+      
+      requestAnimationFrame(() => {
+        const angle = (i / 20) * Math.PI * 2;
+        const distance = 200 + Math.random() * 100;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        
+        particle.style.transform = `translate(${tx}px, ${ty}px)`;
+        particle.style.opacity = '0';
+      });
+    }
     
     requestAnimationFrame(() => {
-      document.documentElement.style.transition = '';
-      
-      clone.style.transition = 'opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-      clone.style.opacity = '0';
-      
-      setTimeout(() => {
-        document.body.removeChild(clone);
-      }, 500);
+      circle.style.width = `${maxRadius * 2}px`;
+      circle.style.height = `${maxRadius * 2}px`;
     });
+    
+    setTimeout(() => {
+      document.documentElement.classList.toggle('dark', newTheme === 'dark');
+      setTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    }, 100);
+    
+    setTimeout(() => {
+      document.body.removeChild(overlay);
+    }, 800);
   };
 
   return (
