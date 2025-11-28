@@ -91,7 +91,7 @@ export default function Home() {
                   </Button>
                 </Link>
               ) : (
-                <Link to="/auth">
+                <Link to="/buyer/auth">
                   <Button variant="default" className="gap-2">
                     <Icon name="LogIn" size={18} />
                     <span className="hidden md:inline">Войти</span>

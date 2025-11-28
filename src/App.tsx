@@ -1,10 +1,13 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import PageTransition from './components/PageTransition';
 
 const Home = lazy(() => import('./pages/Home'));
 const ProductDetail = lazy(() => import('./pages/ProductDetail'));
 const Cart = lazy(() => import('./pages/Cart'));
-const Auth = lazy(() => import('./pages/Auth'));
+const BuyerAuth = lazy(() => import('./pages/BuyerAuth'));
+const SellerAuth = lazy(() => import('./pages/SellerAuth'));
 const Profile = lazy(() => import('./pages/Profile'));
 const SellerDashboard = lazy(() => import('./pages/SellerDashboard'));
 const SellerInfo = lazy(() => import('./pages/SellerInfo'));
@@ -20,19 +23,30 @@ function LoadingScreen() {
   );
 }
 
+function AnimatedRoutes() {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+        <Route path="/product/:id" element={<PageTransition><ProductDetail /></PageTransition>} />
+        <Route path="/cart" element={<PageTransition><Cart /></PageTransition>} />
+        <Route path="/buyer/auth" element={<PageTransition><BuyerAuth /></PageTransition>} />
+        <Route path="/seller/auth" element={<PageTransition><SellerAuth /></PageTransition>} />
+        <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
+        <Route path="/seller/dashboard" element={<PageTransition><SellerDashboard /></PageTransition>} />
+        <Route path="/seller-info" element={<PageTransition><SellerInfo /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Suspense fallback={<LoadingScreen />}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/seller/dashboard" element={<SellerDashboard />} />
-          <Route path="/seller-info" element={<SellerInfo />} />
-        </Routes>
+        <AnimatedRoutes />
       </Suspense>
     </BrowserRouter>
   );

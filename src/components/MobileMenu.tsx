@@ -37,7 +37,7 @@ export default function MobileMenu() {
     {
       icon: isAuthenticated ? 'User' : 'LogIn',
       label: isAuthenticated ? 'Профиль' : 'Войти',
-      path: isAuthenticated ? (user?.role === 'seller' ? '/seller/dashboard' : '/profile') : '/auth',
+      path: isAuthenticated ? (user?.role === 'seller' ? '/seller/dashboard' : '/profile') : '/buyer/auth',
       badge: null
     }
   ];

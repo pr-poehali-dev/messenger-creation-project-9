@@ -72,7 +72,7 @@ export default function SellerInfo() {
               </div>
             </Link>
 
-            <Link to="/auth">
+            <Link to="/seller/auth">
               <Button className="gap-2">
                 <Icon name="Store" size={18} />
                 Стать продавцом
@@ -96,7 +96,7 @@ export default function SellerInfo() {
               Присоединяйтесь к тысячам успешных продавцов и развивайте свой бизнес на крупнейшем маркетплейсе
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/auth">
+              <Link to="/seller/auth">
                 <Button size="lg" className="gap-2 h-14 px-8 text-lg">
                   <Icon name="Rocket" size={20} />
                   Начать продавать
@@ -155,7 +155,7 @@ export default function SellerInfo() {
               <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
                 Создайте аккаунт продавца прямо сейчас и получите доступ ко всем инструментам для успешных продаж
               </p>
-              <Link to="/auth">
+              <Link to="/seller/auth">
                 <Button size="lg" variant="outline" className="gap-2 h-14 px-8 text-lg bg-white text-purple-600 hover:bg-purple-50 border-0">
                   <Icon name="ArrowRight" size={20} />
                   Зарегистрироваться как продавец
