@@ -64,6 +64,13 @@ export default function Home() {
             </div>
 
             <nav className="flex items-center gap-2">
+              <Link to="/seller-info" className="hidden md:block">
+                <Button variant="ghost" className="gap-2">
+                  <Icon name="Store" size={18} />
+                  Продавцам
+                </Button>
+              </Link>
+              
               <Link to="/cart">
                 <Button variant="ghost" size="icon" className="relative">
                   <Icon name="ShoppingCart" size={22} />

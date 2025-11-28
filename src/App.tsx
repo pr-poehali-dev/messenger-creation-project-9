@@ -7,6 +7,7 @@ const Cart = lazy(() => import('./pages/Cart'));
 const Auth = lazy(() => import('./pages/Auth'));
 const Profile = lazy(() => import('./pages/Profile'));
 const SellerDashboard = lazy(() => import('./pages/SellerDashboard'));
+const SellerInfo = lazy(() => import('./pages/SellerInfo'));
 
 function LoadingScreen() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/seller/dashboard" element={<SellerDashboard />} />
+          <Route path="/seller-info" element={<SellerInfo />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
