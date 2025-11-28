@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import MobileMenu from '@/components/MobileMenu';
 import { getCart, updateCartItemQuantity, removeFromCart, getCartTotal, CartItem } from '@/lib/cart';
 import { getAuthState } from '@/lib/auth';
 
@@ -198,6 +199,8 @@ export default function Cart() {
           </div>
         </div>
       </div>
+      
+      <MobileMenu />
     </div>
   );
 }

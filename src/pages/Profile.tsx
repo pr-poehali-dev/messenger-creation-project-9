@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import MobileMenu from '@/components/MobileMenu';
 import { getAuthState, logout } from '@/lib/auth';
 
 export default function Profile() {
@@ -126,6 +127,8 @@ export default function Profile() {
           </CardContent>
         </Card>
       </div>
+      
+      <MobileMenu />
     </div>
   );
 }

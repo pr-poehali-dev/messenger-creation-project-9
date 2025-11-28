@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import MobileMenu from '@/components/MobileMenu';
 import { getProductById, Product } from '@/lib/products';
 import { addToCart, getCartCount } from '@/lib/cart';
 
@@ -208,6 +209,8 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+      
+      <MobileMenu />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import MobileMenu from '@/components/MobileMenu';
 import { getAuthState } from '@/lib/auth';
 import { getProductsBySeller, addProduct, updateProduct, deleteProduct, Product } from '@/lib/products';
 
@@ -344,6 +345,8 @@ export default function SellerDashboard() {
           </CardContent>
         </Card>
       </div>
+      
+      <MobileMenu />
     </div>
   );
 }
