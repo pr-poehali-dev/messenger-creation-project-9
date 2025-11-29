@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdmin } from '@/contexts/AdminContext';
-import { getProducts, deleteProduct, toggleProductBlock } from '@/lib/products';
+import { getProducts, deleteProduct, toggleProductBlock, resetToDefaultProducts } from '@/lib/products';
 import { getAllUsers, toggleUserBlock } from '@/lib/auth';
 import type { Product } from '@/lib/products';
 import type { User } from '@/lib/auth';
@@ -44,6 +44,13 @@ export default function AdminDashboard() {
     loadData();
   };
 
+  const handleResetDemoData = () => {
+    if (confirm('Сбросить все товары к демо-данным? Это действие нельзя отменить.')) {
+      resetToDefaultProducts();
+      loadData();
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/admin/auth');
@@ -72,13 +79,22 @@ export default function AdminDashboard() {
                 <p className="text-slate-400 text-xs">{admin.email}</p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
-            >
-              <Icon name="LogOut" size={18} />
-              Выйти
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleResetDemoData}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+              >
+                <Icon name="RefreshCw" size={18} />
+                Сбросить демо-данные
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+              >
+                <Icon name="LogOut" size={18} />
+                Выйти
+              </button>
+            </div>
           </div>
         </div>
       </div>

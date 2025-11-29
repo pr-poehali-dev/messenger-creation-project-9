@@ -203,3 +203,8 @@ export const toggleProductBlock = (id: string): boolean => {
   localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
   return true;
 };
+
+export const resetToDefaultProducts = (): void => {
+  localStorage.removeItem(PRODUCTS_KEY);
+  getDefaultProducts();
+};
