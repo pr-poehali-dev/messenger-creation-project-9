@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdmin } from '@/contexts/AdminContext';
 import { getProducts, deleteProduct, toggleProductBlock, resetToDefaultProducts } from '@/lib/products';
-import { getAllUsers, toggleUserBlock } from '@/lib/auth';
+import { getAllUsers, toggleUserBlock, resetToDefaultUsers } from '@/lib/auth';
 import type { Product } from '@/lib/products';
 import type { User } from '@/lib/auth';
 import Icon from '@/components/ui/icon';
@@ -51,6 +51,13 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleResetDemoUsers = () => {
+    if (confirm('Удалить всех пользователей? Это действие нельзя отменить.')) {
+      resetToDefaultUsers();
+      loadData();
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/admin/auth');
@@ -84,15 +91,22 @@ export default function AdminDashboard() {
                 onClick={handleResetDemoData}
                 className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
               >
-                <Icon name="RefreshCw" size={18} />
-                Сбросить демо-данные
+                <Icon name="Package" size={18} />
+                <span className="hidden sm:inline">Сбросить товары</span>
+              </button>
+              <button
+                onClick={handleResetDemoUsers}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
+                <Icon name="Users" size={18} />
+                <span className="hidden sm:inline">Очистить пользователей</span>
               </button>
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
               >
                 <Icon name="LogOut" size={18} />
-                Выйти
+                <span className="hidden sm:inline">Выйти</span>
               </button>
             </div>
           </div>

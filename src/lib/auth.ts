@@ -124,3 +124,13 @@ export const toggleUserBlock = (email: string): boolean => {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
   return true;
 };
+
+export const resetToDefaultUsers = (): void => {
+  localStorage.removeItem(USERS_KEY);
+  const keys = Object.keys(localStorage);
+  keys.forEach(key => {
+    if (key.startsWith('peeky_password_')) {
+      localStorage.removeItem(key);
+    }
+  });
+};
