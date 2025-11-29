@@ -1,41 +1,27 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
-import { getProducts } from '@/lib/products';
-import type { Product } from '@/lib/products';
-
-interface Story {
-  id: string;
-  productId: string;
-  sellerName: string;
-  sellerAvatar: string;
-  image: string;
-  title: string;
-  price: number;
-  viewed: boolean;
-}
+import { getActiveStoryPromotions, incrementStoryViews, incrementStoryClicks } from '@/lib/stories';
 
 export default function Stories() {
   const navigate = useNavigate();
   const [selectedStory, setSelectedStory] = useState<number | null>(null);
   const [viewedStories, setViewedStories] = useState<Set<string>>(new Set());
 
-  const products = getProducts().filter(p => !p.isBlocked);
+  const promotions = getActiveStoryPromotions();
   
-  const stories: Story[] = products.slice(0, 10).map(product => ({
-    id: `story-${product.id}`,
-    productId: product.id,
-    sellerName: product.seller,
-    sellerAvatar: product.image,
-    image: product.image,
-    title: product.name,
-    price: product.price,
-    viewed: viewedStories.has(`story-${product.id}`)
+  const stories = promotions.map(promo => ({
+    ...promo,
+    viewed: viewedStories.has(promo.id)
   }));
+
+  if (stories.length === 0) return null;
 
   const openStory = (index: number) => {
     setSelectedStory(index);
-    setViewedStories(prev => new Set(prev).add(stories[index].id));
+    const story = stories[index];
+    setViewedStories(prev => new Set(prev).add(story.id));
+    incrementStoryViews(story.id);
   };
 
   const closeStory = () => {
@@ -59,6 +45,7 @@ export default function Stories() {
   const goToProduct = () => {
     if (selectedStory !== null) {
       const story = stories[selectedStory];
+      incrementStoryClicks(story.id);
       closeStory();
       navigate(`/product/${story.productId}`);
     }
@@ -82,7 +69,7 @@ export default function Stories() {
                 }`}>
                   <div className="w-full h-full rounded-full bg-slate-800 p-0.5">
                     <img
-                      src={story.sellerAvatar}
+                      src={story.productImage}
                       alt={story.sellerName}
                       className="w-full h-full rounded-full object-cover"
                     />
@@ -141,12 +128,8 @@ export default function Stories() {
             </div>
 
             <div className="absolute top-8 left-0 right-0 z-40 p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full border-2 border-white p-0.5">
-                <img
-                  src={stories[selectedStory].sellerAvatar}
-                  alt={stories[selectedStory].sellerName}
-                  className="w-full h-full rounded-full object-cover"
-                />
+              <div className="w-10 h-10 rounded-full border-2 border-white p-0.5 bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
+                <Icon name="User" size={20} className="text-white" />
               </div>
               <div className="flex-1">
                 <p className="text-white font-semibold text-sm">
@@ -154,7 +137,7 @@ export default function Stories() {
                 </p>
                 <p className="text-white/70 text-xs flex items-center gap-1">
                   <Icon name="Clock" size={12} />
-                  5 ч назад
+                  {Math.floor((Date.now() - new Date(stories[selectedStory].startDate).getTime()) / (1000 * 60 * 60))} ч назад
                 </p>
               </div>
               <div className="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white text-xs font-semibold flex items-center gap-1">
@@ -164,22 +147,22 @@ export default function Stories() {
             </div>
 
             <img
-              src={stories[selectedStory].image}
-              alt={stories[selectedStory].title}
+              src={stories[selectedStory].productImage}
+              alt={stories[selectedStory].productName}
               className="w-full h-full object-cover"
             />
 
             <div className="absolute bottom-0 left-0 right-0 z-40 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
               <h3 className="text-white font-bold text-xl mb-2">
-                {stories[selectedStory].title}
+                {stories[selectedStory].productName}
               </h3>
               <div className="flex items-center justify-between mb-4">
                 <p className="text-white text-2xl font-bold">
-                  {stories[selectedStory].price.toLocaleString('ru-RU')} ₽
+                  {stories[selectedStory].productPrice.toLocaleString('ru-RU')} ₽
                 </p>
                 <div className="flex items-center gap-2 text-white/80 text-sm">
                   <Icon name="Eye" size={16} />
-                  <span>{Math.floor(Math.random() * 1000 + 500)}</span>
+                  <span>{stories[selectedStory].views}</span>
                 </div>
               </div>
               <button
