@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ProductCard from '@/components/ProductCard';
 import MobileMenu from '@/components/MobileMenu';
+import Stories from '@/components/Stories';
 import { getProducts, Product } from '@/lib/products';
 import { getAuthState } from '@/lib/auth';
 import { getCartCount } from '@/lib/cart';
@@ -115,6 +116,8 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      <Stories />
 
       <div className="container mx-auto px-4 py-6 pb-24 md:pb-6">
         <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide mb-6">
