@@ -13,6 +13,7 @@ export interface Product {
   sellerName: string;
   inStock: boolean;
   characteristics?: { name: string; value: string }[];
+  isBlocked?: boolean;
 }
 
 const PRODUCTS_KEY = 'peeky_products';
@@ -191,4 +192,14 @@ export const deleteProduct = (id: string): boolean => {
 
 export const getProductsBySeller = (sellerId: string): Product[] => {
   return getProducts().filter(p => p.sellerId === sellerId);
+};
+
+export const toggleProductBlock = (id: string): boolean => {
+  const products = getProducts();
+  const index = products.findIndex(p => p.id === id);
+  if (index === -1) return false;
+  
+  products[index] = { ...products[index], isBlocked: !products[index].isBlocked };
+  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  return true;
 };

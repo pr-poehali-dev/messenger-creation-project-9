@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from './components/PageTransition';
+import { AdminProvider } from './contexts/AdminContext';
 
 const Home = lazy(() => import('./pages/Home'));
 const ProductDetail = lazy(() => import('./pages/ProductDetail'));
@@ -11,6 +12,8 @@ const SellerAuth = lazy(() => import('./pages/SellerAuth'));
 const Profile = lazy(() => import('./pages/Profile'));
 const SellerDashboard = lazy(() => import('./pages/SellerDashboard'));
 const SellerInfo = lazy(() => import('./pages/SellerInfo'));
+const AdminAuth = lazy(() => import('./pages/AdminAuth'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 function LoadingScreen() {
   return (
@@ -37,6 +40,8 @@ function AnimatedRoutes() {
         <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
         <Route path="/seller/dashboard" element={<PageTransition><SellerDashboard /></PageTransition>} />
         <Route path="/seller-info" element={<PageTransition><SellerInfo /></PageTransition>} />
+        <Route path="/admin/auth" element={<PageTransition><AdminAuth /></PageTransition>} />
+        <Route path="/admin/dashboard" element={<PageTransition><AdminDashboard /></PageTransition>} />
       </Routes>
     </AnimatePresence>
   );
@@ -44,10 +49,12 @@ function AnimatedRoutes() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<LoadingScreen />}>
-        <AnimatedRoutes />
-      </Suspense>
-    </BrowserRouter>
+    <AdminProvider>
+      <BrowserRouter>
+        <Suspense fallback={<LoadingScreen />}>
+          <AnimatedRoutes />
+        </Suspense>
+      </BrowserRouter>
+    </AdminProvider>
   );
 }

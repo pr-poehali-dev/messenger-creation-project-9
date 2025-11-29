@@ -5,6 +5,9 @@ export interface User {
   phone: string;
   role: 'buyer' | 'seller';
   createdAt: string;
+  isBlocked?: boolean;
+  storeName?: string;
+  category?: string;
 }
 
 export interface AuthState {
@@ -110,4 +113,14 @@ export const login = (email: string, password: string): { success: boolean; erro
 
 export const logout = (): void => {
   setAuthState({ user: null, isAuthenticated: false });
+};
+
+export const toggleUserBlock = (email: string): boolean => {
+  const users = getAllUsers();
+  const index = users.findIndex(u => u.email === email);
+  if (index === -1) return false;
+  
+  users[index] = { ...users[index], isBlocked: !users[index].isBlocked };
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  return true;
 };
