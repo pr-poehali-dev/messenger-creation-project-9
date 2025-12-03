@@ -34,7 +34,7 @@ interface User {
   sessionToken: string;
 }
 
-type Screen = 'marketplace' | 'profile';
+type Screen = 'marketplace' | 'profile' | 'auth';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -51,25 +51,20 @@ export default function App() {
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
+    
+    loadCategories();
+    loadProducts();
   }, []);
 
   useEffect(() => {
-    if (user) {
-      loadCategories();
-      loadProducts();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user) {
-      loadProducts();
-    }
+    loadProducts();
   }, [selectedCategory, searchQuery]);
 
   const handleLogin = (userId: number, username: string, email: string, sessionToken: string) => {
     const userData: User = { userId, username, email, sessionToken };
     setUser(userData);
     localStorage.setItem('marketplace_user', JSON.stringify(userData));
+    setScreen('marketplace');
   };
 
   const handleLogout = () => {
@@ -113,6 +108,10 @@ export default function App() {
   };
 
   const addToCart = (productId: number) => {
+    if (!user) {
+      setScreen('auth');
+      return;
+    }
     const newCart = new Map(cart);
     newCart.set(productId, (newCart.get(productId) || 0) + 1);
     setCart(newCart);
@@ -129,11 +128,11 @@ export default function App() {
     }, 0);
   };
 
-  if (!user) {
+  if (screen === 'auth') {
     return <AuthScreen onLogin={handleLogin} />;
   }
 
-  if (screen === 'profile') {
+  if (screen === 'profile' && user) {
     return (
       <ProfileScreen
         sessionToken={user.sessionToken}
@@ -151,21 +150,30 @@ export default function App() {
             <h1 className="text-3xl font-bold text-gray-800">🛍️ Маркетплейс</h1>
             
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" onClick={() => setScreen('profile')}>
-                <Icon name="User" size={18} className="mr-2" />
-                {user.username}
-              </Button>
-              
-              <div className="relative">
-                <Button className="relative">
-                  <Icon name="ShoppingCart" size={20} />
-                  {getTotalItems() > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {getTotalItems()}
-                    </span>
-                  )}
+              {user ? (
+                <>
+                  <Button variant="outline" size="sm" onClick={() => setScreen('profile')}>
+                    <Icon name="User" size={18} className="mr-2" />
+                    {user.username}
+                  </Button>
+                  
+                  <div className="relative">
+                    <Button className="relative">
+                      <Icon name="ShoppingCart" size={20} />
+                      {getTotalItems() > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                          {getTotalItems()}
+                        </span>
+                      )}
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <Button onClick={() => setScreen('auth')}>
+                  <Icon name="LogIn" size={18} className="mr-2" />
+                  Войти
                 </Button>
-              </div>
+              )}
             </div>
           </div>
 
@@ -287,7 +295,7 @@ export default function App() {
         )}
       </div>
 
-      {getTotalItems() > 0 && (
+      {user && getTotalItems() > 0 && (
         <div className="fixed bottom-4 right-4 bg-white rounded-xl shadow-2xl p-4 min-w-[300px]">
           <h3 className="font-bold text-gray-800 mb-2">Корзина</h3>
           <div className="text-sm text-gray-600 mb-1">Товаров: {getTotalItems()}</div>
