@@ -87,7 +87,7 @@ export default function ProductDetail() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
           <div className="space-y-4">
-            <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-xl">
+            <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-xl group">
               <img
                 src={images[selectedImage]}
                 alt={product.name}
@@ -98,15 +98,51 @@ export default function ProductDetail() {
                   -{discount}%
                 </div>
               )}
+              
+              {images.length > 1 && (
+                <>
+                  {selectedImage > 0 && (
+                    <button
+                      onClick={() => setSelectedImage(selectedImage - 1)}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all"
+                    >
+                      <Icon name="ChevronLeft" size={24} className="text-gray-800" />
+                    </button>
+                  )}
+                  
+                  {selectedImage < images.length - 1 && (
+                    <button
+                      onClick={() => setSelectedImage(selectedImage + 1)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all"
+                    >
+                      <Icon name="ChevronRight" size={24} className="text-gray-800" />
+                    </button>
+                  )}
+                  
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                    {images.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedImage(idx)}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          selectedImage === idx 
+                            ? 'bg-white w-8' 
+                            : 'bg-white/60 hover:bg-white/80'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             
             {images.length > 1 && (
-              <div className="grid grid-cols-4 gap-3">
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                 {images.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
-                    className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${
+                    className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
                       selectedImage === idx ? 'border-purple-600 shadow-lg' : 'border-gray-200'
                     }`}
                   >
