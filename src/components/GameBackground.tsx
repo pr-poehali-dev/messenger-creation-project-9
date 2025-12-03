@@ -1,9 +1,9 @@
 export default function GameBackground() {
   return (
     <>
-      <div className="absolute inset-0 bg-gradient-to-br from-sky-300 via-green-200 to-yellow-100">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-cyan-300 to-emerald-200">
         <div className="absolute inset-0">
-          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-green-600 via-green-500 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-emerald-700 via-green-600 to-transparent"></div>
           
           <div className="absolute top-10 left-[5%] animate-cloud-float-1">
             <div className="text-8xl drop-shadow-2xl opacity-80">☁️</div>
@@ -94,11 +94,78 @@ export default function GameBackground() {
             <div className="text-7xl drop-shadow-lg">🏭</div>
           </div>
           
-          <div className="absolute inset-0 bg-gradient-to-t from-yellow-100/30 via-transparent to-transparent animate-light-shimmer pointer-events-none"></div>
+          <div className="absolute bottom-20 left-[70%] animate-duck-waddle">
+            <div className="text-5xl drop-shadow-md">🦆</div>
+          </div>
+          
+          <div className="absolute top-[35%] left-[10%] animate-balloon-float">
+            <div className="text-6xl drop-shadow-lg">🎈</div>
+          </div>
+          
+          <div className="absolute bottom-38 right-[55%] animate-cat-walk">
+            <div className="text-5xl drop-shadow-md">🐈</div>
+          </div>
+          
+          <div className="absolute bottom-32 left-[55%] animate-chicken-peck">
+            <div className="text-5xl drop-shadow-md">🐔</div>
+          </div>
+          
+          <div className="absolute top-[45%] right-[8%] animate-bird-fly-2">
+            <div className="text-4xl drop-shadow-md">🕊️</div>
+          </div>
+          
+          <div className="absolute bottom-24 left-[20%] animate-carrot-grow">
+            <div className="text-6xl drop-shadow-lg">🥕</div>
+          </div>
+          
+          <div className="absolute bottom-36 right-[40%] animate-corn-sway">
+            <div className="text-7xl drop-shadow-lg">🌽</div>
+          </div>
+          
+          <div className="absolute bottom-28 left-[65%] animate-mushroom-bob">
+            <div className="text-5xl drop-shadow-md">🍄</div>
+          </div>
+          
+          <div className="absolute top-[25%] right-[20%] animate-rainbow-shimmer">
+            <div className="text-8xl drop-shadow-xl filter brightness-110">🌈</div>
+          </div>
+          
+          <div className="absolute bottom-40 right-[5%] animate-well-pulse">
+            <div className="text-6xl drop-shadow-lg">🚰</div>
+          </div>
+          
+          <div className="absolute bottom-34 left-[10%] animate-fence-shake">
+            <div className="text-6xl drop-shadow-md">🪵</div>
+          </div>
+          
+          <div className="absolute top-[55%] left-[35%] animate-cloud-small">
+            <div className="text-6xl drop-shadow-xl opacity-70">☁️</div>
+          </div>
+          
+          <div className="absolute bottom-26 right-[70%] animate-pumpkin-bounce">
+            <div className="text-6xl drop-shadow-lg">🎃</div>
+          </div>
+          
+          <div className="absolute top-[20%] left-[25%] animate-star-shine">
+            <div className="text-5xl drop-shadow-lg">⭐</div>
+          </div>
+          
+          <div className="absolute bottom-30 left-[40%] animate-hay-shake">
+            <div className="text-6xl drop-shadow-md">🌾</div>
+          </div>
+          
+          <div className="absolute top-[60%] right-[30%] animate-ladybug-crawl">
+            <div className="text-4xl drop-shadow-md">🐞</div>
+          </div>
+          
+          <div className="absolute inset-0 bg-gradient-to-t from-amber-100/40 via-transparent to-transparent animate-light-shimmer pointer-events-none"></div>
           
           <div className="absolute top-[25%] left-[30%] w-3 h-3 bg-white rounded-full animate-star-twinkle-1"></div>
           <div className="absolute top-[35%] right-[25%] w-2 h-2 bg-yellow-200 rounded-full animate-star-twinkle-2"></div>
           <div className="absolute bottom-[40%] left-[50%] w-3 h-3 bg-white rounded-full animate-star-twinkle-3"></div>
+          <div className="absolute top-[15%] right-[35%] w-2 h-2 bg-cyan-200 rounded-full animate-star-twinkle-4"></div>
+          <div className="absolute bottom-[50%] left-[20%] w-3 h-3 bg-pink-200 rounded-full animate-star-twinkle-5"></div>
+          <div className="absolute top-[70%] right-[60%] w-2 h-2 bg-purple-200 rounded-full animate-star-twinkle-6"></div>
         </div>
       </div>
 
@@ -267,6 +334,120 @@ export default function GameBackground() {
           50% { opacity: 1; transform: scale(2.2); }
         }
         
+        @keyframes star-twinkle-4 {
+          0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+          50% { opacity: 1; transform: scale(2.8) rotate(90deg); }
+        }
+        
+        @keyframes star-twinkle-5 {
+          0%, 100% { opacity: 0; transform: scale(0); }
+          50% { opacity: 1; transform: scale(2.3); }
+        }
+        
+        @keyframes star-twinkle-6 {
+          0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+          50% { opacity: 1; transform: scale(2.6) rotate(-90deg); }
+        }
+        
+        @keyframes duck-waddle {
+          0% { transform: translateX(0) scaleX(1) rotate(-5deg); }
+          25% { transform: translateX(25px) scaleX(1) rotate(5deg); }
+          50% { transform: translateX(50px) scaleX(-1) rotate(-5deg); }
+          75% { transform: translateX(25px) scaleX(-1) rotate(5deg); }
+          100% { transform: translateX(0) scaleX(1) rotate(-5deg); }
+        }
+        
+        @keyframes balloon-float {
+          0%, 100% { transform: translateY(0) rotate(-5deg); }
+          25% { transform: translateY(-40px) rotate(3deg); }
+          50% { transform: translateY(-60px) rotate(-3deg); }
+          75% { transform: translateY(-40px) rotate(5deg); }
+        }
+        
+        @keyframes cat-walk {
+          0% { transform: translateX(0) scaleX(1); }
+          50% { transform: translateX(60px) scaleX(-1); }
+          100% { transform: translateX(0) scaleX(1); }
+        }
+        
+        @keyframes chicken-peck {
+          0%, 100% { transform: scaleY(1) translateY(0); }
+          25% { transform: scaleY(0.9) translateY(5px); }
+          50% { transform: scaleY(1) translateY(0); }
+          75% { transform: scaleY(0.9) translateY(5px); }
+        }
+        
+        @keyframes bird-fly-2 {
+          0% { transform: translate(0, 0) rotate(10deg); }
+          25% { transform: translate(-150px, -60px) rotate(-8deg); }
+          50% { transform: translate(-300px, -30px) rotate(12deg); }
+          75% { transform: translate(-450px, -80px) rotate(-10deg); }
+          100% { transform: translate(-600px, -50px) rotate(8deg); }
+        }
+        
+        @keyframes carrot-grow {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-15px) scale(1.12); }
+        }
+        
+        @keyframes corn-sway {
+          0%, 100% { transform: rotate(-6deg) scale(1); }
+          50% { transform: rotate(6deg) scale(1.06); }
+        }
+        
+        @keyframes mushroom-bob {
+          0%, 100% { transform: scale(1) rotate(0deg); }
+          25% { transform: scale(1.08) rotate(-3deg); }
+          50% { transform: scale(1.12) rotate(0deg); }
+          75% { transform: scale(1.08) rotate(3deg); }
+        }
+        
+        @keyframes rainbow-shimmer {
+          0%, 100% { transform: scale(1); filter: brightness(1) hue-rotate(0deg); }
+          50% { transform: scale(1.1); filter: brightness(1.3) hue-rotate(20deg); }
+        }
+        
+        @keyframes well-pulse {
+          0%, 100% { transform: scale(1); filter: brightness(1); }
+          50% { transform: scale(1.08); filter: brightness(1.15); }
+        }
+        
+        @keyframes fence-shake {
+          0%, 100% { transform: rotate(0deg); }
+          25% { transform: rotate(-2deg); }
+          75% { transform: rotate(2deg); }
+        }
+        
+        @keyframes cloud-small {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(50px); }
+        }
+        
+        @keyframes pumpkin-bounce {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          25% { transform: translateY(-18px) rotate(-8deg); }
+          50% { transform: translateY(-25px) rotate(0deg); }
+          75% { transform: translateY(-12px) rotate(8deg); }
+        }
+        
+        @keyframes star-shine {
+          0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+          50% { transform: scale(1.3) rotate(180deg); filter: brightness(1.6); }
+        }
+        
+        @keyframes hay-shake {
+          0%, 100% { transform: rotate(-4deg); }
+          50% { transform: rotate(4deg); }
+        }
+        
+        @keyframes ladybug-crawl {
+          0% { transform: translate(0, 0) rotate(0deg); }
+          25% { transform: translate(30px, 10px) rotate(15deg); }
+          50% { transform: translate(60px, 0) rotate(0deg); }
+          75% { transform: translate(30px, -10px) rotate(-15deg); }
+          100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
         .animate-cloud-float-1 { animation: cloud-float-1 20s ease-in-out infinite; }
         .animate-cloud-float-2 { animation: cloud-float-2 25s ease-in-out infinite; animation-delay: 2s; }
         .animate-cloud-float-3 { animation: cloud-float-3 22s ease-in-out infinite; animation-delay: 5s; }
@@ -294,6 +475,25 @@ export default function GameBackground() {
         .animate-star-twinkle-1 { animation: star-twinkle-1 3s ease-in-out infinite; }
         .animate-star-twinkle-2 { animation: star-twinkle-2 4s ease-in-out infinite; animation-delay: 1.5s; }
         .animate-star-twinkle-3 { animation: star-twinkle-3 5s ease-in-out infinite; animation-delay: 2.5s; }
+        .animate-star-twinkle-4 { animation: star-twinkle-4 3.5s ease-in-out infinite; animation-delay: 0.5s; }
+        .animate-star-twinkle-5 { animation: star-twinkle-5 4.5s ease-in-out infinite; animation-delay: 2s; }
+        .animate-star-twinkle-6 { animation: star-twinkle-6 3.8s ease-in-out infinite; animation-delay: 1s; }
+        .animate-duck-waddle { animation: duck-waddle 8s ease-in-out infinite; }
+        .animate-balloon-float { animation: balloon-float 10s ease-in-out infinite; }
+        .animate-cat-walk { animation: cat-walk 16s ease-in-out infinite; }
+        .animate-chicken-peck { animation: chicken-peck 2.5s ease-in-out infinite; }
+        .animate-bird-fly-2 { animation: bird-fly-2 28s linear infinite; }
+        .animate-carrot-grow { animation: carrot-grow 6.5s ease-in-out infinite; }
+        .animate-corn-sway { animation: corn-sway 5.5s ease-in-out infinite; }
+        .animate-mushroom-bob { animation: mushroom-bob 4.5s ease-in-out infinite; }
+        .animate-rainbow-shimmer { animation: rainbow-shimmer 8s ease-in-out infinite; }
+        .animate-well-pulse { animation: well-pulse 5s ease-in-out infinite; }
+        .animate-fence-shake { animation: fence-shake 6s ease-in-out infinite; }
+        .animate-cloud-small { animation: cloud-small 18s ease-in-out infinite; }
+        .animate-pumpkin-bounce { animation: pumpkin-bounce 5.5s ease-in-out infinite; }
+        .animate-star-shine { animation: star-shine 6s ease-in-out infinite; }
+        .animate-hay-shake { animation: hay-shake 4.8s ease-in-out infinite; }
+        .animate-ladybug-crawl { animation: ladybug-crawl 12s ease-in-out infinite; }
       `}</style>
     </>
   );
