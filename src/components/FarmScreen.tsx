@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
+import Icon from './ui/icon';
 
 interface Player {
   id: number;
@@ -145,13 +146,17 @@ export default function FarmScreen({ playerId, username, onLogout }: FarmScreenP
     <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-teal-50 to-cyan-100">
       <div className="bg-white/90 backdrop-blur-sm shadow-md">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-emerald-800 flex items-center gap-2">
-              🧬 Нано-Ферма <span className="text-sm font-normal text-gray-600">Лвл {player.level}</span>
-            </h1>
-            <p className="text-sm text-gray-600">{player.username}</p>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" onClick={onLogout} size="sm">
+              <Icon name="ArrowLeft" size={18} />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-emerald-800 flex items-center gap-2">
+                🧬 Нано-Ферма <span className="text-sm font-normal text-gray-600">Лвл {player.level}</span>
+              </h1>
+              <p className="text-sm text-gray-600">{player.username}</p>
+            </div>
           </div>
-          <Button variant="outline" onClick={onLogout}>Выход</Button>
         </div>
         
         <div className="container mx-auto px-4 py-2 flex gap-4 text-sm">

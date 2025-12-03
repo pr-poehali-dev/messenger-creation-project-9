@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "Get categories",
+      "method": "GET",
+      "path": "/?action=categories",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "categories": "array"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get all products",
+      "method": "GET",
+      "path": "/?action=products",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "products": "array"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
