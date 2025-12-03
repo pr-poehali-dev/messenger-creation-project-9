@@ -24,32 +24,63 @@ export default function ProductsTab({ products, onAddProduct, onUpdateProduct, o
     category: 'Смартфоны',
     inStock: true
   });
-  const [mediaFile, setMediaFile] = useState<File | null>(null);
-  const [mediaPreview, setMediaPreview] = useState<string>('');
+  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
+  const [mediaPreviews, setMediaPreviews] = useState<string[]>([]);
 
   const categories = ['Смартфоны', 'Наушники', 'Ноутбуки', 'Часы', 'Планшеты', 'Консоли', 'Камеры', 'Умный дом'];
 
   const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
-    if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
-      alert('Пожалуйста, выберите изображение или видео');
+    if (mediaFiles.length + files.length > 10) {
+      alert('Можно загрузить максимум 10 файлов');
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      alert('Размер файла не должен превышать 10 МБ');
-      return;
-    }
+    const validFiles = files.filter(file => {
+      if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
+        alert(`${file.name}: Пожалуйста, выберите изображение или видео`);
+        return false;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        alert(`${file.name}: Размер файла не должен превышать 10 МБ`);
+        return false;
+      }
+      return true;
+    });
 
-    setMediaFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setMediaPreview(reader.result as string);
-      setFormData({ ...formData, image: reader.result as string });
-    };
-    reader.readAsDataURL(file);
+    const newFiles = [...mediaFiles, ...validFiles];
+    setMediaFiles(newFiles);
+
+    validFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMediaPreviews(prev => {
+          const updated = [...prev, reader.result as string];
+          if (updated.length === 1) {
+            setFormData({ ...formData, image: updated[0], images: updated });
+          } else {
+            setFormData({ ...formData, images: updated });
+          }
+          return updated;
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeMedia = (index: number) => {
+    const newFiles = mediaFiles.filter((_, i) => i !== index);
+    const newPreviews = mediaPreviews.filter((_, i) => i !== index);
+    setMediaFiles(newFiles);
+    setMediaPreviews(newPreviews);
+    
+    if (newPreviews.length > 0) {
+      setFormData({ ...formData, image: newPreviews[0], images: newPreviews });
+    } else {
+      setFormData({ ...formData, image: '', images: [] });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -85,6 +116,11 @@ export default function ProductsTab({ products, onAddProduct, onUpdateProduct, o
       category: product.category,
       inStock: product.inStock
     });
+    if (product.images && product.images.length > 0) {
+      setMediaPreviews(product.images);
+    } else {
+      setMediaPreviews(product.image ? [product.image] : []);
+    }
     setShowAddForm(true);
   };
 
@@ -104,8 +140,8 @@ export default function ProductsTab({ products, onAddProduct, onUpdateProduct, o
       category: 'Смартфоны',
       inStock: true
     });
-    setMediaFile(null);
-    setMediaPreview('');
+    setMediaFiles([]);
+    setMediaPreviews([]);
     setEditingProduct(null);
     setShowAddForm(false);
   };
@@ -196,36 +232,40 @@ export default function ProductsTab({ products, onAddProduct, onUpdateProduct, o
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Фото или видео товара
+                  Фото или видео товара (до 10 файлов)
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
-                  {mediaPreview ? (
-                    <div className="space-y-3">
-                      {mediaFile?.type.startsWith('video/') ? (
-                        <video src={mediaPreview} className="max-h-48 mx-auto rounded-lg" controls />
-                      ) : (
-                        <img src={mediaPreview} alt="Предпросмотр" className="max-h-48 mx-auto rounded-lg" />
-                      )}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setMediaFile(null);
-                          setMediaPreview('');
-                          setFormData({ ...formData, image: '' });
-                        }}
-                        className="gap-2"
-                      >
-                        <Icon name="Trash2" size={16} />
-                        Удалить
-                      </Button>
-                    </div>
-                  ) : (
+                
+                {mediaPreviews.length > 0 && (
+                  <div className="grid grid-cols-5 gap-3 mb-4">
+                    {mediaPreviews.map((preview, index) => (
+                      <div key={index} className="relative group">
+                        {mediaFiles[index]?.type.startsWith('video/') ? (
+                          <video src={preview} className="w-full h-24 object-cover rounded-lg" />
+                        ) : (
+                          <img src={preview} alt={`Фото ${index + 1}`} className="w-full h-24 object-cover rounded-lg" />
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeMedia(index)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Icon name="X" size={16} />
+                        </button>
+                        {index === 0 && (
+                          <span className="absolute bottom-1 left-1 bg-purple-600 text-white text-xs px-2 py-0.5 rounded">Главное</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {mediaPreviews.length < 10 && (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
                     <label className="cursor-pointer">
                       <input
                         type="file"
                         accept="image/*,video/*"
+                        multiple
                         onChange={handleMediaChange}
                         className="hidden"
                       />
@@ -233,13 +273,15 @@ export default function ProductsTab({ products, onAddProduct, onUpdateProduct, o
                         <Icon name="Upload" size={48} className="mx-auto text-gray-400" />
                         <p className="text-sm text-gray-600">
                           <span className="text-purple-600 font-semibold">Нажмите для загрузки</span>
-                          {' '}или перетащите файл
+                          {' '}или перетащите файлы
                         </p>
-                        <p className="text-xs text-gray-500">PNG, JPG, GIF, MP4 до 10 МБ</p>
+                        <p className="text-xs text-gray-500">
+                          PNG, JPG, GIF, MP4 до 10 МБ • {mediaPreviews.length}/10 файлов
+                        </p>
                       </div>
                     </label>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-2">
