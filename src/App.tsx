@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 import Icon from './components/ui/icon';
-import AuthScreen from './components/AuthScreen';
+import AuthModal from './components/AuthModal';
 import ProfileScreen from './components/ProfileScreen';
 
 interface Category {
@@ -34,11 +34,12 @@ interface User {
   sessionToken: string;
 }
 
-type Screen = 'marketplace' | 'profile' | 'auth';
+type Screen = 'marketplace' | 'profile';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [screen, setScreen] = useState<Screen>('marketplace');
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -64,7 +65,7 @@ export default function App() {
     const userData: User = { userId, username, email, sessionToken };
     setUser(userData);
     localStorage.setItem('marketplace_user', JSON.stringify(userData));
-    setScreen('marketplace');
+    setIsAuthModalOpen(false);
   };
 
   const handleLogout = () => {
@@ -109,7 +110,7 @@ export default function App() {
 
   const addToCart = (productId: number) => {
     if (!user) {
-      setScreen('auth');
+      setIsAuthModalOpen(true);
       return;
     }
     const newCart = new Map(cart);
@@ -127,10 +128,6 @@ export default function App() {
       return sum + (product ? product.price * qty : 0);
     }, 0);
   };
-
-  if (screen === 'auth') {
-    return <AuthScreen onLogin={handleLogin} />;
-  }
 
   if (screen === 'profile' && user) {
     return (
@@ -169,7 +166,7 @@ export default function App() {
                   </div>
                 </>
               ) : (
-                <Button onClick={() => setScreen('auth')}>
+                <Button onClick={() => setIsAuthModalOpen(true)}>
                   <Icon name="LogIn" size={18} className="mr-2" />
                   Войти
                 </Button>
@@ -307,6 +304,12 @@ export default function App() {
           </Button>
         </div>
       )}
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLogin={handleLogin}
+      />
     </div>
   );
 }
