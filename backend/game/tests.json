@@ -1,0 +1,17 @@
+{
+  "tests": [
+    {
+      "name": "Get building types",
+      "method": "GET",
+      "path": "/?action=building_types",
+      "headers": {
+        "X-Player-Id": "1"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "building_types": []
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
