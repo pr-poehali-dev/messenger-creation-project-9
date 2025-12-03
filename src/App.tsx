@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 import Icon from './components/ui/icon';
+import AuthScreen from './components/AuthScreen';
+import ProfileScreen from './components/ProfileScreen';
 
 interface Category {
   id: number;
@@ -25,7 +27,18 @@ interface Product {
   category_name: string;
 }
 
+interface User {
+  userId: number;
+  username: string;
+  email: string;
+  sessionToken: string;
+}
+
+type Screen = 'marketplace' | 'profile';
+
 export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [screen, setScreen] = useState<Screen>('marketplace');
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -34,13 +47,37 @@ export default function App() {
   const [cart, setCart] = useState<Map<number, number>>(new Map());
 
   useEffect(() => {
-    loadCategories();
-    loadProducts();
+    const savedUser = localStorage.getItem('marketplace_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
   }, []);
 
   useEffect(() => {
-    loadProducts();
+    if (user) {
+      loadCategories();
+      loadProducts();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      loadProducts();
+    }
   }, [selectedCategory, searchQuery]);
+
+  const handleLogin = (userId: number, username: string, email: string, sessionToken: string) => {
+    const userData: User = { userId, username, email, sessionToken };
+    setUser(userData);
+    localStorage.setItem('marketplace_user', JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('marketplace_user');
+    setScreen('marketplace');
+    setCart(new Map());
+  };
 
   const loadCategories = async () => {
     try {
@@ -92,6 +129,20 @@ export default function App() {
     }, 0);
   };
 
+  if (!user) {
+    return <AuthScreen onLogin={handleLogin} />;
+  }
+
+  if (screen === 'profile') {
+    return (
+      <ProfileScreen
+        sessionToken={user.sessionToken}
+        onBack={() => setScreen('marketplace')}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <div className="bg-white shadow-md sticky top-0 z-10">
@@ -99,15 +150,22 @@ export default function App() {
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-3xl font-bold text-gray-800">🛍️ Маркетплейс</h1>
             
-            <div className="relative">
-              <Button className="relative">
-                <Icon name="ShoppingCart" size={20} />
-                {getTotalItems() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {getTotalItems()}
-                  </span>
-                )}
+            <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" onClick={() => setScreen('profile')}>
+                <Icon name="User" size={18} className="mr-2" />
+                {user.username}
               </Button>
+              
+              <div className="relative">
+                <Button className="relative">
+                  <Icon name="ShoppingCart" size={20} />
+                  {getTotalItems() > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {getTotalItems()}
+                    </span>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
 
