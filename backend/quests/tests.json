@@ -1,0 +1,17 @@
+{
+  "tests": [
+    {
+      "name": "Get quests list",
+      "method": "GET",
+      "path": "/?action=list",
+      "headers": {
+        "X-Player-Id": "1"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "quests": []
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import json
 import os
 import psycopg2
-from typing import Dict, Any, List
+from typing import Dict, Any
 from datetime import datetime, timedelta
 
 def get_db_connection():
@@ -63,7 +63,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     SELECT pb.id, pb.building_type_id, pb.position_x, pb.position_y, 
                            pb.level, pb.is_building, pb.build_complete_at, pb.last_collected,
                            bt.name, bt.category, bt.produces_resource, bt.production_rate, 
-                           bt.production_interval, bt.image_url
+                           bt.production_interval, bt.image_url, bt.max_level
                     FROM player_buildings pb
                     JOIN building_types bt ON pb.building_type_id = bt.id
                     WHERE pb.player_id = %s
@@ -84,9 +84,10 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                         'name': b[8],
                         'category': b[9],
                         'produces': b[10],
-                        'production_rate': b[11],
+                        'production_rate': b[11] * b[4],
                         'production_interval': b[12],
-                        'image': b[13]
+                        'image': b[13],
+                        'max_level': b[14]
                     })
                 
                 return {
@@ -112,7 +113,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 cursor.execute("""
                     SELECT id, name, category, description, cost_coins, cost_wood, 
                            cost_stone, cost_iron, build_time, produces_resource, 
-                           production_rate, production_interval, provides_population, image_url
+                           production_rate, production_interval, provides_population, 
+                           image_url, max_level, upgrade_cost_multiplier
                     FROM building_types
                     ORDER BY category, cost_coins
                 """)
@@ -136,7 +138,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                         'production_rate': t[10],
                         'production_interval': t[11],
                         'provides_population': t[12],
-                        'image': t[13]
+                        'image': t[13],
+                        'max_level': t[14],
+                        'upgrade_multiplier': float(t[15])
                     })
                 
                 return {
@@ -224,11 +228,85 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'isBase64Encoded': False
                 }
             
+            elif action == 'upgrade':
+                building_id = body.get('building_id')
+                
+                cursor.execute("""
+                    SELECT pb.level, bt.cost_coins, bt.cost_wood, bt.cost_stone, bt.cost_iron,
+                           bt.max_level, bt.upgrade_cost_multiplier, bt.name
+                    FROM player_buildings pb
+                    JOIN building_types bt ON pb.building_type_id = bt.id
+                    WHERE pb.id = %s AND pb.player_id = %s AND pb.is_building = FALSE
+                """, (building_id, player_id))
+                building = cursor.fetchone()
+                
+                if not building:
+                    return {
+                        'statusCode': 404,
+                        'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                        'body': json.dumps({'error': 'Здание не найдено'}),
+                        'isBase64Encoded': False
+                    }
+                
+                current_level, base_coins, base_wood, base_stone, base_iron, max_level, multiplier, name = building
+                
+                if current_level >= max_level:
+                    return {
+                        'statusCode': 400,
+                        'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                        'body': json.dumps({'error': 'Достигнут максимальный уровень'}),
+                        'isBase64Encoded': False
+                    }
+                
+                upgrade_coins = int(base_coins * (multiplier ** current_level))
+                upgrade_wood = int(base_wood * (multiplier ** current_level))
+                upgrade_stone = int(base_stone * (multiplier ** current_level))
+                upgrade_iron = int(base_iron * (multiplier ** current_level))
+                
+                cursor.execute("""
+                    SELECT coins, wood, stone, iron FROM player_resources WHERE player_id = %s
+                """, (player_id,))
+                resources = cursor.fetchone()
+                
+                if resources[0] < upgrade_coins or resources[1] < upgrade_wood or resources[2] < upgrade_stone or resources[3] < upgrade_iron:
+                    return {
+                        'statusCode': 400,
+                        'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                        'body': json.dumps({'error': 'Недостаточно ресурсов для улучшения'}),
+                        'isBase64Encoded': False
+                    }
+                
+                cursor.execute("""
+                    UPDATE player_resources 
+                    SET coins = coins - %s, wood = wood - %s, stone = stone - %s, iron = iron - %s
+                    WHERE player_id = %s
+                """, (upgrade_coins, upgrade_wood, upgrade_stone, upgrade_iron, player_id))
+                
+                cursor.execute("""
+                    UPDATE player_buildings 
+                    SET level = level + 1
+                    WHERE id = %s
+                """, (building_id,))
+                
+                conn.commit()
+                
+                return {
+                    'statusCode': 200,
+                    'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                    'body': json.dumps({
+                        'success': True,
+                        'message': f'{name} улучшено до уровня {current_level + 1}!',
+                        'new_level': current_level + 1
+                    }),
+                    'isBase64Encoded': False
+                }
+            
             elif action == 'collect':
                 building_id = body.get('building_id')
                 
                 cursor.execute("""
-                    SELECT pb.last_collected, bt.produces_resource, bt.production_rate, bt.production_interval
+                    SELECT pb.last_collected, bt.produces_resource, bt.production_rate, 
+                           bt.production_interval, pb.level
                     FROM player_buildings pb
                     JOIN building_types bt ON pb.building_type_id = bt.id
                     WHERE pb.id = %s AND pb.player_id = %s AND pb.is_building = FALSE
@@ -243,7 +321,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                         'isBase64Encoded': False
                     }
                 
-                last_collected, resource_type, rate, interval = building
+                last_collected, resource_type, base_rate, interval, level = building
                 
                 if not resource_type:
                     return {
@@ -268,7 +346,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     }
                 
                 periods = int(time_passed / interval)
-                amount = rate * periods
+                rate_with_level = base_rate * level
+                amount = rate_with_level * periods
                 
                 cursor.execute(f"""
                     UPDATE player_resources 

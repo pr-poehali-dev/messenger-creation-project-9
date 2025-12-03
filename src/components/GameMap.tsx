@@ -8,6 +8,7 @@ interface GameMapProps {
   onBuild: (x: number, y: number) => void;
   onCollect: (building: Building) => void;
   onCompleteBuilding: (buildingId: number) => void;
+  onUpgrade: (building: Building) => void;
 }
 
 export default function GameMap({
@@ -16,7 +17,8 @@ export default function GameMap({
   selectedBuildingType,
   onBuild,
   onCollect,
-  onCompleteBuilding
+  onCompleteBuilding,
+  onUpgrade
 }: GameMapProps) {
   const GRID_SIZE = 10;
   const CELL_SIZE = 80;
@@ -98,7 +100,14 @@ export default function GameMap({
             >
               {building ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-1">
-                  <div className="text-3xl mb-1">{building.image}</div>
+                  <div className="flex items-center gap-1">
+                    <div className="text-3xl">{building.image}</div>
+                    {building.level > 1 && (
+                      <div className="text-xs font-bold bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
+                        {building.level}
+                      </div>
+                    )}
+                  </div>
                   <div className="text-xs font-semibold text-gray-700 text-center truncate w-full px-1">
                     {building.name}
                   </div>
@@ -123,7 +132,7 @@ export default function GameMap({
                       )}
                     </div>
                   ) : building.produces ? (
-                    <div className="mt-1">
+                    <div className="mt-1 flex gap-1">
                       {canCollect(building) ? (
                         <Button
                           size="sm"
@@ -141,8 +150,35 @@ export default function GameMap({
                           ⏱️ {formatTime(timeLeft)}
                         </div>
                       )}
+                      {building.level < building.max_level && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs py-0 h-6"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onUpgrade(building);
+                          }}
+                        >
+                          ⬆️
+                        </Button>
+                      )}
                     </div>
-                  ) : null}
+                  ) : (
+                    building.level < building.max_level && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="text-xs py-0 h-6 mt-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onUpgrade(building);
+                        }}
+                      >
+                        ⬆️ Улучшить
+                      </Button>
+                    )
+                  )}
                 </div>
               ) : buildMode && selectedBuildingType ? (
                 <div className="absolute inset-0 flex items-center justify-center opacity-50">

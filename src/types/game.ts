@@ -32,6 +32,8 @@ export interface BuildingType {
   production_interval: number;
   provides_population: number;
   image: string;
+  max_level: number;
+  upgrade_multiplier: number;
 }
 
 export interface Building {
@@ -49,6 +51,29 @@ export interface Building {
   production_rate: number;
   production_interval: number;
   image: string;
+  max_level: number;
+}
+
+export interface Quest {
+  id: number;
+  title: string;
+  description: string;
+  type: string;
+  target: number;
+  rewards: {
+    coins: number;
+    wood: number;
+    stone: number;
+    food: number;
+    iron: number;
+    experience: number;
+  };
+  required_level: number;
+  icon: string;
+  progress: number;
+  completed: boolean;
+  player_quest_id: number | null;
+  active: boolean;
 }
 
 export interface GameState {

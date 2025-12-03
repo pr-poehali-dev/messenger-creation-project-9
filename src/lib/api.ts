@@ -1,5 +1,6 @@
 const AUTH_URL = 'https://functions.poehali.dev/6fa55cf5-f8a6-4405-9007-73fbfdd881e0';
 const GAME_URL = 'https://functions.poehali.dev/15f7b5a9-a4ea-41e1-9209-ae5076802636';
+const QUESTS_URL = 'https://functions.poehali.dev/eda6e58b-6951-42fe-b287-a1bc15f8f470';
 
 export async function register(username: string, email: string, password: string) {
   const response = await fetch(AUTH_URL, {
@@ -106,6 +107,73 @@ export async function completeBuilding(playerId: string, buildingId: number) {
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || 'Ошибка завершения строительства');
+  }
+  
+  return response.json();
+}
+
+export async function upgradeBuilding(playerId: string, buildingId: number) {
+  const response = await fetch(GAME_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Player-Id': playerId
+    },
+    body: JSON.stringify({ action: 'upgrade', building_id: buildingId })
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Ошибка улучшения');
+  }
+  
+  return response.json();
+}
+
+export async function getQuests(playerId: string) {
+  const response = await fetch(`${QUESTS_URL}?action=list`, {
+    headers: { 'X-Player-Id': playerId }
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Ошибка загрузки квестов');
+  }
+  
+  return response.json();
+}
+
+export async function startQuest(playerId: string, questId: number) {
+  const response = await fetch(QUESTS_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Player-Id': playerId
+    },
+    body: JSON.stringify({ action: 'start', quest_id: questId })
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Ошибка начала квеста');
+  }
+  
+  return response.json();
+}
+
+export async function claimQuestReward(playerId: string, questId: number) {
+  const response = await fetch(QUESTS_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Player-Id': playerId
+    },
+    body: JSON.stringify({ action: 'claim', quest_id: questId })
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Ошибка получения награды');
   }
   
   return response.json();
