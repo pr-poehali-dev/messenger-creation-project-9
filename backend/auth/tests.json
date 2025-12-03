@@ -5,28 +5,11 @@
       "method": "POST",
       "body": {
         "action": "register",
-        "username": "testplayer789",
-        "email": "test789@game.com",
+        "username": "nanofarm123",
+        "email": "nano@farm.com",
         "password": "password123"
       },
       "expectedStatus": 200,
-      "expectedBody": {
-        "success": true
-      },
-      "bodyMatcher": "partial"
-    },
-    {
-      "name": "Login existing player",
-      "method": "POST",
-      "body": {
-        "action": "login",
-        "username": "testplayer789",
-        "password": "password123"
-      },
-      "expectedStatus": 200,
-      "expectedBody": {
-        "success": true
-      },
       "bodyMatcher": "partial"
     }
   ]

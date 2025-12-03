@@ -1,5 +1,4 @@
 {
-  "quests": "https://functions.poehali.dev/eda6e58b-6951-42fe-b287-a1bc15f8f470",
-  "auth": "https://functions.poehali.dev/6fa55cf5-f8a6-4405-9007-73fbfdd881e0",
-  "game": "https://functions.poehali.dev/15f7b5a9-a4ea-41e1-9209-ae5076802636"
+  "farm": "https://functions.poehali.dev/3876dc69-d831-4782-8a84-75f0ee87a7c2",
+  "auth": "https://functions.poehali.dev/6fa55cf5-f8a6-4405-9007-73fbfdd881e0"
 }

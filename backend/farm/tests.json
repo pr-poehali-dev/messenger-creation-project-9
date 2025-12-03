@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "name": "Get farm state",
+      "method": "GET",
+      "path": "/?player_id=1&action=state",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
+  ]
+}
