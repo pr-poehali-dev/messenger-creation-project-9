@@ -26,10 +26,11 @@ interface Product {
 }
 
 interface MarketplaceScreenProps {
-  onBack: () => void;
+  username: string;
+  onLogout: () => void;
 }
 
-export default function MarketplaceScreen({ onBack }: MarketplaceScreenProps) {
+export default function MarketplaceScreen({ username, onLogout }: MarketplaceScreenProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -102,20 +103,23 @@ export default function MarketplaceScreen({ onBack }: MarketplaceScreenProps) {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              <Button variant="outline" onClick={onBack}>
-                <Icon name="ArrowLeft" size={20} />
-              </Button>
               <h1 className="text-2xl font-bold text-gray-800">🛍️ Маркетплейс</h1>
+              <span className="text-sm text-gray-600">Привет, {username}!</span>
             </div>
             
-            <div className="relative">
-              <Button className="relative">
-                <Icon name="ShoppingCart" size={20} />
-                {getTotalItems() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {getTotalItems()}
-                  </span>
-                )}
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Button className="relative">
+                  <Icon name="ShoppingCart" size={20} />
+                  {getTotalItems() > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {getTotalItems()}
+                    </span>
+                  )}
+                </Button>
+              </div>
+              <Button variant="outline" size="sm" onClick={onLogout}>
+                <Icon name="LogOut" size={18} />
               </Button>
             </div>
           </div>
