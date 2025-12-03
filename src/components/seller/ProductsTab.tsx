@@ -24,8 +24,33 @@ export default function ProductsTab({ products, onAddProduct, onUpdateProduct, o
     category: 'Смартфоны',
     inStock: true
   });
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [mediaPreview, setMediaPreview] = useState<string>('');
 
   const categories = ['Смартфоны', 'Наушники', 'Ноутбуки', 'Часы', 'Планшеты', 'Консоли', 'Камеры', 'Умный дом'];
+
+  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
+      alert('Пожалуйста, выберите изображение или видео');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Размер файла не должен превышать 10 МБ');
+      return;
+    }
+
+    setMediaFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setMediaPreview(reader.result as string);
+      setFormData({ ...formData, image: reader.result as string });
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +104,8 @@ export default function ProductsTab({ products, onAddProduct, onUpdateProduct, o
       category: 'Смартфоны',
       inStock: true
     });
+    setMediaFile(null);
+    setMediaPreview('');
     setEditingProduct(null);
     setShowAddForm(false);
   };
@@ -169,13 +196,50 @@ export default function ProductsTab({ products, onAddProduct, onUpdateProduct, o
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  URL изображения
+                  Фото или видео товара
                 </label>
-                <Input
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                />
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                  {mediaPreview ? (
+                    <div className="space-y-3">
+                      {mediaFile?.type.startsWith('video/') ? (
+                        <video src={mediaPreview} className="max-h-48 mx-auto rounded-lg" controls />
+                      ) : (
+                        <img src={mediaPreview} alt="Предпросмотр" className="max-h-48 mx-auto rounded-lg" />
+                      )}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setMediaFile(null);
+                          setMediaPreview('');
+                          setFormData({ ...formData, image: '' });
+                        }}
+                        className="gap-2"
+                      >
+                        <Icon name="Trash2" size={16} />
+                        Удалить
+                      </Button>
+                    </div>
+                  ) : (
+                    <label className="cursor-pointer">
+                      <input
+                        type="file"
+                        accept="image/*,video/*"
+                        onChange={handleMediaChange}
+                        className="hidden"
+                      />
+                      <div className="space-y-2">
+                        <Icon name="Upload" size={48} className="mx-auto text-gray-400" />
+                        <p className="text-sm text-gray-600">
+                          <span className="text-purple-600 font-semibold">Нажмите для загрузки</span>
+                          {' '}или перетащите файл
+                        </p>
+                        <p className="text-xs text-gray-500">PNG, JPG, GIF, MP4 до 10 МБ</p>
+                      </div>
+                    </label>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center gap-2">
