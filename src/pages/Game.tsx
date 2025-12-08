@@ -77,13 +77,13 @@ export default function Game({ user, onLogout }: GameProps) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (coinsPerSecond > 0) {
+      if (coinsPerSecond > 0 && !energyRestoreTime) {
         setCoins(prev => prev + coinsPerSecond);
         setTotalCoins(prev => prev + coinsPerSecond);
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [coinsPerSecond]);
+  }, [coinsPerSecond, energyRestoreTime]);
 
   useEffect(() => {
     const interval = setInterval(() => {
