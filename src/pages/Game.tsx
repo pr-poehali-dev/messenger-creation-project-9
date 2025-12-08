@@ -176,7 +176,7 @@ export default function Game({ user, onLogout }: GameProps) {
               <img 
                 src="https://cdn.poehali.dev/files/dd2262a44e3b9c2166824aad0dc234a4.jpg"
                 alt="Dragon"
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-contain"
               />
               
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
