@@ -15,6 +15,7 @@ export interface GameState {
   level: number;
   upgrades: Upgrade[];
   lastSaved: string;
+  energyRestoreTime?: number | null;
 }
 
 export interface Upgrade {

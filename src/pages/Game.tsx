@@ -29,6 +29,8 @@ export default function Game({ user, onLogout }: GameProps) {
   const [clickAnimation, setClickAnimation] = useState(false);
   const [floatingTexts, setFloatingTexts] = useState<Array<{ id: number; value: number; x: number; y: number }>>([]);
   const [upgrades, setUpgrades] = useState<Upgrade[]>(DEFAULT_UPGRADES);
+  const [energyRestoreTime, setEnergyRestoreTime] = useState<number | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState<string>('');
 
   useEffect(() => {
     const savedState = getGameState();
@@ -40,6 +42,9 @@ export default function Game({ user, onLogout }: GameProps) {
       setEnergy(savedState.energy);
       setLevel(savedState.level);
       setUpgrades(savedState.upgrades);
+      if (savedState.energyRestoreTime) {
+        setEnergyRestoreTime(savedState.energyRestoreTime);
+      }
     }
   }, [user.id]);
 
@@ -54,9 +59,10 @@ export default function Game({ user, onLogout }: GameProps) {
       level,
       upgrades,
       lastSaved: new Date().toISOString(),
+      energyRestoreTime,
     };
     saveGameState(state);
-  }, [user.id, coins, totalCoins, coinsPerTap, coinsPerSecond, energy, level, upgrades]);
+  }, [user.id, coins, totalCoins, coinsPerTap, coinsPerSecond, energy, level, upgrades, energyRestoreTime]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,21 +76,40 @@ export default function Game({ user, onLogout }: GameProps) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setEnergy(prev => Math.min(prev + 5, maxEnergy));
+      if (energyRestoreTime) {
+        const now = Date.now();
+        if (now >= energyRestoreTime) {
+          setEnergy(maxEnergy);
+          setEnergyRestoreTime(null);
+          setTimeRemaining('');
+        } else {
+          const diff = energyRestoreTime - now;
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          setTimeRemaining(`${hours}ч ${minutes}м ${seconds}с`);
+        }
+      }
     }, 1000);
     return () => clearInterval(interval);
-  }, [maxEnergy]);
+  }, [energyRestoreTime, maxEnergy]);
 
   useEffect(() => {
     setLevel(Math.floor(totalCoins / 10000) + 1);
   }, [totalCoins]);
 
   const handleDragonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (energy >= 10) {
+    if (energy >= 10 && !energyRestoreTime) {
+      const newEnergy = energy - 10;
       setCoins(prev => prev + coinsPerTap);
       setTotalCoins(prev => prev + coinsPerTap);
-      setEnergy(prev => prev - 10);
+      setEnergy(newEnergy);
       setClickAnimation(true);
+      
+      if (newEnergy === 0) {
+        const restoreTime = Date.now() + (3 * 60 * 60 * 1000);
+        setEnergyRestoreTime(restoreTime);
+      }
       
       const rect = e.currentTarget.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -169,24 +194,40 @@ export default function Game({ user, onLogout }: GameProps) {
           <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/30">
             <div className="flex justify-between text-sm mb-2">
               <span className="text-purple-300">Энергия</span>
-              <span className="text-white font-bold">{energy}/{maxEnergy}</span>
+              {energyRestoreTime ? (
+                <span className="text-orange-400 font-bold flex items-center gap-1">
+                  <Icon name="Clock" size={16} />
+                  {timeRemaining}
+                </span>
+              ) : (
+                <span className="text-white font-bold">{energy}/{maxEnergy}</span>
+              )}
             </div>
             <div className="h-3 bg-purple-950 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
-                style={{ width: `${(energy / maxEnergy) * 100}%` }}
+                className={`h-full transition-all ${
+                  energyRestoreTime 
+                    ? 'bg-gradient-to-r from-orange-500 to-red-500' 
+                    : 'bg-gradient-to-r from-purple-500 to-pink-500'
+                }`}
+                style={{ width: `${energyRestoreTime ? 0 : (energy / maxEnergy) * 100}%` }}
               />
             </div>
+            {energyRestoreTime && (
+              <div className="mt-2 text-center text-sm text-orange-300">
+                ⏳ Энергия восстанавливается...
+              </div>
+            )}
           </div>
 
           <div className="relative">
             <button
               onClick={handleDragonClick}
-              disabled={energy < 10}
+              disabled={energy < 10 || !!energyRestoreTime}
               className={`w-full aspect-square rounded-3xl overflow-hidden relative
                 shadow-2xl shadow-orange-500/50 border-4 border-yellow-500/30 
                 transition-all duration-100
-                ${energy >= 10 ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'opacity-50 cursor-not-allowed'}
+                ${energy >= 10 && !energyRestoreTime ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'opacity-50 cursor-not-allowed'}
                 ${clickAnimation ? 'scale-110' : ''}`}
             >
               <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-purple-900 to-orange-600">
