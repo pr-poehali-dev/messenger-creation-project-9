@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
+import DragonImage from '@/components/DragonImage';
 import { User, GameState, Upgrade } from '@/types/game';
 import { saveGameState, getGameState, removeUser } from '@/utils/storage';
 
@@ -167,19 +168,17 @@ export default function Game({ user, onLogout }: GameProps) {
                 ${energy >= 10 ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'opacity-50 cursor-not-allowed'}
                 ${clickAnimation ? 'scale-110' : ''}`}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-purple-900 to-orange-600">
+              <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-purple-900 to-orange-900">
                 <div className="absolute inset-0" style={{
-                  backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,200,100,0.3) 0%, transparent 50%)',
+                  backgroundImage: 'radial-gradient(circle at 50% 40%, rgba(255,150,50,0.4) 0%, transparent 60%)',
                 }}></div>
               </div>
               
-              <img 
-                src="https://cdn.poehali.dev/files/dd2262a44e3b9c2166824aad0dc234a4.jpg"
-                alt="Dragon"
-                className="absolute inset-0 w-full h-full object-contain"
-              />
+              <div className="absolute inset-0 p-4">
+                <DragonImage />
+              </div>
               
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
               
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center z-10">
                 <div className="text-4xl font-bold text-white drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] 
