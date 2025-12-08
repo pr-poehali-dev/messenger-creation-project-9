@@ -35,6 +35,7 @@ export default function Game({ user, onLogout }: GameProps) {
   const [timeRemaining, setTimeRemaining] = useState<string>('');
   const [currentDragonId, setCurrentDragonId] = useState('dragon-1');
   const [ownedDragons, setOwnedDragons] = useState<string[]>(['dragon-1']);
+  const [dragonChangeAnimation, setDragonChangeAnimation] = useState(false);
 
   useEffect(() => {
     const savedState = getGameState();
@@ -167,22 +168,31 @@ export default function Game({ user, onLogout }: GameProps) {
     if (coins >= dragon.cost && !ownedDragons.includes(dragon.id)) {
       setCoins(prev => prev - dragon.cost);
       setOwnedDragons(prev => [...prev, dragon.id]);
-      setCurrentDragonId(dragon.id);
-      setCoinsPerTap(dragon.coinsPerTap);
-      setMaxEnergy(dragon.maxEnergy);
-      setEnergy(dragon.maxEnergy);
-      setEnergyRestoreTime(null);
+      
+      setDragonChangeAnimation(true);
+      setTimeout(() => {
+        setCurrentDragonId(dragon.id);
+        setCoinsPerTap(dragon.coinsPerTap);
+        setMaxEnergy(dragon.maxEnergy);
+        setEnergy(dragon.maxEnergy);
+        setEnergyRestoreTime(null);
+        setTimeout(() => setDragonChangeAnimation(false), 600);
+      }, 300);
     }
   };
 
   const handleSelectDragon = (dragonId: string) => {
     const dragon = DRAGONS.find(d => d.id === dragonId);
     if (dragon && ownedDragons.includes(dragonId)) {
-      setCurrentDragonId(dragonId);
-      setCoinsPerTap(dragon.coinsPerTap);
-      setMaxEnergy(dragon.maxEnergy);
-      setEnergy(dragon.maxEnergy);
-      setEnergyRestoreTime(null);
+      setDragonChangeAnimation(true);
+      setTimeout(() => {
+        setCurrentDragonId(dragonId);
+        setCoinsPerTap(dragon.coinsPerTap);
+        setMaxEnergy(dragon.maxEnergy);
+        setEnergy(dragon.maxEnergy);
+        setEnergyRestoreTime(null);
+        setTimeout(() => setDragonChangeAnimation(false), 600);
+      }, 300);
     }
   };
 
@@ -294,7 +304,8 @@ export default function Game({ user, onLogout }: GameProps) {
               <img 
                 src={currentDragon.image}
                 alt={currentDragon.name}
-                className="absolute inset-0 w-full h-full object-contain"
+                className={`absolute inset-0 w-full h-full object-contain transition-all duration-500
+                  ${dragonChangeAnimation ? 'opacity-0 scale-50 rotate-180' : 'opacity-100 scale-100 rotate-0'}`}
               />
               
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
