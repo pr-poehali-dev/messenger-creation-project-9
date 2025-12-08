@@ -175,7 +175,7 @@ export default function Game({ user, onLogout }: GameProps) {
               </div>
               
               <img 
-                src="https://cdn.poehali.dev/files/dd2262a44e3b9c2166824aad0dc234a4.jpg"
+                src="https://cdn.poehali.dev/files/4a35708d3e611f087bb1e26e9a8e171_1.jpeg"
                 alt="Dragon"
                 className="absolute inset-0 w-full h-full object-contain"
               />
