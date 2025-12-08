@@ -27,6 +27,7 @@ export default function Game({ user, onLogout }: GameProps) {
   const [maxEnergy] = useState(1000);
   const [level, setLevel] = useState(1);
   const [clickAnimation, setClickAnimation] = useState(false);
+  const [floatingTexts, setFloatingTexts] = useState<Array<{ id: number; value: number; x: number; y: number }>>([]);
   const [upgrades, setUpgrades] = useState<Upgrade[]>(DEFAULT_UPGRADES);
 
   useEffect(() => {
@@ -78,13 +79,33 @@ export default function Game({ user, onLogout }: GameProps) {
     setLevel(Math.floor(totalCoins / 10000) + 1);
   }, [totalCoins]);
 
-  const handleDragonClick = () => {
+  const handleDragonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (energy >= 10) {
       setCoins(prev => prev + coinsPerTap);
       setTotalCoins(prev => prev + coinsPerTap);
       setEnergy(prev => prev - 10);
       setClickAnimation(true);
+      
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const newText = {
+        id: Date.now(),
+        value: coinsPerTap,
+        x,
+        y
+      };
+      setFloatingTexts(prev => [...prev, newText]);
+      
+      const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVqzn77BfGAg+ltzy0YMwBSZ9y/DVijYIHGu87+Wc');
+      audio.volume = 0.3;
+      audio.play().catch(() => {});
+      
       setTimeout(() => setClickAnimation(false), 100);
+      setTimeout(() => {
+        setFloatingTexts(prev => prev.filter(t => t.id !== newText.id));
+      }, 1000);
     }
   };
 
@@ -191,6 +212,27 @@ export default function Game({ user, onLogout }: GameProps) {
                   +{coinsPerTap}
                 </div>
               </div>
+
+              {floatingTexts.map(text => (
+                <div
+                  key={text.id}
+                  className="absolute pointer-events-none z-20 animate-float"
+                  style={{
+                    left: text.x,
+                    top: text.y,
+                    animation: 'floatUp 1s ease-out forwards'
+                  }}
+                >
+                  <div className="text-3xl font-bold text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]"
+                    style={{ 
+                      WebkitTextStroke: '1px rgba(255,100,0,0.8)',
+                      filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.8))'
+                    }}
+                  >
+                    +{text.value}
+                  </div>
+                </div>
+              ))}
             </button>
 
             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2 rounded-full border-2 border-purple-400 shadow-lg">
@@ -260,6 +302,17 @@ export default function Game({ user, onLogout }: GameProps) {
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: linear-gradient(to bottom, #a855f7, #ec4899);
           border-radius: 10px;
+        }
+        
+        @keyframes floatUp {
+          0% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100px) scale(1.5);
+            opacity: 0;
+          }
         }
       `}</style>
     </div>
