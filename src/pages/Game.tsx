@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 import DragonImage from '@/components/DragonImage';
-import { User, GameState, Upgrade } from '@/types/game';
+import { User, GameState, Upgrade, Dragon } from '@/types/game';
 import { saveGameState, getGameState, removeUser } from '@/utils/storage';
+import DragonShop, { DRAGONS } from '@/pages/DragonShop';
 
 interface GameProps {
   user: User;
@@ -19,18 +20,21 @@ const DEFAULT_UPGRADES: Upgrade[] = [
 ];
 
 export default function Game({ user, onLogout }: GameProps) {
+  const [showShop, setShowShop] = useState(false);
   const [coins, setCoins] = useState(0);
   const [totalCoins, setTotalCoins] = useState(0);
   const [coinsPerTap, setCoinsPerTap] = useState(1);
   const [coinsPerSecond, setCoinsPerSecond] = useState(0);
   const [energy, setEnergy] = useState(1000);
-  const [maxEnergy] = useState(1000);
+  const [maxEnergy, setMaxEnergy] = useState(1000);
   const [level, setLevel] = useState(1);
   const [clickAnimation, setClickAnimation] = useState(false);
   const [floatingTexts, setFloatingTexts] = useState<Array<{ id: number; value: number; x: number; y: number }>>([]);
   const [upgrades, setUpgrades] = useState<Upgrade[]>(DEFAULT_UPGRADES);
   const [energyRestoreTime, setEnergyRestoreTime] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<string>('');
+  const [currentDragonId, setCurrentDragonId] = useState('dragon-1');
+  const [ownedDragons, setOwnedDragons] = useState<string[]>(['dragon-1']);
 
   useEffect(() => {
     const savedState = getGameState();
@@ -40,8 +44,11 @@ export default function Game({ user, onLogout }: GameProps) {
       setCoinsPerTap(savedState.coinsPerTap);
       setCoinsPerSecond(savedState.coinsPerSecond);
       setEnergy(savedState.energy);
+      setMaxEnergy(savedState.maxEnergy || 1000);
       setLevel(savedState.level);
       setUpgrades(savedState.upgrades);
+      setCurrentDragonId(savedState.currentDragonId || 'dragon-1');
+      setOwnedDragons(savedState.ownedDragons || ['dragon-1']);
       if (savedState.energyRestoreTime) {
         setEnergyRestoreTime(savedState.energyRestoreTime);
       }
@@ -56,13 +63,16 @@ export default function Game({ user, onLogout }: GameProps) {
       coinsPerTap,
       coinsPerSecond,
       energy,
+      maxEnergy,
       level,
       upgrades,
       lastSaved: new Date().toISOString(),
       energyRestoreTime,
+      currentDragonId,
+      ownedDragons,
     };
     saveGameState(state);
-  }, [user.id, coins, totalCoins, coinsPerTap, coinsPerSecond, energy, level, upgrades, energyRestoreTime]);
+  }, [user.id, coins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -153,11 +163,49 @@ export default function Game({ user, onLogout }: GameProps) {
     onLogout();
   };
 
+  const handleBuyDragon = (dragon: Dragon) => {
+    if (coins >= dragon.cost && !ownedDragons.includes(dragon.id)) {
+      setCoins(prev => prev - dragon.cost);
+      setOwnedDragons(prev => [...prev, dragon.id]);
+      setCurrentDragonId(dragon.id);
+      setCoinsPerTap(dragon.coinsPerTap);
+      setMaxEnergy(dragon.maxEnergy);
+      setEnergy(dragon.maxEnergy);
+      setEnergyRestoreTime(null);
+    }
+  };
+
+  const handleSelectDragon = (dragonId: string) => {
+    const dragon = DRAGONS.find(d => d.id === dragonId);
+    if (dragon && ownedDragons.includes(dragonId)) {
+      setCurrentDragonId(dragonId);
+      setCoinsPerTap(dragon.coinsPerTap);
+      setMaxEnergy(dragon.maxEnergy);
+      setEnergy(dragon.maxEnergy);
+      setEnergyRestoreTime(null);
+    }
+  };
+
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
     return Math.floor(num).toString();
   };
+
+  const currentDragon = DRAGONS.find(d => d.id === currentDragonId) || DRAGONS[0];
+
+  if (showShop) {
+    return (
+      <DragonShop
+        coins={coins}
+        currentDragonId={currentDragonId}
+        ownedDragons={ownedDragons}
+        onBuyDragon={handleBuyDragon}
+        onSelectDragon={handleSelectDragon}
+        onBack={() => setShowShop(false)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 via-indigo-900 to-black text-white">
@@ -170,6 +218,13 @@ export default function Game({ user, onLogout }: GameProps) {
             <p className="text-sm text-purple-300">Игрок: {user.username} • Уровень {level}</p>
           </div>
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => setShowShop(true)}
+              className="px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 border border-yellow-500/30 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all flex items-center gap-2 font-bold"
+            >
+              <Icon name="ShoppingBag" size={20} />
+              Магазин
+            </button>
             <div className="text-right">
               <div className="text-3xl font-bold text-yellow-400">
                 {formatNumber(coins)}
@@ -237,8 +292,8 @@ export default function Game({ user, onLogout }: GameProps) {
               </div>
               
               <img 
-                src="https://cdn.poehali.dev/files/4a35708d3e611f087bb1e26e9a8e171_1.jpeg"
-                alt="Dragon"
+                src={currentDragon.image}
+                alt={currentDragon.name}
                 className="absolute inset-0 w-full h-full object-contain"
               />
               

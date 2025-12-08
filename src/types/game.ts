@@ -5,6 +5,16 @@ export interface User {
   createdAt: string;
 }
 
+export interface Dragon {
+  id: string;
+  name: string;
+  image: string;
+  cost: number;
+  coinsPerTap: number;
+  maxEnergy: number;
+  owned: boolean;
+}
+
 export interface GameState {
   userId: string;
   coins: number;
@@ -12,10 +22,13 @@ export interface GameState {
   coinsPerTap: number;
   coinsPerSecond: number;
   energy: number;
+  maxEnergy: number;
   level: number;
   upgrades: Upgrade[];
   lastSaved: string;
   energyRestoreTime?: number | null;
+  currentDragonId: string;
+  ownedDragons: string[];
 }
 
 export interface Upgrade {
