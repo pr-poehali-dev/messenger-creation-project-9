@@ -161,30 +161,38 @@ export default function Game({ user, onLogout }: GameProps) {
             <button
               onClick={handleDragonClick}
               disabled={energy < 10}
-              className={`w-full aspect-square rounded-3xl bg-gradient-to-br from-red-600 via-orange-600 to-yellow-600 
+              className={`w-full aspect-square rounded-3xl overflow-hidden relative
                 shadow-2xl shadow-orange-500/50 border-4 border-yellow-500/30 
-                flex flex-col items-center justify-center gap-4 transition-all duration-100
+                transition-all duration-100
                 ${energy >= 10 ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'opacity-50 cursor-not-allowed'}
                 ${clickAnimation ? 'scale-110' : ''}`}
             >
-              <div className="relative">
-                <Icon name="Flame" size={120} className="text-yellow-300 animate-pulse" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Icon name="Crown" size={60} className="text-red-600" />
-                </div>
+              <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-purple-900 to-orange-600">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,200,100,0.3) 0%, transparent 50%)',
+                }}></div>
               </div>
               
-              <div className="text-center">
-                <div className="text-6xl font-bold text-white drop-shadow-lg">
-                  🐉
-                </div>
-                <div className="text-2xl font-bold text-white mt-2">
+              <img 
+                src="https://cdn.poehali.dev/files/dd2262a44e3b9c2166824aad0dc234a4.jpg"
+                alt="Dragon"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center z-10">
+                <div className="text-4xl font-bold text-white drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] 
+                  bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent
+                  [text-shadow:_0_2px_20px_rgb(0_0_0_/_80%)]"
+                  style={{ WebkitTextStroke: '1px rgba(255,255,255,0.3)' }}
+                >
                   +{coinsPerTap}
                 </div>
               </div>
             </button>
 
-            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-purple-600 px-6 py-2 rounded-full border-2 border-purple-400">
+            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2 rounded-full border-2 border-purple-400 shadow-lg">
               <span className="font-bold">Клик: +{coinsPerTap}</span>
             </div>
           </div>
