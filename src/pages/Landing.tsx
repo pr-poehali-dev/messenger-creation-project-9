@@ -11,10 +11,10 @@ export default function Landing({ onNavigate }: LandingProps) {
         <div className="text-center mb-16">
           <div className="text-8xl mb-6 animate-bounce">🐉</div>
           <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
-            Dragon Empire
+            Peeky
           </h1>
           <p className="text-2xl text-purple-300 mb-8">
-            Стань повелителем драконов и построй свою империю!
+            Стань повелителем драконов и построй свою Peeky!
           </p>
           
           <div className="flex gap-4 justify-center">
@@ -102,7 +102,7 @@ export default function Landing({ onNavigate }: LandingProps) {
         </div>
 
         <div className="text-center mt-12 text-purple-400">
-          <p>© 2024 Dragon Empire. Все права защищены.</p>
+          <p>© 2024 Peeky. Все права защищены.</p>
         </div>
       </div>
     </div>

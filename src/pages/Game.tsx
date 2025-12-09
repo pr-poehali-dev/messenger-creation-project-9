@@ -118,7 +118,7 @@ export default function Game({ user, onLogout }: GameProps) {
       setClickAnimation(true);
       
       if (newEnergy === 0) {
-        const restoreTime = Date.now() + (3 * 60 * 60 * 1000);
+        const restoreTime = Date.now() + (5 * 60 * 1000);
         setEnergyRestoreTime(restoreTime);
       }
       
@@ -223,7 +223,7 @@ export default function Game({ user, onLogout }: GameProps) {
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-              Dragon Empire
+              Peeky
             </h1>
             <p className="text-sm text-purple-300">Игрок: {user.username} • Уровень {level}</p>
           </div>
