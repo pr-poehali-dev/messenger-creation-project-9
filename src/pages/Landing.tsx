@@ -9,7 +9,7 @@ export default function Landing({ onNavigate }: LandingProps) {
     <div className="min-h-screen bg-gradient-to-b from-purple-900 via-indigo-900 to-black text-white">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="text-center mb-16">
-          <div className="text-8xl mb-6 animate-bounce">🐉</div>
+          <div className="text-8xl mb-6 animate-bounce">👀</div>
           <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
             Peeky
           </h1>

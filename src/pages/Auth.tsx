@@ -82,7 +82,7 @@ export default function Auth({ mode, onSuccess, onBack }: AuthProps) {
 
         <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/30">
           <div className="text-center mb-8">
-            <div className="text-6xl mb-4">🐉</div>
+            <div className="text-6xl mb-4">👀</div>
             <h2 className="text-3xl font-bold mb-2">
               {mode === 'register' ? 'Регистрация' : 'Вход'}
             </h2>
