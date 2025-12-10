@@ -188,6 +188,42 @@ export const DRAGONS: Dragon[] = [
     maxEnergy: 50000,
     owned: false,
   },
+  {
+    id: 'dragon-20',
+    name: 'Ледяной страж',
+    image: 'https://cdn.poehali.dev/files/0e204d8d5b811f0a47536e6bbe206fd_1.jpeg',
+    cost: 200000000,
+    coinsPerTap: 5000,
+    maxEnergy: 60000,
+    owned: false,
+  },
+  {
+    id: 'dragon-21',
+    name: 'Неоновый хранитель',
+    image: 'https://cdn.poehali.dev/files/3077.jpeg',
+    cost: 300000000,
+    coinsPerTap: 7500,
+    maxEnergy: 70000,
+    owned: false,
+  },
+  {
+    id: 'dragon-22',
+    name: 'Костяной древний',
+    image: 'https://cdn.poehali.dev/files/20777.jpeg',
+    cost: 500000000,
+    coinsPerTap: 12000,
+    maxEnergy: 85000,
+    owned: false,
+  },
+  {
+    id: 'dragon-23',
+    name: 'Праздничный дракон',
+    image: 'https://cdn.poehali.dev/files/eb2d628d5b811f09b91f223c7f1d620_1.jpeg',
+    cost: 750000000,
+    coinsPerTap: 18000,
+    maxEnergy: 100000,
+    owned: false,
+  },
 ];
 
 export default function DragonShop({
