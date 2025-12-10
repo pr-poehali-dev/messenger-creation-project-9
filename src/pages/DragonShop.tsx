@@ -224,6 +224,16 @@ export const DRAGONS: Dragon[] = [
     maxEnergy: 100000,
     owned: false,
   },
+  {
+    id: 'dragon-24',
+    name: 'Повелитель бури',
+    image: 'https://cdn.poehali.dev/files/3710.jpeg',
+    cost: 0,
+    goldCost: 250,
+    coinsPerTap: 50000,
+    maxEnergy: 500000,
+    owned: false,
+  },
 ];
 
 export default function DragonShop({
