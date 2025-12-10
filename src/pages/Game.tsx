@@ -35,7 +35,7 @@ export default function Game({ user, onLogout }: GameProps) {
   const [maxEnergy, setMaxEnergy] = useState(1000);
   const [level, setLevel] = useState(1);
   const [clickAnimation, setClickAnimation] = useState(false);
-  const [floatingTexts, setFloatingTexts] = useState<Array<{ id: number; value: number; x: number; y: number; isNewYear?: boolean; isGolden?: boolean; isAmethyst?: boolean }>>([]);
+  const [floatingTexts, setFloatingTexts] = useState<Array<{ id: number; value: number; x: number; y: number; dragonType?: string }>>([]);
   const [snowflakes, setSnowflakes] = useState<Array<{ id: number; x: number; y: number; size: number }>>([]);
   const [passiveIncomeIndicator, setPassiveIncomeIndicator] = useState(false);
   const [upgrades, setUpgrades] = useState<Upgrade[]>(DEFAULT_UPGRADES);
@@ -138,100 +138,278 @@ export default function Game({ user, onLogout }: GameProps) {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       
-      const isNewYearDragon = currentDragonId === 'dragon-6';
-      const isGoldenDragon = currentDragonId === 'dragon-8';
-      const isAmethystDragon = currentDragonId === 'dragon-9';
-      
       const newText = {
         id: Date.now(),
         value: coinsPerTap,
         x,
         y,
-        isNewYear: isNewYearDragon,
-        isGolden: isGoldenDragon,
-        isAmethyst: isAmethystDragon
+        dragonType: currentDragonId
       };
       setFloatingTexts(prev => [...prev, newText]);
       
-      if (isNewYearDragon) {
-        const newSnowflakes = Array.from({ length: 8 }, (_, i) => ({
-          id: Date.now() + i,
-          x: x + (Math.random() - 0.5) * 100,
-          y: y + (Math.random() - 0.5) * 100,
-          size: 10 + Math.random() * 15
-        }));
-        setSnowflakes(prev => [...prev, ...newSnowflakes]);
-        setTimeout(() => {
-          setSnowflakes(prev => prev.filter(s => !newSnowflakes.find(ns => ns.id === s.id)));
-        }, 1500);
-        
+      const playDragonEffect = (dragonId: string) => {
         const ctx = new AudioContext();
         const oscillator = ctx.createOscillator();
         const gainNode = ctx.createGain();
         oscillator.connect(gainNode);
         gainNode.connect(ctx.destination);
-        oscillator.frequency.setValueAtTime(1046.5, ctx.currentTime);
-        oscillator.frequency.setValueAtTime(1318.5, ctx.currentTime + 0.1);
-        gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-        oscillator.start(ctx.currentTime);
-        oscillator.stop(ctx.currentTime + 0.5);
-      } else if (isGoldenDragon) {
-        const newSnowflakes = Array.from({ length: 12 }, (_, i) => ({
-          id: Date.now() + i,
-          x: x + (Math.random() - 0.5) * 120,
-          y: y + (Math.random() - 0.5) * 120,
-          size: 15 + Math.random() * 20
-        }));
-        setSnowflakes(prev => [...prev, ...newSnowflakes]);
-        setTimeout(() => {
-          setSnowflakes(prev => prev.filter(s => !newSnowflakes.find(ns => ns.id === s.id)));
-        }, 1500);
         
-        const ctx = new AudioContext();
-        const oscillator = ctx.createOscillator();
-        const gainNode = ctx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(ctx.destination);
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(523.25, ctx.currentTime);
-        oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
-        oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2);
-        gainNode.gain.setValueAtTime(0.4, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-        oscillator.start(ctx.currentTime);
-        oscillator.stop(ctx.currentTime + 0.6);
-      } else if (isAmethystDragon) {
-        const newSnowflakes = Array.from({ length: 16 }, (_, i) => ({
-          id: Date.now() + i,
-          x: x + (Math.random() - 0.5) * 150,
-          y: y + (Math.random() - 0.5) * 150,
-          size: 20 + Math.random() * 25
-        }));
-        setSnowflakes(prev => [...prev, ...newSnowflakes]);
-        setTimeout(() => {
-          setSnowflakes(prev => prev.filter(s => !newSnowflakes.find(ns => ns.id === s.id)));
-        }, 1500);
-        
-        const ctx = new AudioContext();
-        const oscillator = ctx.createOscillator();
-        const gainNode = ctx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(ctx.destination);
-        oscillator.type = 'triangle';
-        oscillator.frequency.setValueAtTime(830.61, ctx.currentTime);
-        oscillator.frequency.setValueAtTime(987.77, ctx.currentTime + 0.1);
-        oscillator.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.2);
-        oscillator.frequency.setValueAtTime(1396.91, ctx.currentTime + 0.3);
-        gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
-        oscillator.start(ctx.currentTime);
-        oscillator.stop(ctx.currentTime + 0.8);
-      } else {
-        const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVqzn77BfGAg+ltzy0YMwBSZ9y/DVijYIHGu87+Wc');
-        audio.volume = 0.3;
-        audio.play().catch(() => {});
-      }
+        switch(dragonId) {
+          case 'dragon-6':
+            const snowflakes6 = Array.from({ length: 8 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 100,
+              y: y + (Math.random() - 0.5) * 100,
+              size: 10 + Math.random() * 15
+            }));
+            setSnowflakes(prev => [...prev, ...snowflakes6]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !snowflakes6.find(ns => ns.id === s.id))), 1500);
+            oscillator.frequency.setValueAtTime(1046.5, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(1318.5, ctx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.5);
+            break;
+          case 'dragon-8':
+            const goldFlakes = Array.from({ length: 12 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 120,
+              y: y + (Math.random() - 0.5) * 120,
+              size: 15 + Math.random() * 20
+            }));
+            setSnowflakes(prev => [...prev, ...goldFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !goldFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(523.25, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.4, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.6);
+            break;
+          case 'dragon-9':
+            const amethystFlakes = Array.from({ length: 16 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 150,
+              y: y + (Math.random() - 0.5) * 150,
+              size: 20 + Math.random() * 25
+            }));
+            setSnowflakes(prev => [...prev, ...amethystFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !amethystFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'triangle';
+            oscillator.frequency.setValueAtTime(830.61, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(987.77, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(1396.91, ctx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.8);
+            break;
+          case 'dragon-10':
+            const neonFlakes = Array.from({ length: 20 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 160,
+              y: y + (Math.random() - 0.5) * 160,
+              size: 18 + Math.random() * 22
+            }));
+            setSnowflakes(prev => [...prev, ...neonFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !neonFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(440, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(554.37, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(880, ctx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.35, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.7);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.7);
+            break;
+          case 'dragon-11':
+            const cyberFlakes = Array.from({ length: 24 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 180,
+              y: y + (Math.random() - 0.5) * 180,
+              size: 20 + Math.random() * 25
+            }));
+            setSnowflakes(prev => [...prev, ...cyberFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !cyberFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(329.63, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(392, ctx.currentTime + 0.08);
+            oscillator.frequency.setValueAtTime(493.88, ctx.currentTime + 0.16);
+            oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.24);
+            gainNode.gain.setValueAtTime(0.4, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.8);
+            break;
+          case 'dragon-12':
+            const mechaFlakes = Array.from({ length: 28 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 200,
+              y: y + (Math.random() - 0.5) * 200,
+              size: 22 + Math.random() * 28
+            }));
+            setSnowflakes(prev => [...prev, ...mechaFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !mechaFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(261.63, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(329.63, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(392, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(523.25, ctx.currentTime + 0.3);
+            oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.4);
+            gainNode.gain.setValueAtTime(0.45, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.9);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.9);
+            break;
+          case 'dragon-13':
+            const spaceFlakes = Array.from({ length: 32 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 220,
+              y: y + (Math.random() - 0.5) * 220,
+              size: 24 + Math.random() * 30
+            }));
+            setSnowflakes(prev => [...prev, ...spaceFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !spaceFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(220, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(277.18, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(329.63, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(440, ctx.currentTime + 0.3);
+            oscillator.frequency.setValueAtTime(554.37, ctx.currentTime + 0.4);
+            oscillator.frequency.setValueAtTime(880, ctx.currentTime + 0.5);
+            gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 1);
+            break;
+          case 'dragon-14':
+            const cartoonFlakes = Array.from({ length: 36 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 240,
+              y: y + (Math.random() - 0.5) * 240,
+              size: 26 + Math.random() * 32
+            }));
+            setSnowflakes(prev => [...prev, ...cartoonFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !cartoonFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'triangle';
+            oscillator.frequency.setValueAtTime(523.25, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(1046.5, ctx.currentTime + 0.3);
+            oscillator.frequency.setValueAtTime(1318.51, ctx.currentTime + 0.4);
+            oscillator.frequency.setValueAtTime(1567.98, ctx.currentTime + 0.5);
+            gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.1);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 1.1);
+            break;
+          case 'dragon-15':
+            const electricFlakes = Array.from({ length: 18 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 140,
+              y: y + (Math.random() - 0.5) * 140,
+              size: 16 + Math.random() * 20
+            }));
+            setSnowflakes(prev => [...prev, ...electricFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !electricFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(987.77, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.05);
+            oscillator.frequency.setValueAtTime(1318.51, ctx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.35, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.4);
+            break;
+          case 'dragon-16':
+            const neonDefenderFlakes = Array.from({ length: 22 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 160,
+              y: y + (Math.random() - 0.5) * 160,
+              size: 18 + Math.random() * 24
+            }));
+            setSnowflakes(prev => [...prev, ...neonDefenderFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !neonDefenderFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(659.25, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.08);
+            oscillator.frequency.setValueAtTime(987.77, ctx.currentTime + 0.16);
+            gainNode.gain.setValueAtTime(0.38, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.5);
+            break;
+          case 'dragon-17':
+            const snowGuardianFlakes = Array.from({ length: 26 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 180,
+              y: y + (Math.random() - 0.5) * 180,
+              size: 20 + Math.random() * 26
+            }));
+            setSnowflakes(prev => [...prev, ...snowGuardianFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !snowGuardianFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(440, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(554.37, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(880, ctx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.4, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.6);
+            break;
+          case 'dragon-18':
+            const springFlakes = Array.from({ length: 30 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 200,
+              y: y + (Math.random() - 0.5) * 200,
+              size: 22 + Math.random() * 28
+            }));
+            setSnowflakes(prev => [...prev, ...springFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !springFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'triangle';
+            oscillator.frequency.setValueAtTime(523.25, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(1046.5, ctx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.42, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.7);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.7);
+            break;
+          case 'dragon-19':
+            const flowerFlakes = Array.from({ length: 34 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 220,
+              y: y + (Math.random() - 0.5) * 220,
+              size: 24 + Math.random() * 30
+            }));
+            setSnowflakes(prev => [...prev, ...flowerFlakes]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !flowerFlakes.find(ns => ns.id === s.id))), 1500);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(392, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(493.88, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(587.33, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.3);
+            oscillator.frequency.setValueAtTime(987.77, ctx.currentTime + 0.4);
+            gainNode.gain.setValueAtTime(0.45, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.8);
+            break;
+          default:
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVqzn77BfGAg+ltzy0YMwBSZ9y/DVijYIHGu87+Wc');
+            audio.volume = 0.3;
+            audio.play().catch(() => {});
+        }
+      };
+      
+      playDragonEffect(currentDragonId);
       
       setTimeout(() => setClickAnimation(false), 100);
       setTimeout(() => {
@@ -316,7 +494,6 @@ export default function Game({ user, onLogout }: GameProps) {
 
   const currentDragon = DRAGONS.find(d => d.id === currentDragonId) || DRAGONS[0];
   const upgradesOwned = upgrades.reduce((sum, u) => sum + u.owned, 0);
-  const isNewYearDragon = currentDragonId === 'dragon-6';
 
   if (showShop) {
     return (
@@ -334,7 +511,7 @@ export default function Game({ user, onLogout }: GameProps) {
 
   return (
     <div className={`min-h-screen text-white relative overflow-hidden ${
-      isNewYearDragon 
+      currentDragonId === 'dragon-6' 
         ? 'bg-gradient-to-b from-blue-900 via-cyan-900 to-indigo-950'
         : 'bg-gradient-to-b from-purple-900 via-indigo-900 to-black'
     }`}>
@@ -366,7 +543,7 @@ export default function Game({ user, onLogout }: GameProps) {
         />
       )}
       
-      {isNewYearDragon && (
+      {currentDragonId === 'dragon-6' && (
         <div className="fixed inset-0 pointer-events-none z-0">
           {[...Array(50)].map((_, i) => (
             <div
