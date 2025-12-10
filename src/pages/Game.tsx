@@ -159,7 +159,7 @@ export default function Game({ user, onLogout }: GameProps) {
           formatNumber={formatNumber}
         />
 
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6 p-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 p-3 sm:p-4 md:p-6 pb-20 md:pb-6">
           <DragonClicker
             currentDragon={currentDragon}
             currentDragonId={gameState.currentDragonId}

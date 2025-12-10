@@ -31,8 +31,8 @@ export default function DragonClicker({
   onDragonClick
 }: DragonClickerProps) {
   return (
-    <div className="space-y-6">
-      <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/30">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-purple-500/30">
         <div className="flex justify-between text-sm mb-2">
           <span className="text-purple-300">Энергия</span>
           {energyRestoreTime ? (
@@ -119,8 +119,8 @@ export default function DragonClicker({
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
           
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center z-10">
-            <div className="text-4xl font-bold text-white drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] 
+          <div className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-center z-10">
+            <div className="text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] 
               bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent
               [text-shadow:_0_2px_20px_rgb(0_0_0_/_80%)]"
               style={{ WebkitTextStroke: '1px rgba(255,255,255,0.3)' }}

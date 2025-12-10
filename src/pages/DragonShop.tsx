@@ -207,36 +207,36 @@ export default function DragonShop({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 via-indigo-900 to-black text-white">
-      <div className="bg-black/30 backdrop-blur-sm border-b border-purple-500/30 p-4">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
+      <div className="bg-black/30 backdrop-blur-sm border-b border-purple-500/30 p-3 sm:p-4">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={onBack}
-              className="px-4 py-2 bg-purple-600/20 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition-colors flex items-center gap-2"
+              className="px-3 py-2 sm:px-4 bg-purple-600/20 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition-colors flex items-center gap-2 text-sm sm:text-base"
             >
-              <Icon name="ArrowLeft" size={20} />
-              Назад
+              <Icon name="ArrowLeft" size={18} />
+              <span className="hidden sm:inline">Назад</span>
             </button>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+              <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
                 Магазин драконов
               </h1>
-              <p className="text-sm text-purple-300">Выбери своего дракона</p>
+              <p className="text-xs sm:text-sm text-purple-300">Выбери своего дракона</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto justify-end">
             <div className="text-right">
-              <div className="text-2xl font-bold text-yellow-400">
+              <div className="text-xl sm:text-2xl font-bold text-yellow-400">
                 {formatNumber(coins)}
               </div>
               <div className="text-xs text-purple-300">Монет</div>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-yellow-300 flex items-center justify-end gap-2">
+              <div className="text-xl sm:text-2xl font-bold text-yellow-300 flex items-center justify-end gap-1 sm:gap-2">
                 <img 
                   src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"
                   alt="Gold"
-                  className="w-6 h-6"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                 />
                 {goldCoins}
               </div>
@@ -246,8 +246,8 @@ export default function DragonShop({
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="max-w-6xl mx-auto p-3 sm:p-4 md:p-6 pb-20 md:pb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
           {DRAGONS.map((dragon) => {
             const isOwned = ownedDragons.includes(dragon.id);
             const isCurrent = currentDragonId === dragon.id;
@@ -259,7 +259,7 @@ export default function DragonShop({
             return (
               <div
                 key={dragon.id}
-                className={`bg-black/40 backdrop-blur-sm rounded-2xl p-6 border-2 transition-all ${
+                className={`bg-black/40 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 transition-all ${
                   isCurrent
                     ? 'border-yellow-500 shadow-xl shadow-yellow-500/30'
                     : isOwned
@@ -269,51 +269,52 @@ export default function DragonShop({
                     : 'border-gray-700/30 opacity-60'
                 }`}
               >
-                <div className="relative aspect-square rounded-xl overflow-hidden mb-4 border-2 border-purple-500/30">
+                <div className="relative aspect-square rounded-lg sm:rounded-xl overflow-hidden mb-3 sm:mb-4 border-2 border-purple-500/30">
                   <img
                     src={dragon.image}
                     alt={dragon.name}
                     className="w-full h-full object-cover"
                   />
                   {isGoldDragon && (
-                    <div className="absolute top-2 left-2 bg-gradient-to-r from-yellow-600 to-amber-600 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg shadow-yellow-500/50">
+                    <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-gradient-to-r from-yellow-600 to-amber-600 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg shadow-yellow-500/50">
                       <img 
                         src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"
                         alt="Gold"
-                        className="w-4 h-4"
+                        className="w-3 h-3 sm:w-4 sm:h-4"
                       />
-                      Легенда
+                      <span className="hidden sm:inline">Легенда</span>
                     </div>
                   )}
                   {isCurrent && (
-                    <div className="absolute top-2 right-2 bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                      <Icon name="Check" size={14} />
-                      Текущий
+                    <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-yellow-500 text-black px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                      <Icon name="Check" size={12} />
+                      <span className="hidden sm:inline">Текущий</span>
                     </div>
                   )}
                   {isOwned && !isCurrent && (
-                    <div className="absolute top-2 right-2 bg-purple-500 px-3 py-1 rounded-full text-xs font-bold">
-                      Куплен
+                    <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-purple-500 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-bold">
+                      <span className="hidden sm:inline">Куплен</span>
+                      <Icon name="Check" size={12} className="sm:hidden" />
                     </div>
                   )}
                 </div>
 
-                <h3 className="text-xl font-bold mb-3 text-center">{dragon.name}</h3>
+                <h3 className="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-center">{dragon.name}</h3>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex justify-between items-center bg-purple-900/30 rounded-lg px-3 py-2">
-                    <span className="text-purple-300 text-sm flex items-center gap-1">
-                      <Icon name="HandCoins" size={16} />
+                <div className="space-y-1.5 sm:space-y-2 mb-3 sm:mb-4">
+                  <div className="flex justify-between items-center bg-purple-900/30 rounded-lg px-2 py-1.5 sm:px-3 sm:py-2">
+                    <span className="text-purple-300 text-xs sm:text-sm flex items-center gap-1">
+                      <Icon name="HandCoins" size={14} />
                       Клик
                     </span>
-                    <span className="font-bold text-yellow-400">+{dragon.coinsPerTap}</span>
+                    <span className="font-bold text-yellow-400 text-sm sm:text-base">+{dragon.coinsPerTap}</span>
                   </div>
-                  <div className="flex justify-between items-center bg-purple-900/30 rounded-lg px-3 py-2">
-                    <span className="text-purple-300 text-sm flex items-center gap-1">
-                      <Icon name="Battery" size={16} />
+                  <div className="flex justify-between items-center bg-purple-900/30 rounded-lg px-2 py-1.5 sm:px-3 sm:py-2">
+                    <span className="text-purple-300 text-xs sm:text-sm flex items-center gap-1">
+                      <Icon name="Battery" size={14} />
                       Энергия
                     </span>
-                    <span className="font-bold text-cyan-400">{dragon.maxEnergy}</span>
+                    <span className="font-bold text-cyan-400 text-sm sm:text-base">{dragon.maxEnergy}</span>
                   </div>
                 </div>
 
@@ -321,11 +322,11 @@ export default function DragonShop({
                   <button
                     onClick={() => onBuyDragon(dragon)}
                     disabled={!canBuy}
-                    className={`w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+                    className={`w-full py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm sm:text-base ${
                       canBuy
                         ? isGoldDragon
-                          ? 'bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 cursor-pointer shadow-lg shadow-yellow-500/30'
-                          : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 cursor-pointer'
+                          ? 'bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 active:scale-95 cursor-pointer shadow-lg shadow-yellow-500/30'
+                          : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 active:scale-95 cursor-pointer'
                         : 'bg-gray-700/50 cursor-not-allowed'
                     }`}
                   >
@@ -334,13 +335,13 @@ export default function DragonShop({
                         <img 
                           src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"
                           alt="Gold"
-                          className="w-5 h-5"
+                          className="w-4 h-4 sm:w-5 sm:h-5"
                         />
                         <span>{dragon.goldCost}</span>
                       </>
                     ) : (
                       <>
-                        <Icon name="ShoppingCart" size={20} />
+                        <Icon name="ShoppingCart" size={18} />
                         <span>
                           {dragon.cost === 0 ? 'Бесплатно' : formatNumber(dragon.cost)}
                         </span>
@@ -348,13 +349,13 @@ export default function DragonShop({
                     )}
                   </button>
                 ) : isCurrent ? (
-                  <div className="w-full py-3 rounded-xl font-bold bg-yellow-500/20 border-2 border-yellow-500 text-yellow-400 text-center">
+                  <div className="w-full py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold bg-yellow-500/20 border-2 border-yellow-500 text-yellow-400 text-center text-sm sm:text-base">
                     Используется
                   </div>
                 ) : (
                   <button
                     onClick={() => onSelectDragon(dragon.id)}
-                    className="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition-all flex items-center justify-center gap-2"
+                    className="w-full py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                   >
                     <Icon name="Check" size={20} />
                     Выбрать
