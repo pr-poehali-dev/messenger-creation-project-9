@@ -11,7 +11,7 @@ interface DragonClickerProps {
   coinsPerTap: number;
   clickAnimation: boolean;
   dragonChangeAnimation: boolean;
-  floatingTexts: Array<{ id: number; value: number; x: number; y: number; isNewYear?: boolean }>;
+  floatingTexts: Array<{ id: number; value: number; x: number; y: number; isNewYear?: boolean; isGolden?: boolean; isAmethyst?: boolean }>;
   snowflakes: Array<{ id: number; x: number; y: number; size: number }>;
   onDragonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -139,31 +139,54 @@ export default function DragonClicker({
                 animation: 'floatUp 1s ease-out forwards'
               }}
             >
-              <div className={`text-3xl font-bold ${text.isNewYear ? 'text-white' : 'text-yellow-400'} drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]`}
+              <div className={`text-3xl font-bold ${
+                text.isNewYear ? 'text-white' : 
+                text.isGolden ? 'text-yellow-300' : 
+                text.isAmethyst ? 'text-purple-300' : 
+                'text-yellow-400'
+              } drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]`}
                 style={{ 
-                  WebkitTextStroke: text.isNewYear ? '1px rgba(0,200,255,0.8)' : '1px rgba(255,100,0,0.8)',
-                  filter: text.isNewYear ? 'drop-shadow(0 0 10px rgba(0,200,255,0.8))' : 'drop-shadow(0 0 10px rgba(255,215,0,0.8))'
+                  WebkitTextStroke: text.isNewYear ? '1px rgba(0,200,255,0.8)' : 
+                                    text.isGolden ? '1px rgba(255,215,0,1)' :
+                                    text.isAmethyst ? '1px rgba(147,51,234,1)' :
+                                    '1px rgba(255,100,0,0.8)',
+                  filter: text.isNewYear ? 'drop-shadow(0 0 10px rgba(0,200,255,0.8))' : 
+                         text.isGolden ? 'drop-shadow(0 0 20px rgba(255,215,0,1)) drop-shadow(0 0 30px rgba(255,165,0,0.8))' :
+                         text.isAmethyst ? 'drop-shadow(0 0 20px rgba(147,51,234,1)) drop-shadow(0 0 30px rgba(192,38,211,0.8))' :
+                         'drop-shadow(0 0 10px rgba(255,215,0,0.8))'
                 }}
               >
-                {text.isNewYear && '❄️'}+{text.value}{text.isNewYear && '🎄'}
+                {text.isNewYear && '❄️'}
+                {text.isGolden && '💰'}
+                {text.isAmethyst && '💎'}
+                +{text.value}
+                {text.isNewYear && '🎄'}
+                {text.isGolden && '✨'}
+                {text.isAmethyst && '🔮'}
               </div>
             </div>
           ))}
           
-          {snowflakes.map(flake => (
-            <div
-              key={flake.id}
-              className="absolute pointer-events-none z-20 animate-snowfall"
-              style={{
-                left: flake.x,
-                top: flake.y,
-                fontSize: flake.size,
-                animation: 'snowfall 1.5s ease-out forwards'
-              }}
-            >
-              ❄️
-            </div>
-          ))}
+          {snowflakes.map(flake => {
+            const isGolden = currentDragonId === 'dragon-8';
+            const isAmethyst = currentDragonId === 'dragon-9';
+            const emoji = isGolden ? '✨' : isAmethyst ? '💎' : '❄️';
+            
+            return (
+              <div
+                key={flake.id}
+                className="absolute pointer-events-none z-20 animate-snowfall"
+                style={{
+                  left: flake.x,
+                  top: flake.y,
+                  fontSize: flake.size,
+                  animation: 'snowfall 1.5s ease-out forwards'
+                }}
+              >
+                {emoji}
+              </div>
+            );
+          })}
         </button>
 
         <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2 rounded-full border-2 border-purple-400 shadow-lg">

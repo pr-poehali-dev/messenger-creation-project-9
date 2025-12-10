@@ -32,7 +32,7 @@ export default function Game({ user, onLogout }: GameProps) {
   const [maxEnergy, setMaxEnergy] = useState(1000);
   const [level, setLevel] = useState(1);
   const [clickAnimation, setClickAnimation] = useState(false);
-  const [floatingTexts, setFloatingTexts] = useState<Array<{ id: number; value: number; x: number; y: number; isNewYear?: boolean }>>([]);
+  const [floatingTexts, setFloatingTexts] = useState<Array<{ id: number; value: number; x: number; y: number; isNewYear?: boolean; isGolden?: boolean; isAmethyst?: boolean }>>([]);
   const [snowflakes, setSnowflakes] = useState<Array<{ id: number; x: number; y: number; size: number }>>([]);
   const [passiveIncomeIndicator, setPassiveIncomeIndicator] = useState(false);
   const [upgrades, setUpgrades] = useState<Upgrade[]>(DEFAULT_UPGRADES);
@@ -134,12 +134,17 @@ export default function Game({ user, onLogout }: GameProps) {
       const y = e.clientY - rect.top;
       
       const isNewYearDragon = currentDragonId === 'dragon-6';
+      const isGoldenDragon = currentDragonId === 'dragon-8';
+      const isAmethystDragon = currentDragonId === 'dragon-9';
+      
       const newText = {
         id: Date.now(),
         value: coinsPerTap,
         x,
         y,
-        isNewYear: isNewYearDragon
+        isNewYear: isNewYearDragon,
+        isGolden: isGoldenDragon,
+        isAmethyst: isAmethystDragon
       };
       setFloatingTexts(prev => [...prev, newText]);
       
@@ -155,7 +160,6 @@ export default function Game({ user, onLogout }: GameProps) {
           setSnowflakes(prev => prev.filter(s => !newSnowflakes.find(ns => ns.id === s.id)));
         }, 1500);
         
-        const bellAudio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
         const ctx = new AudioContext();
         const oscillator = ctx.createOscillator();
         const gainNode = ctx.createGain();
@@ -167,6 +171,57 @@ export default function Game({ user, onLogout }: GameProps) {
         gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
         oscillator.start(ctx.currentTime);
         oscillator.stop(ctx.currentTime + 0.5);
+      } else if (isGoldenDragon) {
+        const newSnowflakes = Array.from({ length: 12 }, (_, i) => ({
+          id: Date.now() + i,
+          x: x + (Math.random() - 0.5) * 120,
+          y: y + (Math.random() - 0.5) * 120,
+          size: 15 + Math.random() * 20
+        }));
+        setSnowflakes(prev => [...prev, ...newSnowflakes]);
+        setTimeout(() => {
+          setSnowflakes(prev => prev.filter(s => !newSnowflakes.find(ns => ns.id === s.id)));
+        }, 1500);
+        
+        const ctx = new AudioContext();
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(523.25, ctx.currentTime);
+        oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+        oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2);
+        gainNode.gain.setValueAtTime(0.4, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + 0.6);
+      } else if (isAmethystDragon) {
+        const newSnowflakes = Array.from({ length: 16 }, (_, i) => ({
+          id: Date.now() + i,
+          x: x + (Math.random() - 0.5) * 150,
+          y: y + (Math.random() - 0.5) * 150,
+          size: 20 + Math.random() * 25
+        }));
+        setSnowflakes(prev => [...prev, ...newSnowflakes]);
+        setTimeout(() => {
+          setSnowflakes(prev => prev.filter(s => !newSnowflakes.find(ns => ns.id === s.id)));
+        }, 1500);
+        
+        const ctx = new AudioContext();
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        oscillator.type = 'triangle';
+        oscillator.frequency.setValueAtTime(830.61, ctx.currentTime);
+        oscillator.frequency.setValueAtTime(987.77, ctx.currentTime + 0.1);
+        oscillator.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.2);
+        oscillator.frequency.setValueAtTime(1396.91, ctx.currentTime + 0.3);
+        gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + 0.8);
       } else {
         const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVqzn77BfGAg+ltzy0YMwBSZ9y/DVijYIHGu87+Wc');
         audio.volume = 0.3;
