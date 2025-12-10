@@ -268,8 +268,17 @@ export default function Game({ user, onLogout }: GameProps) {
   };
 
   const handleBuyDragon = (dragon: Dragon) => {
-    if (coins >= dragon.cost && !ownedDragons.includes(dragon.id)) {
-      setCoins(prev => prev - dragon.cost);
+    const isGoldDragon = dragon.goldCost !== undefined && dragon.goldCost > 0;
+    const canAfford = isGoldDragon 
+      ? goldCoins >= (dragon.goldCost || 0)
+      : coins >= dragon.cost;
+    
+    if (canAfford && !ownedDragons.includes(dragon.id)) {
+      if (isGoldDragon) {
+        setGoldCoins(prev => prev - (dragon.goldCost || 0));
+      } else {
+        setCoins(prev => prev - dragon.cost);
+      }
       setOwnedDragons(prev => [...prev, dragon.id]);
       
       setDragonChangeAnimation(true);
@@ -313,6 +322,7 @@ export default function Game({ user, onLogout }: GameProps) {
     return (
       <DragonShop
         coins={coins}
+        goldCoins={goldCoins}
         currentDragonId={currentDragonId}
         ownedDragons={ownedDragons}
         onBuyDragon={handleBuyDragon}

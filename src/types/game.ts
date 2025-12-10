@@ -10,6 +10,7 @@ export interface Dragon {
   name: string;
   image: string;
   cost: number;
+  goldCost?: number;
   coinsPerTap: number;
   maxEnergy: number;
   owned: boolean;

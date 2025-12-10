@@ -3,6 +3,7 @@ import { Dragon } from '@/types/game';
 
 interface DragonShopProps {
   coins: number;
+  goldCoins: number;
   currentDragonId: string;
   ownedDragons: string[];
   onBuyDragon: (dragon: Dragon) => void;
@@ -92,10 +93,61 @@ export const DRAGONS: Dragon[] = [
     maxEnergy: 25000,
     owned: false,
   },
+  {
+    id: 'dragon-10',
+    name: 'Неоновый дракон',
+    image: 'https://cdn.poehali.dev/files/02.jpeg',
+    cost: 0,
+    goldCost: 5,
+    coinsPerTap: 1000,
+    maxEnergy: 50000,
+    owned: false,
+  },
+  {
+    id: 'dragon-11',
+    name: 'Кибер-дракон',
+    image: 'https://cdn.poehali.dev/files/25.jpeg',
+    cost: 0,
+    goldCost: 10,
+    coinsPerTap: 2000,
+    maxEnergy: 75000,
+    owned: false,
+  },
+  {
+    id: 'dragon-12',
+    name: 'Мехадракон',
+    image: 'https://cdn.poehali.dev/files/85.jpeg',
+    cost: 0,
+    goldCost: 20,
+    coinsPerTap: 5000,
+    maxEnergy: 100000,
+    owned: false,
+  },
+  {
+    id: 'dragon-13',
+    name: 'Космический дракон',
+    image: 'https://cdn.poehali.dev/files/97.jpeg',
+    cost: 0,
+    goldCost: 50,
+    coinsPerTap: 10000,
+    maxEnergy: 150000,
+    owned: false,
+  },
+  {
+    id: 'dragon-14',
+    name: 'Мультяшный дракон',
+    image: 'https://cdn.poehali.dev/files/396.jpeg',
+    cost: 0,
+    goldCost: 100,
+    coinsPerTap: 25000,
+    maxEnergy: 250000,
+    owned: false,
+  },
 ];
 
 export default function DragonShop({
   coins,
+  goldCoins,
   currentDragonId,
   ownedDragons,
   onBuyDragon,
@@ -127,11 +179,24 @@ export default function DragonShop({
               <p className="text-sm text-purple-300">Выбери своего дракона</p>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-3xl font-bold text-yellow-400">
-              {formatNumber(coins)}
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <div className="text-2xl font-bold text-yellow-400">
+                {formatNumber(coins)}
+              </div>
+              <div className="text-xs text-purple-300">Монет</div>
             </div>
-            <div className="text-sm text-purple-300">Монет</div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-yellow-300 flex items-center justify-end gap-2">
+                <img 
+                  src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"
+                  alt="Gold"
+                  className="w-6 h-6"
+                />
+                {goldCoins}
+              </div>
+              <div className="text-xs text-amber-300">Золотых</div>
+            </div>
           </div>
         </div>
       </div>
@@ -141,7 +206,10 @@ export default function DragonShop({
           {DRAGONS.map((dragon) => {
             const isOwned = ownedDragons.includes(dragon.id);
             const isCurrent = currentDragonId === dragon.id;
-            const canBuy = coins >= dragon.cost && !isOwned;
+            const isGoldDragon = dragon.goldCost !== undefined && dragon.goldCost > 0;
+            const canBuy = isGoldDragon 
+              ? goldCoins >= (dragon.goldCost || 0) && !isOwned
+              : coins >= dragon.cost && !isOwned;
 
             return (
               <div
@@ -162,6 +230,16 @@ export default function DragonShop({
                     alt={dragon.name}
                     className="w-full h-full object-cover"
                   />
+                  {isGoldDragon && (
+                    <div className="absolute top-2 left-2 bg-gradient-to-r from-yellow-600 to-amber-600 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg shadow-yellow-500/50">
+                      <img 
+                        src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"
+                        alt="Gold"
+                        className="w-4 h-4"
+                      />
+                      Легенда
+                    </div>
+                  )}
                   {isCurrent && (
                     <div className="absolute top-2 right-2 bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                       <Icon name="Check" size={14} />
@@ -200,14 +278,29 @@ export default function DragonShop({
                     disabled={!canBuy}
                     className={`w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
                       canBuy
-                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 cursor-pointer'
+                        ? isGoldDragon
+                          ? 'bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 cursor-pointer shadow-lg shadow-yellow-500/30'
+                          : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 cursor-pointer'
                         : 'bg-gray-700/50 cursor-not-allowed'
                     }`}
                   >
-                    <Icon name="ShoppingCart" size={20} />
-                    <span>
-                      {dragon.cost === 0 ? 'Бесплатно' : formatNumber(dragon.cost)}
-                    </span>
+                    {isGoldDragon ? (
+                      <>
+                        <img 
+                          src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"
+                          alt="Gold"
+                          className="w-5 h-5"
+                        />
+                        <span>{dragon.goldCost}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Icon name="ShoppingCart" size={20} />
+                        <span>
+                          {dragon.cost === 0 ? 'Бесплатно' : formatNumber(dragon.cost)}
+                        </span>
+                      </>
+                    )}
                   </button>
                 ) : isCurrent ? (
                   <div className="w-full py-3 rounded-xl font-bold bg-yellow-500/20 border-2 border-yellow-500 text-yellow-400 text-center">

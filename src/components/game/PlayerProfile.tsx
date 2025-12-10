@@ -78,8 +78,8 @@ export default function PlayerProfile({
       description: 'Купи всех драконов',
       icon: 'Trophy',
       progress: ownedDragonsCount,
-      goal: 9,
-      unlocked: ownedDragonsCount >= 9,
+      goal: 14,
+      unlocked: ownedDragonsCount >= 14,
       color: 'from-amber-500 to-yellow-500'
     },
     {
