@@ -65,6 +65,15 @@ export const DRAGONS: Dragon[] = [
     maxEnergy: 10000,
     owned: false,
   },
+  {
+    id: 'dragon-7',
+    name: 'Закатный дракон',
+    image: 'https://cdn.poehali.dev/files/emixed_ec6b7d50d56d11f09838ca2b5e920a99_1839530447_generation_0.jpeg',
+    cost: 5000000,
+    coinsPerTap: 200,
+    maxEnergy: 15000,
+    owned: false,
+  },
 ];
 
 export default function DragonShop({
