@@ -338,6 +338,39 @@ export default function Game({ user, onLogout }: GameProps) {
                 }}></div>
               </div>
               
+              {currentDragonId === 'dragon-6' && (
+                <>
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-3 h-3 rounded-full animate-twinkle"
+                      style={{
+                        left: `${10 + (i * 7)}%`,
+                        top: `${5 + Math.sin(i) * 15}%`,
+                        background: ['#ff0000', '#00ff00', '#ffff00', '#0000ff'][i % 4],
+                        boxShadow: `0 0 10px ${['#ff0000', '#00ff00', '#ffff00', '#0000ff'][i % 4]}`,
+                        animation: `twinkle ${1 + (i % 3) * 0.5}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.2}s`
+                      }}
+                    />
+                  ))}
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={`bottom-${i}`}
+                      className="absolute w-3 h-3 rounded-full animate-twinkle"
+                      style={{
+                        left: `${10 + (i * 7)}%`,
+                        bottom: `${5 + Math.sin(i) * 15}%`,
+                        background: ['#ff0000', '#00ff00', '#ffff00', '#0000ff'][i % 4],
+                        boxShadow: `0 0 10px ${['#ff0000', '#00ff00', '#ffff00', '#0000ff'][i % 4]}`,
+                        animation: `twinkle ${1 + (i % 3) * 0.5}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.2}s`
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+              
               <img 
                 src={currentDragon.image}
                 alt={currentDragon.name}
