@@ -251,40 +251,62 @@ export default function Game({ user, onLogout }: GameProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-900 via-indigo-900 to-black text-white">
-      <GameHeader
-        username={user.username}
-        level={level}
-        coins={coins}
-        coinsPerSecond={coinsPerSecond}
-        passiveIncomeIndicator={passiveIncomeIndicator}
-        onShopClick={() => setShowShop(true)}
-        onLogout={handleLogout}
-        formatNumber={formatNumber}
-      />
-
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6 p-6">
-        <DragonClicker
-          currentDragon={currentDragon}
-          currentDragonId={currentDragonId}
-          energy={energy}
-          maxEnergy={maxEnergy}
-          energyRestoreTime={energyRestoreTime}
-          timeRemaining={timeRemaining}
-          coinsPerTap={coinsPerTap}
-          clickAnimation={clickAnimation}
-          dragonChangeAnimation={dragonChangeAnimation}
-          floatingTexts={floatingTexts}
-          snowflakes={snowflakes}
-          onDragonClick={handleDragonClick}
-        />
-
-        <UpgradesList
-          upgrades={upgrades}
+    <div className="min-h-screen bg-gradient-to-b from-purple-900 via-indigo-900 to-black text-white relative overflow-hidden">
+      {currentDragonId === 'dragon-6' && (
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute text-white opacity-80"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `-${Math.random() * 20}%`,
+                fontSize: `${10 + Math.random() * 10}px`,
+                animation: `backgroundSnowfall ${5 + Math.random() * 10}s linear infinite`,
+                animationDelay: `${Math.random() * 5}s`
+              }}
+            >
+              ❄️
+            </div>
+          ))}
+        </div>
+      )}
+      
+      <div className="relative z-10">
+        <GameHeader
+          username={user.username}
+          level={level}
           coins={coins}
-          onBuyUpgrade={handleBuyUpgrade}
+          coinsPerSecond={coinsPerSecond}
+          passiveIncomeIndicator={passiveIncomeIndicator}
+          onShopClick={() => setShowShop(true)}
+          onLogout={handleLogout}
           formatNumber={formatNumber}
         />
+
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6 p-6">
+          <DragonClicker
+            currentDragon={currentDragon}
+            currentDragonId={currentDragonId}
+            energy={energy}
+            maxEnergy={maxEnergy}
+            energyRestoreTime={energyRestoreTime}
+            timeRemaining={timeRemaining}
+            coinsPerTap={coinsPerTap}
+            clickAnimation={clickAnimation}
+            dragonChangeAnimation={dragonChangeAnimation}
+            floatingTexts={floatingTexts}
+            snowflakes={snowflakes}
+            onDragonClick={handleDragonClick}
+          />
+
+          <UpgradesList
+            upgrades={upgrades}
+            coins={coins}
+            onBuyUpgrade={handleBuyUpgrade}
+            formatNumber={formatNumber}
+          />
+        </div>
       </div>
     </div>
   );
