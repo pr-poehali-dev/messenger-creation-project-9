@@ -6,6 +6,7 @@ import GameHeader from '@/components/game/GameHeader';
 import DragonClicker from '@/components/game/DragonClicker';
 import UpgradesList from '@/components/game/UpgradesList';
 import PlayerProfile from '@/components/game/PlayerProfile';
+import GoldExchange from '@/components/game/GoldExchange';
 
 interface GameProps {
   user: User;
@@ -24,7 +25,9 @@ const DEFAULT_UPGRADES: Upgrade[] = [
 export default function Game({ user, onLogout }: GameProps) {
   const [showShop, setShowShop] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showGoldExchange, setShowGoldExchange] = useState(false);
   const [coins, setCoins] = useState(0);
+  const [goldCoins, setGoldCoins] = useState(0);
   const [totalCoins, setTotalCoins] = useState(0);
   const [coinsPerTap, setCoinsPerTap] = useState(1);
   const [coinsPerSecond, setCoinsPerSecond] = useState(0);
@@ -46,6 +49,7 @@ export default function Game({ user, onLogout }: GameProps) {
     const savedState = getGameState();
     if (savedState && savedState.userId === user.id) {
       setCoins(savedState.coins);
+      setGoldCoins(savedState.goldCoins || 0);
       setTotalCoins(savedState.totalCoins);
       setCoinsPerTap(savedState.coinsPerTap);
       setCoinsPerSecond(savedState.coinsPerSecond);
@@ -65,6 +69,7 @@ export default function Game({ user, onLogout }: GameProps) {
     const state: GameState = {
       userId: user.id,
       coins,
+      goldCoins,
       totalCoins,
       coinsPerTap,
       coinsPerSecond,
@@ -78,7 +83,7 @@ export default function Game({ user, onLogout }: GameProps) {
       ownedDragons,
     };
     saveGameState(state);
-  }, [user.id, coins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons]);
+  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -249,6 +254,14 @@ export default function Game({ user, onLogout }: GameProps) {
     }
   };
 
+  const handleGoldExchange = (amount: number) => {
+    const cost = amount * 15000000000;
+    if (coins >= cost) {
+      setCoins(prev => prev - cost);
+      setGoldCoins(prev => prev + amount);
+    }
+  };
+
   const handleLogout = () => {
     removeUser();
     onLogout();
@@ -332,6 +345,16 @@ export default function Game({ user, onLogout }: GameProps) {
           formatNumber={formatNumber}
         />
       )}
+
+      {showGoldExchange && (
+        <GoldExchange
+          coins={coins}
+          goldCoins={goldCoins}
+          onExchange={handleGoldExchange}
+          onClose={() => setShowGoldExchange(false)}
+          formatNumber={formatNumber}
+        />
+      )}
       
       {isNewYearDragon && (
         <div className="fixed inset-0 pointer-events-none z-0">
@@ -358,10 +381,12 @@ export default function Game({ user, onLogout }: GameProps) {
           username={user.username}
           level={level}
           coins={coins}
+          goldCoins={goldCoins}
           coinsPerSecond={coinsPerSecond}
           passiveIncomeIndicator={passiveIncomeIndicator}
           onShopClick={() => setShowShop(true)}
           onProfileClick={() => setShowProfile(true)}
+          onGoldClick={() => setShowGoldExchange(true)}
           onLogout={handleLogout}
           formatNumber={formatNumber}
         />

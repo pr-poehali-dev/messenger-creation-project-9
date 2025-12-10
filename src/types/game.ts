@@ -18,6 +18,7 @@ export interface Dragon {
 export interface GameState {
   userId: string;
   coins: number;
+  goldCoins?: number;
   totalCoins: number;
   coinsPerTap: number;
   coinsPerSecond: number;

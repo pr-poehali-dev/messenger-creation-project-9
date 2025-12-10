@@ -4,10 +4,12 @@ interface GameHeaderProps {
   username: string;
   level: number;
   coins: number;
+  goldCoins: number;
   coinsPerSecond: number;
   passiveIncomeIndicator: boolean;
   onShopClick: () => void;
   onProfileClick: () => void;
+  onGoldClick: () => void;
   onLogout: () => void;
   formatNumber: (num: number) => string;
 }
@@ -16,10 +18,12 @@ export default function GameHeader({
   username,
   level,
   coins,
+  goldCoins,
   coinsPerSecond,
   passiveIncomeIndicator,
   onShopClick,
   onProfileClick,
+  onGoldClick,
   onLogout,
   formatNumber
 }: GameHeaderProps) {
@@ -46,6 +50,17 @@ export default function GameHeader({
           >
             <Icon name="ShoppingBag" size={20} />
             Магазин
+          </button>
+          <button
+            onClick={onGoldClick}
+            className="relative px-4 py-2 bg-gradient-to-r from-amber-600 to-yellow-600 border-2 border-yellow-500/50 rounded-lg hover:from-amber-500 hover:to-yellow-500 transition-all flex items-center gap-2 font-bold shadow-lg shadow-yellow-500/30"
+          >
+            <img 
+              src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"
+              alt="Gold"
+              className="w-6 h-6"
+            />
+            <span className="text-white">{goldCoins}</span>
           </button>
           <div className="text-right relative">
             <div className="text-3xl font-bold text-yellow-400">
