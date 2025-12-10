@@ -5,6 +5,7 @@ import DragonShop, { DRAGONS } from '@/pages/DragonShop';
 import GameHeader from '@/components/game/GameHeader';
 import DragonClicker from '@/components/game/DragonClicker';
 import UpgradesList from '@/components/game/UpgradesList';
+import PlayerProfile from '@/components/game/PlayerProfile';
 
 interface GameProps {
   user: User;
@@ -22,6 +23,7 @@ const DEFAULT_UPGRADES: Upgrade[] = [
 
 export default function Game({ user, onLogout }: GameProps) {
   const [showShop, setShowShop] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [coins, setCoins] = useState(0);
   const [totalCoins, setTotalCoins] = useState(0);
   const [coinsPerTap, setCoinsPerTap] = useState(1);
@@ -236,6 +238,8 @@ export default function Game({ user, onLogout }: GameProps) {
   };
 
   const currentDragon = DRAGONS.find(d => d.id === currentDragonId) || DRAGONS[0];
+  const upgradesOwned = upgrades.reduce((sum, u) => sum + u.owned, 0);
+  const isNewYearDragon = currentDragonId === 'dragon-6';
 
   if (showShop) {
     return (
@@ -251,8 +255,30 @@ export default function Game({ user, onLogout }: GameProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-900 via-indigo-900 to-black text-white relative overflow-hidden">
-      {currentDragonId === 'dragon-6' && (
+    <div className={`min-h-screen text-white relative overflow-hidden ${
+      isNewYearDragon 
+        ? 'bg-gradient-to-b from-blue-900 via-cyan-900 to-indigo-950'
+        : 'bg-gradient-to-b from-purple-900 via-indigo-900 to-black'
+    }`}>
+      {showProfile && (
+        <PlayerProfile
+          username={user.username}
+          level={level}
+          totalCoins={totalCoins}
+          coins={coins}
+          coinsPerTap={coinsPerTap}
+          coinsPerSecond={coinsPerSecond}
+          energy={energy}
+          maxEnergy={maxEnergy}
+          currentDragonName={currentDragon.name}
+          ownedDragonsCount={ownedDragons.length}
+          upgradesOwned={upgradesOwned}
+          onClose={() => setShowProfile(false)}
+          formatNumber={formatNumber}
+        />
+      )}
+      
+      {isNewYearDragon && (
         <div className="fixed inset-0 pointer-events-none z-0">
           {[...Array(50)].map((_, i) => (
             <div
@@ -280,6 +306,7 @@ export default function Game({ user, onLogout }: GameProps) {
           coinsPerSecond={coinsPerSecond}
           passiveIncomeIndicator={passiveIncomeIndicator}
           onShopClick={() => setShowShop(true)}
+          onProfileClick={() => setShowProfile(true)}
           onLogout={handleLogout}
           formatNumber={formatNumber}
         />
