@@ -36,31 +36,32 @@ export default function GameHeader({
           </h1>
           <p className="text-xs sm:text-sm text-purple-300">Игрок: {username} • Уровень {level}</p>
         </div>
-        <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end flex-wrap">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           <button
             onClick={onProfileClick}
-            className="px-3 py-2 sm:px-4 bg-gradient-to-r from-purple-600 to-pink-600 border border-purple-500/30 rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all flex items-center gap-1 sm:gap-2 font-bold text-sm sm:text-base"
+            className="p-2 bg-gradient-to-r from-purple-600 to-pink-600 border border-purple-500/30 rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all"
+            title="Профиль"
           >
-            <Icon name="User" size={18} />
-            <span className="hidden sm:inline">Профиль</span>
+            <Icon name="User" size={20} />
           </button>
           <button
             onClick={onShopClick}
-            className="px-3 py-2 sm:px-4 bg-gradient-to-r from-yellow-600 to-orange-600 border border-yellow-500/30 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all flex items-center gap-1 sm:gap-2 font-bold text-sm sm:text-base"
+            className="p-2 bg-gradient-to-r from-yellow-600 to-orange-600 border border-yellow-500/30 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all"
+            title="Магазин"
           >
-            <Icon name="ShoppingBag" size={18} />
-            <span className="hidden sm:inline">Магазин</span>
+            <Icon name="ShoppingBag" size={20} />
           </button>
           <button
             onClick={onGoldClick}
-            className="relative px-2 py-2 sm:px-4 bg-gradient-to-r from-amber-600 to-yellow-600 border-2 border-yellow-500/50 rounded-lg hover:from-amber-500 hover:to-yellow-500 transition-all flex items-center gap-1 sm:gap-2 font-bold shadow-lg shadow-yellow-500/30 text-sm sm:text-base"
+            className="relative px-2 py-1.5 bg-gradient-to-r from-amber-600 to-yellow-600 border-2 border-yellow-500/50 rounded-lg hover:from-amber-500 hover:to-yellow-500 transition-all flex items-center gap-1 font-bold shadow-lg shadow-yellow-500/30"
+            title="Золотые монеты"
           >
             <img 
               src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"
               alt="Gold"
-              className="w-5 h-5 sm:w-6 sm:h-6"
+              className="w-5 h-5"
             />
-            <span className="text-white">{goldCoins}</span>
+            <span className="text-white text-sm">{goldCoins}</span>
           </button>
           <div className="text-right relative">
             <div className="text-2xl sm:text-3xl font-bold text-yellow-400">
@@ -79,8 +80,9 @@ export default function GameHeader({
           <button
             onClick={onLogout}
             className="p-2 bg-red-600/20 border border-red-500/30 rounded-lg hover:bg-red-600/30 transition-colors"
+            title="Выход"
           >
-            <Icon name="LogOut" size={18} />
+            <Icon name="LogOut" size={20} />
           </button>
         </div>
       </div>
