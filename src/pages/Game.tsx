@@ -151,11 +151,24 @@ export default function Game({ user, onLogout }: GameProps) {
         setTimeout(() => {
           setSnowflakes(prev => prev.filter(s => !newSnowflakes.find(ns => ns.id === s.id)));
         }, 1500);
+        
+        const bellAudio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
+        const ctx = new AudioContext();
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        oscillator.frequency.setValueAtTime(1046.5, ctx.currentTime);
+        oscillator.frequency.setValueAtTime(1318.5, ctx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + 0.5);
+      } else {
+        const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVqzn77BfGAg+ltzy0YMwBSZ9y/DVijYIHGu87+Wc');
+        audio.volume = 0.3;
+        audio.play().catch(() => {});
       }
-      
-      const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVqzn77BfGAg+ltzy0YMwBSZ9y/DVijYIHGu87+Wc');
-      audio.volume = 0.3;
-      audio.play().catch(() => {});
       
       setTimeout(() => setClickAnimation(false), 100);
       setTimeout(() => {
