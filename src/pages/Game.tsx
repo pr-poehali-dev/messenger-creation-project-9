@@ -29,7 +29,9 @@ export default function Game({ user, onLogout }: GameProps) {
   const [maxEnergy, setMaxEnergy] = useState(1000);
   const [level, setLevel] = useState(1);
   const [clickAnimation, setClickAnimation] = useState(false);
-  const [floatingTexts, setFloatingTexts] = useState<Array<{ id: number; value: number; x: number; y: number }>>([]);
+  const [floatingTexts, setFloatingTexts] = useState<Array<{ id: number; value: number; x: number; y: number; isNewYear?: boolean }>>([]);
+  const [snowflakes, setSnowflakes] = useState<Array<{ id: number; x: number; y: number; size: number }>>([]);
+  const [passiveIncomeIndicator, setPassiveIncomeIndicator] = useState(false);
   const [upgrades, setUpgrades] = useState<Upgrade[]>(DEFAULT_UPGRADES);
   const [energyRestoreTime, setEnergyRestoreTime] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<string>('');
@@ -80,6 +82,8 @@ export default function Game({ user, onLogout }: GameProps) {
       if (coinsPerSecond > 0 && !energyRestoreTime) {
         setCoins(prev => prev + coinsPerSecond);
         setTotalCoins(prev => prev + coinsPerSecond);
+        setPassiveIncomeIndicator(true);
+        setTimeout(() => setPassiveIncomeIndicator(false), 800);
       }
     }, 1000);
     return () => clearInterval(interval);
@@ -126,13 +130,28 @@ export default function Game({ user, onLogout }: GameProps) {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       
+      const isNewYearDragon = currentDragonId === 'dragon-6';
       const newText = {
         id: Date.now(),
         value: coinsPerTap,
         x,
-        y
+        y,
+        isNewYear: isNewYearDragon
       };
       setFloatingTexts(prev => [...prev, newText]);
+      
+      if (isNewYearDragon) {
+        const newSnowflakes = Array.from({ length: 8 }, (_, i) => ({
+          id: Date.now() + i,
+          x: x + (Math.random() - 0.5) * 100,
+          y: y + (Math.random() - 0.5) * 100,
+          size: 10 + Math.random() * 15
+        }));
+        setSnowflakes(prev => [...prev, ...newSnowflakes]);
+        setTimeout(() => {
+          setSnowflakes(prev => prev.filter(s => !newSnowflakes.find(ns => ns.id === s.id)));
+        }, 1500);
+      }
       
       const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVqzn77BfGAg+ltzy0YMwBSZ9y/DVijYIHGu87+Wc');
       audio.volume = 0.3;
@@ -235,13 +254,18 @@ export default function Game({ user, onLogout }: GameProps) {
               <Icon name="ShoppingBag" size={20} />
               Магазин
             </button>
-            <div className="text-right">
+            <div className="text-right relative">
               <div className="text-3xl font-bold text-yellow-400">
                 {formatNumber(coins)}
               </div>
               <div className="text-sm text-purple-300 flex items-center justify-end gap-1">
                 <Icon name="Zap" size={14} />
                 {coinsPerSecond}/сек
+                {passiveIncomeIndicator && coinsPerSecond > 0 && (
+                  <span className="absolute -top-2 right-0 text-green-400 font-bold text-xs animate-pulse">
+                    +{coinsPerSecond}
+                  </span>
+                )}
               </div>
             </div>
             <button
@@ -330,14 +354,29 @@ export default function Game({ user, onLogout }: GameProps) {
                     animation: 'floatUp 1s ease-out forwards'
                   }}
                 >
-                  <div className="text-3xl font-bold text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]"
+                  <div className={`text-3xl font-bold ${text.isNewYear ? 'text-white' : 'text-yellow-400'} drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]`}
                     style={{ 
-                      WebkitTextStroke: '1px rgba(255,100,0,0.8)',
-                      filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.8))'
+                      WebkitTextStroke: text.isNewYear ? '1px rgba(0,200,255,0.8)' : '1px rgba(255,100,0,0.8)',
+                      filter: text.isNewYear ? 'drop-shadow(0 0 10px rgba(0,200,255,0.8))' : 'drop-shadow(0 0 10px rgba(255,215,0,0.8))'
                     }}
                   >
-                    +{text.value}
+                    {text.isNewYear && '❄️'}+{text.value}{text.isNewYear && '🎄'}
                   </div>
+                </div>
+              ))}
+              
+              {snowflakes.map(flake => (
+                <div
+                  key={flake.id}
+                  className="absolute pointer-events-none z-20 animate-snowfall"
+                  style={{
+                    left: flake.x,
+                    top: flake.y,
+                    fontSize: flake.size,
+                    animation: 'snowfall 1.5s ease-out forwards'
+                  }}
+                >
+                  ❄️
                 </div>
               ))}
             </button>
