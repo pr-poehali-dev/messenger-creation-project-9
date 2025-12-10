@@ -16,9 +16,14 @@ export default function UpgradesList({
 }: UpgradesListProps) {
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-        Улучшения
-      </h2>
+      <div>
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          Улучшения
+        </h2>
+        <p className="text-sm text-purple-300/80 mt-1">
+          Пассивный доход — монеты начисляются автоматически
+        </p>
+      </div>
       
       <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
         {upgrades.map(upgrade => {
