@@ -47,18 +47,25 @@ export default function GameHeader({
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           <button
-            onClick={onProfileClick}
-            className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 border-2 border-blue-300/50 rounded-lg hover:from-blue-400 hover:to-purple-500 transition-all shadow-lg shadow-blue-500/30"
-            title="Профиль"
-          >
-            <Icon name="User" size={20} />
-          </button>
-          <button
             onClick={onShopClick}
             className="p-2 bg-gradient-to-br from-red-500 to-green-600 border-2 border-green-300/50 rounded-lg hover:from-red-400 hover:to-green-500 transition-all shadow-lg shadow-green-500/30"
             title="Магазин"
           >
             <Icon name="ShoppingBag" size={20} />
+          </button>
+          <button
+            onClick={onQuestClick}
+            className="p-2 bg-purple-600/40 border-2 border-purple-400/50 rounded-lg hover:bg-purple-500/50 transition-all shadow-lg shadow-purple-500/30"
+            title="Квесты"
+          >
+            <Icon name="Trophy" size={20} />
+          </button>
+          <button
+            onClick={onProfileClick}
+            className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 border-2 border-blue-300/50 rounded-lg hover:from-blue-400 hover:to-purple-500 transition-all shadow-lg shadow-blue-500/30"
+            title="Профиль"
+          >
+            <Icon name="User" size={20} />
           </button>
           <button
             onClick={onGoldClick}
@@ -86,13 +93,6 @@ export default function GameHeader({
               )}
             </div>
           </div>
-          <button
-            onClick={onQuestClick}
-            className="p-2 bg-purple-600/40 border-2 border-purple-400/50 rounded-lg hover:bg-purple-500/50 transition-all shadow-lg shadow-purple-500/30"
-            title="Квесты"
-          >
-            <Icon name="Trophy" size={20} />
-          </button>
           <button
             onClick={onLogout}
             className="p-2 bg-red-600/40 border-2 border-red-400/50 rounded-lg hover:bg-red-500/50 transition-all shadow-lg shadow-red-500/30"
