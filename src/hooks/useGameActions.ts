@@ -375,6 +375,52 @@ export function useGameActions({
             oscillator.start(ctx.currentTime);
             oscillator.stop(ctx.currentTime + 1.5);
             break;
+          case 'dragon-27':
+            const cosmicStars = Array.from({ length: 45 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 280,
+              y: y + (Math.random() - 0.5) * 280,
+              size: 30 + Math.random() * 38
+            }));
+            setSnowflakes(prev => [...prev, ...cosmicStars]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !cosmicStars.find(ns => ns.id === s.id))), 2200);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(174.61, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(261.63, ctx.currentTime + 0.12);
+            oscillator.frequency.setValueAtTime(392, ctx.currentTime + 0.24);
+            oscillator.frequency.setValueAtTime(523.25, ctx.currentTime + 0.36);
+            oscillator.frequency.setValueAtTime(698.46, ctx.currentTime + 0.48);
+            oscillator.frequency.setValueAtTime(880, ctx.currentTime + 0.6);
+            oscillator.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.72);
+            gainNode.gain.setValueAtTime(0.58, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.3);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 1.3);
+            break;
+          case 'dragon-28':
+            const pinkRoses = Array.from({ length: 55 }, (_, i) => ({
+              id: Date.now() + i,
+              x: x + (Math.random() - 0.5) * 320,
+              y: y + (Math.random() - 0.5) * 320,
+              size: 34 + Math.random() * 42
+            }));
+            setSnowflakes(prev => [...prev, ...pinkRoses]);
+            setTimeout(() => setSnowflakes(prev => prev.filter(s => !pinkRoses.find(ns => ns.id === s.id))), 2800);
+            oscillator.type = 'triangle';
+            oscillator.frequency.setValueAtTime(261.63, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(329.63, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(392, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(523.25, ctx.currentTime + 0.3);
+            oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.4);
+            oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.5);
+            oscillator.frequency.setValueAtTime(1046.5, ctx.currentTime + 0.6);
+            oscillator.frequency.setValueAtTime(1318.51, ctx.currentTime + 0.7);
+            oscillator.frequency.setValueAtTime(1567.98, ctx.currentTime + 0.8);
+            gainNode.gain.setValueAtTime(0.62, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.6);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 1.6);
+            break;
           default:
             const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVqzn77BfGAg+ltzy0YMwBSZ9y/DVijYIHGu87+Wc');
             audio.volume = 0.3;

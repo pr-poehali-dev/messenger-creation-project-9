@@ -253,6 +253,25 @@ export const DRAGONS: Dragon[] = [
     maxEnergy: 750000,
     owned: false,
   },
+  {
+    id: 'dragon-27',
+    name: 'Звёздный страж',
+    image: 'https://cdn.poehali.dev/files/459.jpeg',
+    cost: 2500000000,
+    coinsPerTap: 40000,
+    maxEnergy: 180000,
+    owned: false,
+  },
+  {
+    id: 'dragon-28',
+    name: 'Розовая мечта',
+    image: 'https://cdn.poehali.dev/files/752.jpeg',
+    cost: 0,
+    goldCost: 750,
+    coinsPerTap: 150000,
+    maxEnergy: 1000000,
+    owned: false,
+  },
 ];
 
 export default function DragonShop({

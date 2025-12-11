@@ -98,6 +98,10 @@ export default function Game({ user, onLogout }: GameProps) {
         ? 'bg-gradient-to-b from-red-950 via-orange-900 to-black'
         : gameState.currentDragonId === 'dragon-26'
         ? 'bg-gradient-to-b from-red-900 via-orange-950 to-black'
+        : gameState.currentDragonId === 'dragon-27'
+        ? 'bg-gradient-to-b from-cyan-950 via-blue-950 to-black'
+        : gameState.currentDragonId === 'dragon-28'
+        ? 'bg-gradient-to-b from-pink-950 via-rose-900 to-purple-950'
         : 'bg-gradient-to-b from-purple-900 via-indigo-900 to-black'
     }`}>
       {showProfile && (
