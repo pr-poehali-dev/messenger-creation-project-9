@@ -11,6 +11,10 @@ export const DEFAULT_UPGRADES: Upgrade[] = [
   { id: '5', name: 'Драконий замок', cost: 50000, profit: 500, owned: 0, icon: 'Castle' },
   { id: '6', name: 'Магический портал', cost: 200000, profit: 2000, owned: 0, icon: 'Sparkles' },
   { id: '7', name: 'Монеты за золото', cost: 0, goldCost: 100, profit: 1000, owned: 0, icon: 'Coins' },
+  { id: '8', name: 'Золотая империя', cost: 0, goldCost: 250, profit: 3000, owned: 0, icon: 'Crown' },
+  { id: '9', name: 'Древний артефакт', cost: 0, goldCost: 500, profit: 7500, owned: 0, icon: 'Scroll' },
+  { id: '10', name: 'Космический реактор', cost: 0, goldCost: 1000, profit: 20000, owned: 0, icon: 'Zap' },
+  { id: '11', name: 'Машина времени', cost: 0, goldCost: 2500, profit: 60000, owned: 0, icon: 'Clock' },
 ];
 
 export function useGameState(user: User) {
