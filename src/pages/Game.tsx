@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { User } from '@/types/game';
 import { removeUser } from '@/utils/storage';
-import DragonShop, { DRAGONS } from '@/pages/DragonShop';
+import DragonShop from '@/pages/DragonShop';
+import { DRAGONS } from '@/data/dragons';
 import GameHeader from '@/components/game/GameHeader';
 import DragonClicker from '@/components/game/DragonClicker';
 import UpgradesList from '@/components/game/UpgradesList';

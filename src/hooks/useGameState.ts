@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User, GameState, Upgrade } from '@/types/game';
 import { saveGameState, getGameState } from '@/utils/storage';
-import { DRAGONS } from '@/pages/DragonShop';
+import { DRAGONS } from '@/data/dragons';
 
 export const DEFAULT_UPGRADES: Upgrade[] = [
   { id: '1', name: 'Огненное дыхание', cost: 100, profit: 1, owned: 0, icon: 'Flame' },

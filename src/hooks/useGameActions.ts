@@ -1,5 +1,5 @@
 import { Dragon, Upgrade } from '@/types/game';
-import { DRAGONS } from '@/pages/DragonShop';
+import { DRAGONS } from '@/data/dragons';
 
 interface UseGameActionsProps {
   energy: number;
