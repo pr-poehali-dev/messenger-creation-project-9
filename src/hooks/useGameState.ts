@@ -30,6 +30,9 @@ export function useGameState(user: User) {
   const [currentDragonId, setCurrentDragonId] = useState('dragon-1');
   const [ownedDragons, setOwnedDragons] = useState<string[]>(['dragon-1']);
   const [dragonChangeAnimation, setDragonChangeAnimation] = useState(false);
+  const [totalClicks, setTotalClicks] = useState(0);
+  const [totalEnergyUsed, setTotalEnergyUsed] = useState(0);
+  const [totalUpgrades, setTotalUpgrades] = useState(0);
 
   useEffect(() => {
     const savedState = getGameState();
@@ -45,6 +48,9 @@ export function useGameState(user: User) {
       setUpgrades(savedState.upgrades);
       setCurrentDragonId(savedState.currentDragonId || 'dragon-1');
       setOwnedDragons(savedState.ownedDragons || ['dragon-1']);
+      setTotalClicks(savedState.totalClicks || 0);
+      setTotalEnergyUsed(savedState.totalEnergyUsed || 0);
+      setTotalUpgrades(savedState.totalUpgrades || 0);
       if (savedState.energyRestoreTime) {
         setEnergyRestoreTime(savedState.energyRestoreTime);
       }
@@ -67,9 +73,12 @@ export function useGameState(user: User) {
       energyRestoreTime,
       currentDragonId,
       ownedDragons,
+      totalClicks,
+      totalEnergyUsed,
+      totalUpgrades,
     };
     saveGameState(state);
-  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons]);
+  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons, totalClicks, totalEnergyUsed, totalUpgrades]);
 
   return {
     coins,
@@ -108,5 +117,11 @@ export function useGameState(user: User) {
     setOwnedDragons,
     dragonChangeAnimation,
     setDragonChangeAnimation,
+    totalClicks,
+    setTotalClicks,
+    totalEnergyUsed,
+    setTotalEnergyUsed,
+    totalUpgrades,
+    setTotalUpgrades,
   };
 }

@@ -31,6 +31,9 @@ export interface GameState {
   energyRestoreTime?: number | null;
   currentDragonId: string;
   ownedDragons: string[];
+  totalClicks?: number;
+  totalEnergyUsed?: number;
+  totalUpgrades?: number;
 }
 
 export interface Upgrade {

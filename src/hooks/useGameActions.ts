@@ -24,6 +24,9 @@ interface UseGameActionsProps {
   setCurrentDragonId: React.Dispatch<React.SetStateAction<string>>;
   setCoinsPerTap: React.Dispatch<React.SetStateAction<number>>;
   setMaxEnergy: React.Dispatch<React.SetStateAction<number>>;
+  setTotalClicks: React.Dispatch<React.SetStateAction<number>>;
+  setTotalEnergyUsed: React.Dispatch<React.SetStateAction<number>>;
+  setTotalUpgrades: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export function useGameActions({
@@ -49,6 +52,9 @@ export function useGameActions({
   setCurrentDragonId,
   setCoinsPerTap,
   setMaxEnergy,
+  setTotalClicks,
+  setTotalEnergyUsed,
+  setTotalUpgrades,
 }: UseGameActionsProps) {
   const handleDragonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (energy >= 10 && !energyRestoreTime) {
@@ -57,6 +63,8 @@ export function useGameActions({
       setTotalCoins(prev => prev + coinsPerTap);
       setEnergy(newEnergy);
       setClickAnimation(true);
+      setTotalClicks(prev => prev + 1);
+      setTotalEnergyUsed(prev => prev + 10);
       
       if (newEnergy === 0) {
         const restoreTime = Date.now() + (5 * 60 * 1000);
@@ -448,6 +456,7 @@ export function useGameActions({
             : u
         )
       );
+      setTotalUpgrades(prev => prev + 1);
     }
   };
 
@@ -472,6 +481,7 @@ export function useGameActions({
         setCoins(prev => prev - dragon.cost);
       }
       setOwnedDragons(prev => [...prev, dragon.id]);
+      setTotalUpgrades(prev => prev + 1);
       
       setDragonChangeAnimation(true);
       setTimeout(() => {

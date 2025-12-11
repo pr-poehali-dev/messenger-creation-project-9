@@ -10,6 +10,7 @@ interface GameHeaderProps {
   onShopClick: () => void;
   onProfileClick: () => void;
   onGoldClick: () => void;
+  onQuestClick: () => void;
   onLogout: () => void;
   formatNumber: (num: number) => string;
 }
@@ -24,6 +25,7 @@ export default function GameHeader({
   onShopClick,
   onProfileClick,
   onGoldClick,
+  onQuestClick,
   onLogout,
   formatNumber
 }: GameHeaderProps) {
@@ -84,6 +86,13 @@ export default function GameHeader({
               )}
             </div>
           </div>
+          <button
+            onClick={onQuestClick}
+            className="p-2 bg-purple-600/40 border-2 border-purple-400/50 rounded-lg hover:bg-purple-500/50 transition-all shadow-lg shadow-purple-500/30"
+            title="Квесты"
+          >
+            <Icon name="Trophy" size={20} />
+          </button>
           <button
             onClick={onLogout}
             className="p-2 bg-red-600/40 border-2 border-red-400/50 rounded-lg hover:bg-red-500/50 transition-all shadow-lg shadow-red-500/30"

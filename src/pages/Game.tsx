@@ -7,6 +7,7 @@ import DragonClicker from '@/components/game/DragonClicker';
 import UpgradesList from '@/components/game/UpgradesList';
 import PlayerProfile from '@/components/game/PlayerProfile';
 import GoldExchange from '@/components/game/GoldExchange';
+import QuestSystem from '@/components/game/QuestSystem';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameTimers } from '@/hooks/useGameTimers';
 import { useGameActions } from '@/hooks/useGameActions';
@@ -20,6 +21,7 @@ export default function Game({ user, onLogout }: GameProps) {
   const [showShop, setShowShop] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showGoldExchange, setShowGoldExchange] = useState(false);
+  const [showQuests, setShowQuests] = useState(false);
 
   const gameState = useGameState(user);
 
@@ -60,6 +62,9 @@ export default function Game({ user, onLogout }: GameProps) {
     setCurrentDragonId: gameState.setCurrentDragonId,
     setCoinsPerTap: gameState.setCoinsPerTap,
     setMaxEnergy: gameState.setMaxEnergy,
+    setTotalClicks: gameState.setTotalClicks,
+    setTotalEnergyUsed: gameState.setTotalEnergyUsed,
+    setTotalUpgrades: gameState.setTotalUpgrades,
   });
 
   const handleLogout = () => {
@@ -131,6 +136,19 @@ export default function Game({ user, onLogout }: GameProps) {
           formatNumber={formatNumber}
         />
       )}
+
+      {showQuests && (
+        <QuestSystem
+          onClose={() => setShowQuests(false)}
+          totalClicks={gameState.totalClicks}
+          totalCoins={gameState.totalCoins}
+          totalEnergyUsed={gameState.totalEnergyUsed}
+          totalUpgrades={gameState.totalUpgrades}
+          totalDragons={gameState.ownedDragons.length}
+          goldCoins={gameState.goldCoins}
+          onRewardClaimed={(goldAmount) => gameState.setGoldCoins(prev => prev + goldAmount)}
+        />
+      )}
       
       {gameState.currentDragonId === 'dragon-6' && (
         <div className="fixed inset-0 pointer-events-none z-0">
@@ -163,6 +181,7 @@ export default function Game({ user, onLogout }: GameProps) {
           onShopClick={() => setShowShop(true)}
           onProfileClick={() => setShowProfile(true)}
           onGoldClick={() => setShowGoldExchange(true)}
+          onQuestClick={() => setShowQuests(true)}
           onLogout={handleLogout}
           formatNumber={formatNumber}
         />
