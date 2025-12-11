@@ -10,6 +10,7 @@ interface PlayerStatsProps {
   currentDragonName: string;
   ownedDragonsCount: number;
   upgradesOwned: number;
+  maxCombo: number;
   formatNumber: (num: number) => string;
 }
 
@@ -23,6 +24,7 @@ export default function PlayerStats({
   currentDragonName,
   ownedDragonsCount,
   upgradesOwned,
+  maxCombo,
   formatNumber
 }: PlayerStatsProps) {
   return (
@@ -101,15 +103,20 @@ export default function PlayerStats({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-xl p-3 sm:p-4 text-center">
           <div className="text-2xl sm:text-3xl font-bold text-purple-400 mb-1">{ownedDragonsCount}</div>
-          <div className="text-xs sm:text-sm text-purple-300">Драконов куплено</div>
+          <div className="text-xs sm:text-sm text-purple-300">Драконов</div>
         </div>
 
         <div className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30 rounded-xl p-3 sm:p-4 text-center">
           <div className="text-2xl sm:text-3xl font-bold text-cyan-400 mb-1">{upgradesOwned}</div>
-          <div className="text-xs sm:text-sm text-cyan-300">Улучшений куплено</div>
+          <div className="text-xs sm:text-sm text-cyan-300">Улучшений</div>
+        </div>
+
+        <div className="bg-gradient-to-r from-orange-600/20 to-red-600/20 border border-orange-500/30 rounded-xl p-3 sm:p-4 text-center">
+          <div className="text-2xl sm:text-3xl font-bold text-orange-400 mb-1">{maxCombo}</div>
+          <div className="text-xs sm:text-sm text-orange-300">Макс комбо</div>
         </div>
       </div>
     </>

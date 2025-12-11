@@ -13,7 +13,8 @@ export function getAchievements(
   totalCoins: number,
   ownedDragonsCount: number,
   upgradesOwned: number,
-  level: number
+  level: number,
+  maxCombo: number = 0
 ): Achievement[] {
   return [
     {
@@ -95,6 +96,46 @@ export function getAchievements(
       goal: 10,
       unlocked: level >= 10,
       color: 'from-cyan-600 to-blue-600'
+    },
+    {
+      id: 9,
+      name: 'Начало комбо',
+      description: 'Набери комбо x10',
+      icon: 'Zap',
+      progress: Math.min(maxCombo, 10),
+      goal: 10,
+      unlocked: maxCombo >= 10,
+      color: 'from-yellow-500 to-orange-500'
+    },
+    {
+      id: 10,
+      name: 'Комбо-мастер',
+      description: 'Набери комбо x25',
+      icon: 'Flame',
+      progress: Math.min(maxCombo, 25),
+      goal: 25,
+      unlocked: maxCombo >= 25,
+      color: 'from-orange-500 to-red-500'
+    },
+    {
+      id: 11,
+      name: 'Комбо-легенда',
+      description: 'Набери комбо x50',
+      icon: 'Sparkles',
+      progress: Math.min(maxCombo, 50),
+      goal: 50,
+      unlocked: maxCombo >= 50,
+      color: 'from-red-500 to-pink-500'
+    },
+    {
+      id: 12,
+      name: 'Повелитель комбо',
+      description: 'Набери комбо x100',
+      icon: 'Trophy',
+      progress: Math.min(maxCombo, 100),
+      goal: 100,
+      unlocked: maxCombo >= 100,
+      color: 'from-purple-500 to-pink-600'
     }
   ];
 }

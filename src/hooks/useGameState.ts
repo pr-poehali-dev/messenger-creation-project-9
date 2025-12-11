@@ -36,6 +36,7 @@ export function useGameState(user: User) {
   const [totalUpgrades, setTotalUpgrades] = useState(0);
   const [comboCount, setComboCount] = useState(0);
   const [comboTimer, setComboTimer] = useState<number | null>(null);
+  const [maxCombo, setMaxCombo] = useState(0);
 
   useEffect(() => {
     const savedState = getGameState();
@@ -71,6 +72,7 @@ export function useGameState(user: User) {
       setTotalClicks(savedState.totalClicks || 0);
       setTotalEnergyUsed(savedState.totalEnergyUsed || 0);
       setTotalUpgrades(savedState.totalUpgrades || 0);
+      setMaxCombo(savedState.maxCombo || 0);
       if (savedState.energyRestoreTime) {
         setEnergyRestoreTime(savedState.energyRestoreTime);
       }
@@ -96,9 +98,10 @@ export function useGameState(user: User) {
       totalClicks,
       totalEnergyUsed,
       totalUpgrades,
+      maxCombo,
     };
     saveGameState(state);
-  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons, totalClicks, totalEnergyUsed, totalUpgrades]);
+  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons, totalClicks, totalEnergyUsed, totalUpgrades, maxCombo]);
 
   return {
     coins,
@@ -147,5 +150,7 @@ export function useGameState(user: User) {
     setComboCount,
     comboTimer,
     setComboTimer,
+    maxCombo,
+    setMaxCombo,
   };
 }

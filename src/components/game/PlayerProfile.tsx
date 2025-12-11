@@ -15,6 +15,7 @@ interface PlayerProfileProps {
   currentDragonName: string;
   ownedDragonsCount: number;
   upgradesOwned: number;
+  maxCombo: number;
   onClose: () => void;
   formatNumber: (num: number) => string;
 }
@@ -31,10 +32,11 @@ export default function PlayerProfile({
   currentDragonName,
   ownedDragonsCount,
   upgradesOwned,
+  maxCombo,
   onClose,
   formatNumber
 }: PlayerProfileProps) {
-  const achievements = getAchievements(totalCoins, ownedDragonsCount, upgradesOwned, level);
+  const achievements = getAchievements(totalCoins, ownedDragonsCount, upgradesOwned, level, maxCombo);
   const unlockedCount = achievements.filter(a => a.unlocked).length;
 
   return (
@@ -67,6 +69,7 @@ export default function PlayerProfile({
           currentDragonName={currentDragonName}
           ownedDragonsCount={ownedDragonsCount}
           upgradesOwned={upgradesOwned}
+          maxCombo={maxCombo}
           formatNumber={formatNumber}
         />
 

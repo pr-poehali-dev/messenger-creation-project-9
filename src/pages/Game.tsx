@@ -70,6 +70,8 @@ export default function Game({ user, onLogout }: GameProps) {
     setTotalUpgrades: gameState.setTotalUpgrades,
     setComboCount: gameState.setComboCount,
     setComboTimer: gameState.setComboTimer,
+    maxCombo: gameState.maxCombo,
+    setMaxCombo: gameState.setMaxCombo,
   });
 
   const handleLogout = () => {
@@ -127,6 +129,7 @@ export default function Game({ user, onLogout }: GameProps) {
           currentDragonName={currentDragon.name}
           ownedDragonsCount={gameState.ownedDragons.length}
           upgradesOwned={upgradesOwned}
+          maxCombo={gameState.maxCombo}
           onClose={() => setShowProfile(false)}
           formatNumber={formatNumber}
         />

@@ -11,6 +11,7 @@ interface UseGameActionsProps {
   ownedDragons: string[];
   comboCount: number;
   comboTimer: number | null;
+  maxCombo: number;
   setCoins: React.Dispatch<React.SetStateAction<number>>;
   setTotalCoins: React.Dispatch<React.SetStateAction<number>>;
   setEnergy: React.Dispatch<React.SetStateAction<number>>;
@@ -31,6 +32,7 @@ interface UseGameActionsProps {
   setTotalUpgrades: React.Dispatch<React.SetStateAction<number>>;
   setComboCount: React.Dispatch<React.SetStateAction<number>>;
   setComboTimer: React.Dispatch<React.SetStateAction<number | null>>;
+  setMaxCombo: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export function useGameActions({
@@ -43,6 +45,7 @@ export function useGameActions({
   ownedDragons,
   comboCount,
   comboTimer,
+  maxCombo,
   setCoins,
   setTotalCoins,
   setEnergy,
@@ -63,6 +66,7 @@ export function useGameActions({
   setTotalUpgrades,
   setComboCount,
   setComboTimer,
+  setMaxCombo,
 }: UseGameActionsProps) {
   const handleDragonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (energy >= 10 && !energyRestoreTime) {
@@ -94,6 +98,11 @@ export function useGameActions({
       setTotalClicks(prev => prev + 1);
       setTotalEnergyUsed(prev => prev + 10);
       setComboCount(newCombo);
+      
+      // Обновляем максимальное комбо
+      if (newCombo > maxCombo) {
+        setMaxCombo(newCombo);
+      }
       
       // Сброс комбо через 2 секунды без клика
       const timer = window.setTimeout(() => {

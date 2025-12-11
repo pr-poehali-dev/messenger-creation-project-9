@@ -37,6 +37,7 @@ export interface GameState {
   totalClicks?: number;
   totalEnergyUsed?: number;
   totalUpgrades?: number;
+  maxCombo?: number;
   previousDragonId?: string;
 }
 
