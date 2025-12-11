@@ -75,6 +75,117 @@ export default function DragonDisplay({
             ))}
           </>
         )}
+
+        {currentDragonId === 'dragon-30' && (
+          <>
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={`clock-${i}`}
+                className="absolute"
+                style={{
+                  left: `${15 + (i * 10)}%`,
+                  top: `${10 + Math.sin(i * 0.8) * 20}%`,
+                  width: '40px',
+                  height: '40px',
+                  animation: `float ${3 + (i % 2)}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.3}s`,
+                  opacity: 0.6,
+                }}
+              >
+                <div className="relative w-full h-full">
+                  <div className="absolute inset-0 rounded-full border-2 border-amber-400 bg-amber-900/30 backdrop-blur-sm" />
+                  <div 
+                    className="absolute top-1/2 left-1/2 w-0.5 h-3 bg-amber-300 origin-bottom"
+                    style={{
+                      transform: `translate(-50%, -100%) rotate(${i * 45}deg)`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+
+        {(currentDragonId === 'dragon-31' || currentDragonId === 'dragon-32') && (
+          <>
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={`snow-${i}`}
+                className="absolute animate-snowfall"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: '-10px',
+                  width: '8px',
+                  height: '8px',
+                  animation: `snowfall ${5 + Math.random() * 5}s linear infinite`,
+                  animationDelay: `${Math.random() * 5}s`,
+                }}
+              >
+                <div className="w-full h-full bg-white rounded-full opacity-80 blur-[1px]" 
+                  style={{
+                    boxShadow: '0 0 8px rgba(255,255,255,0.8)',
+                  }}
+                />
+              </div>
+            ))}
+            <div className="absolute inset-0 bg-gradient-radial from-cyan-500/20 via-transparent to-transparent animate-pulse" />
+          </>
+        )}
+
+        {currentDragonId === 'dragon-33' && (
+          <>
+            {[...Array(30)].map((_, i) => {
+              const colors = ['#ff0000', '#ff6600', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff'];
+              return (
+                <div
+                  key={`mosaic-${i}`}
+                  className="absolute animate-sparkle"
+                  style={{
+                    left: `${5 + (i * 3)}%`,
+                    top: `${10 + Math.sin(i * 0.5) * 30}%`,
+                    width: `${6 + Math.random() * 8}px`,
+                    height: `${6 + Math.random() * 8}px`,
+                    background: colors[i % colors.length],
+                    boxShadow: `0 0 15px ${colors[i % colors.length]}`,
+                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                    animation: `sparkle ${1.5 + (i % 3) * 0.5}s ease-in-out infinite`,
+                    animationDelay: `${i * 0.1}s`,
+                    opacity: 0.7,
+                  }}
+                />
+              );
+            })}
+            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-yellow-500/10 to-cyan-500/10" />
+          </>
+        )}
+
+        {currentDragonId === 'dragon-34' && (
+          <>
+            {[...Array(15)].map((_, i) => {
+              const petalColors = ['#ff69b4', '#ff1493', '#ff85c1', '#ffc0cb'];
+              return (
+                <div
+                  key={`petal-${i}`}
+                  className="absolute animate-float"
+                  style={{
+                    left: `${Math.random() * 90}%`,
+                    top: `${Math.random() * 90}%`,
+                    width: '12px',
+                    height: '12px',
+                    background: petalColors[i % petalColors.length],
+                    borderRadius: '50% 0% 50% 0%',
+                    transform: `rotate(${i * 24}deg)`,
+                    boxShadow: `0 0 10px ${petalColors[i % petalColors.length]}`,
+                    animation: `float ${4 + (i % 3)}s ease-in-out infinite`,
+                    animationDelay: `${i * 0.2}s`,
+                    opacity: 0.6,
+                  }}
+                />
+              );
+            })}
+            <div className="absolute inset-0 bg-gradient-to-t from-pink-500/20 via-transparent to-green-500/10" />
+          </>
+        )}
         
         <img 
           src={currentDragon.image}
