@@ -34,6 +34,8 @@ export function useGameState(user: User) {
   const [totalClicks, setTotalClicks] = useState(0);
   const [totalEnergyUsed, setTotalEnergyUsed] = useState(0);
   const [totalUpgrades, setTotalUpgrades] = useState(0);
+  const [comboCount, setComboCount] = useState(0);
+  const [comboTimer, setComboTimer] = useState<number | null>(null);
 
   useEffect(() => {
     const savedState = getGameState();
@@ -141,5 +143,9 @@ export function useGameState(user: User) {
     setTotalEnergyUsed,
     totalUpgrades,
     setTotalUpgrades,
+    comboCount,
+    setComboCount,
+    comboTimer,
+    setComboTimer,
   };
 }

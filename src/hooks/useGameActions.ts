@@ -9,6 +9,8 @@ interface UseGameActionsProps {
   coins: number;
   goldCoins: number;
   ownedDragons: string[];
+  comboCount: number;
+  comboTimer: number | null;
   setCoins: React.Dispatch<React.SetStateAction<number>>;
   setTotalCoins: React.Dispatch<React.SetStateAction<number>>;
   setEnergy: React.Dispatch<React.SetStateAction<number>>;
@@ -27,6 +29,8 @@ interface UseGameActionsProps {
   setTotalClicks: React.Dispatch<React.SetStateAction<number>>;
   setTotalEnergyUsed: React.Dispatch<React.SetStateAction<number>>;
   setTotalUpgrades: React.Dispatch<React.SetStateAction<number>>;
+  setComboCount: React.Dispatch<React.SetStateAction<number>>;
+  setComboTimer: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 export function useGameActions({
@@ -37,6 +41,8 @@ export function useGameActions({
   coins,
   goldCoins,
   ownedDragons,
+  comboCount,
+  comboTimer,
   setCoins,
   setTotalCoins,
   setEnergy,
@@ -55,16 +61,46 @@ export function useGameActions({
   setTotalClicks,
   setTotalEnergyUsed,
   setTotalUpgrades,
+  setComboCount,
+  setComboTimer,
 }: UseGameActionsProps) {
   const handleDragonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (energy >= 10 && !energyRestoreTime) {
       const newEnergy = energy - 10;
-      setCoins(prev => prev + coinsPerTap);
-      setTotalCoins(prev => prev + coinsPerTap);
+      
+      // Обработка комбо
+      const newCombo = comboCount + 1;
+      let comboMultiplier = 1;
+      
+      if (comboTimer) {
+        clearTimeout(comboTimer);
+      }
+      
+      // Бонус за комбо: каждые 5 кликов +10%, каждые 10 +25%, каждые 20 +50%
+      if (newCombo >= 20) {
+        comboMultiplier = 1.5;
+      } else if (newCombo >= 10) {
+        comboMultiplier = 1.25;
+      } else if (newCombo >= 5) {
+        comboMultiplier = 1.1;
+      }
+      
+      const coinsEarned = Math.floor(coinsPerTap * comboMultiplier);
+      
+      setCoins(prev => prev + coinsEarned);
+      setTotalCoins(prev => prev + coinsEarned);
       setEnergy(newEnergy);
       setClickAnimation(true);
       setTotalClicks(prev => prev + 1);
       setTotalEnergyUsed(prev => prev + 10);
+      setComboCount(newCombo);
+      
+      // Сброс комбо через 2 секунды без клика
+      const timer = window.setTimeout(() => {
+        setComboCount(0);
+        setComboTimer(null);
+      }, 2000);
+      setComboTimer(timer);
       
       if (newEnergy === 0) {
         const restoreTime = Date.now() + (5 * 60 * 1000);
@@ -77,7 +113,7 @@ export function useGameActions({
       
       const newText = {
         id: Date.now(),
-        value: coinsPerTap,
+        value: coinsEarned,
         x,
         y,
         dragonType: currentDragonId

@@ -292,6 +292,44 @@ export default function DragonDisplay({
             <div className="absolute inset-0 bg-gradient-radial from-blue-300/25 via-cyan-500/15 to-transparent animate-pulse" />
           </>
         )}
+
+        {currentDragonId === 'dragon-39' && (
+          <>
+            {[...Array(30)].map((_, i) => (
+              <div
+                key={`dark-${i}`}
+                className="absolute"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  width: `${20 + Math.random() * 40}px`,
+                  height: `${20 + Math.random() * 40}px`,
+                  background: 'radial-gradient(circle, rgba(139, 0, 0, 0.8), transparent)',
+                  animation: `float ${4 + (i % 3)}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.2}s`,
+                  opacity: 0.6,
+                  filter: 'blur(8px)',
+                }}
+              />
+            ))}
+            {[...Array(15)].map((_, i) => (
+              <div
+                key={`lightning-${i}`}
+                className="absolute w-1 bg-red-600"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: '0',
+                  height: '100%',
+                  boxShadow: '0 0 10px rgba(220, 38, 38, 0.8)',
+                  animation: `twinkle ${0.5 + Math.random()}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.3}s`,
+                  opacity: 0.4,
+                }}
+              />
+            ))}
+            <div className="absolute inset-0 bg-gradient-to-b from-red-950/40 via-black/30 to-orange-900/40" />
+          </>
+        )}
         
         <img 
           src={currentDragon.image}

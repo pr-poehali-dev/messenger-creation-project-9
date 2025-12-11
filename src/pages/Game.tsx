@@ -48,6 +48,8 @@ export default function Game({ user, onLogout }: GameProps) {
     coins: gameState.coins,
     goldCoins: gameState.goldCoins,
     ownedDragons: gameState.ownedDragons,
+    comboCount: gameState.comboCount,
+    comboTimer: gameState.comboTimer,
     setCoins: gameState.setCoins,
     setTotalCoins: gameState.setTotalCoins,
     setEnergy: gameState.setEnergy,
@@ -66,6 +68,8 @@ export default function Game({ user, onLogout }: GameProps) {
     setTotalClicks: gameState.setTotalClicks,
     setTotalEnergyUsed: gameState.setTotalEnergyUsed,
     setTotalUpgrades: gameState.setTotalUpgrades,
+    setComboCount: gameState.setComboCount,
+    setComboTimer: gameState.setComboTimer,
   });
 
   const handleLogout = () => {
@@ -188,20 +192,32 @@ export default function Game({ user, onLogout }: GameProps) {
         />
 
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 p-3 sm:p-4 md:p-6 pb-20 md:pb-6">
-          <DragonClicker
-            currentDragon={currentDragon}
-            currentDragonId={gameState.currentDragonId}
-            energy={gameState.energy}
-            maxEnergy={gameState.maxEnergy}
-            energyRestoreTime={gameState.energyRestoreTime}
-            timeRemaining={gameState.timeRemaining}
-            coinsPerTap={gameState.coinsPerTap}
-            clickAnimation={gameState.clickAnimation}
-            dragonChangeAnimation={gameState.dragonChangeAnimation}
-            floatingTexts={gameState.floatingTexts}
-            snowflakes={gameState.snowflakes}
-            onDragonClick={gameActions.handleDragonClick}
-          />
+          <div className="relative">
+            {gameState.comboCount >= 5 && (
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+                <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+                  КОМБО x{gameState.comboCount} 🔥
+                  {gameState.comboCount >= 20 && ' +50%'}
+                  {gameState.comboCount >= 10 && gameState.comboCount < 20 && ' +25%'}
+                  {gameState.comboCount >= 5 && gameState.comboCount < 10 && ' +10%'}
+                </div>
+              </div>
+            )}
+            <DragonClicker
+              currentDragon={currentDragon}
+              currentDragonId={gameState.currentDragonId}
+              energy={gameState.energy}
+              maxEnergy={gameState.maxEnergy}
+              energyRestoreTime={gameState.energyRestoreTime}
+              timeRemaining={gameState.timeRemaining}
+              coinsPerTap={gameState.coinsPerTap}
+              clickAnimation={gameState.clickAnimation}
+              dragonChangeAnimation={gameState.dragonChangeAnimation}
+              floatingTexts={gameState.floatingTexts}
+              snowflakes={gameState.snowflakes}
+              onDragonClick={gameActions.handleDragonClick}
+            />
+          </div>
 
           <UpgradesList
             upgrades={gameState.upgrades}
