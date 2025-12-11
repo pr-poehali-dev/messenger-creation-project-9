@@ -11,6 +11,7 @@ interface GameHeaderProps {
   onProfileClick: () => void;
   onGoldClick: () => void;
   onQuestClick: () => void;
+  onLeaderboardClick: () => void;
   onLogout: () => void;
   formatNumber: (num: number) => string;
 }
@@ -26,6 +27,7 @@ export default function GameHeader({
   onProfileClick,
   onGoldClick,
   onQuestClick,
+  onLeaderboardClick,
   onLogout,
   formatNumber
 }: GameHeaderProps) {
@@ -93,6 +95,13 @@ export default function GameHeader({
               )}
             </div>
           </div>
+          <button
+            onClick={onLeaderboardClick}
+            className="p-2 bg-yellow-600/40 border-2 border-yellow-400/50 rounded-lg hover:bg-yellow-500/50 transition-all shadow-lg shadow-yellow-500/30"
+            title="Таблица лидеров"
+          >
+            <Icon name="Trophy" size={20} />
+          </button>
           <button
             onClick={onLogout}
             className="p-2 bg-red-600/40 border-2 border-red-400/50 rounded-lg hover:bg-red-500/50 transition-all shadow-lg shadow-red-500/30"

@@ -9,6 +9,7 @@ import UpgradesList from '@/components/game/UpgradesList';
 import PlayerProfile from '@/components/game/PlayerProfile';
 import GoldExchange from '@/components/game/GoldExchange';
 import QuestSystem from '@/components/game/QuestSystem';
+import Leaderboard from '@/components/game/Leaderboard';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameTimers } from '@/hooks/useGameTimers';
 import { useGameActions } from '@/hooks/useGameActions';
@@ -23,6 +24,7 @@ export default function Game({ user, onLogout }: GameProps) {
   const [showProfile, setShowProfile] = useState(false);
   const [showGoldExchange, setShowGoldExchange] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   const gameState = useGameState(user);
 
@@ -157,6 +159,14 @@ export default function Game({ user, onLogout }: GameProps) {
           onRewardClaimed={(goldAmount) => gameState.setGoldCoins(prev => prev + goldAmount)}
         />
       )}
+
+      {showLeaderboard && (
+        <Leaderboard
+          currentUsername={user.username}
+          currentMaxCombo={gameState.maxCombo}
+          onClose={() => setShowLeaderboard(false)}
+        />
+      )}
       
       {gameState.currentDragonId === 'dragon-6' && (
         <div className="fixed inset-0 pointer-events-none z-0">
@@ -190,6 +200,7 @@ export default function Game({ user, onLogout }: GameProps) {
           onProfileClick={() => setShowProfile(true)}
           onGoldClick={() => setShowGoldExchange(true)}
           onQuestClick={() => setShowQuests(true)}
+          onLeaderboardClick={() => setShowLeaderboard(true)}
           onLogout={handleLogout}
           formatNumber={formatNumber}
         />

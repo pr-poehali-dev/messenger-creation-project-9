@@ -330,6 +330,33 @@ export default function DragonDisplay({
             <div className="absolute inset-0 bg-gradient-to-b from-red-950/40 via-black/30 to-orange-900/40" />
           </>
         )}
+
+        {currentDragonId === 'dragon-40' && (
+          <>
+            {[...Array(25)].map((_, i) => {
+              const neonColors = ['#00ffff', '#ff00ff', '#ffff00', '#00ff00', '#ff0066'];
+              return (
+                <div
+                  key={`neon-${i}`}
+                  className="absolute"
+                  style={{
+                    left: `${5 + (i * 3.5)}%`,
+                    top: `${10 + Math.sin(i * 0.6) * 30}%`,
+                    width: `${8 + Math.random() * 12}px`,
+                    height: `${8 + Math.random() * 12}px`,
+                    background: neonColors[i % neonColors.length],
+                    borderRadius: '50%',
+                    boxShadow: `0 0 20px ${neonColors[i % neonColors.length]}, 0 0 40px ${neonColors[i % neonColors.length]}`,
+                    animation: `twinkle ${1 + (i % 4) * 0.5}s ease-in-out infinite`,
+                    animationDelay: `${i * 0.15}s`,
+                    opacity: 0.8,
+                  }}
+                />
+              );
+            })}
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-pink-500/20" />
+          </>
+        )}
         
         <img 
           src={currentDragon.image}
