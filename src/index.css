@@ -117,3 +117,39 @@ body {
 .animate-snowfall {
   animation: snowfall 8s linear infinite;
 }
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -100px) scale(0.8);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.1);
+  }
+  90% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -20px) scale(0.9);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 3s ease-out forwards;
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}

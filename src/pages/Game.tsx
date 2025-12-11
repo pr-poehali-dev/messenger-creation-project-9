@@ -25,6 +25,7 @@ export default function Game({ user, onLogout }: GameProps) {
   const [showGoldExchange, setShowGoldExchange] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [rewardNotification, setRewardNotification] = useState<{amount: number; rank: number} | null>(null);
 
   const gameState = useGameState(user);
 
@@ -171,6 +172,8 @@ export default function Game({ user, onLogout }: GameProps) {
               ...prev,
               [`rank${rank}`]: true
             }));
+            setRewardNotification({ amount: goldAmount, rank });
+            setTimeout(() => setRewardNotification(null), 3000);
           }}
           rewardsClaimed={gameState.leaderboardRewardsClaimed}
         />
@@ -196,6 +199,27 @@ export default function Game({ user, onLogout }: GameProps) {
         </div>
       )}
       
+      {rewardNotification && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] animate-slideDown">
+          <div className="bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 text-white px-6 py-4 rounded-2xl shadow-2xl border-4 border-yellow-300 flex items-center gap-3 animate-bounce">
+            <div className="text-4xl">
+              {rewardNotification.rank === 1 && '🥇'}
+              {rewardNotification.rank === 2 && '🥈'}
+              {rewardNotification.rank === 3 && '🥉'}
+            </div>
+            <div>
+              <div className="text-xl font-bold drop-shadow-lg">
+                Поздравляем!
+              </div>
+              <div className="text-lg">
+                +{rewardNotification.amount} 🪙 золотых монет
+              </div>
+            </div>
+            <div className="text-3xl animate-spin-slow">✨</div>
+          </div>
+        </div>
+      )}
+
       <div className="relative z-10">
         <GameHeader
           username={user.username}

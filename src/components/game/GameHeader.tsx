@@ -63,11 +63,11 @@ export default function GameHeader({
             <Icon name="Trophy" size={20} />
           </button>
           <button
-            onClick={onProfileClick}
-            className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 border-2 border-blue-300/50 rounded-lg hover:from-blue-400 hover:to-purple-500 transition-all shadow-lg shadow-blue-500/30"
-            title="Профиль"
+            onClick={onLeaderboardClick}
+            className="p-2 bg-yellow-600/40 border-2 border-yellow-400/50 rounded-lg hover:bg-yellow-500/50 transition-all shadow-lg shadow-yellow-500/30"
+            title="Таблица лидеров"
           >
-            <Icon name="User" size={20} />
+            <Icon name="Award" size={20} />
           </button>
           <button
             onClick={onGoldClick}
@@ -80,6 +80,13 @@ export default function GameHeader({
               className="w-5 h-5"
             />
             <span className="text-amber-900 text-sm">{goldCoins}</span>
+          </button>
+          <button
+            onClick={onProfileClick}
+            className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 border-2 border-blue-300/50 rounded-lg hover:from-blue-400 hover:to-purple-500 transition-all shadow-lg shadow-blue-500/30"
+            title="Профиль"
+          >
+            <Icon name="User" size={20} />
           </button>
           <div className="text-right relative">
             <div className="text-2xl sm:text-3xl font-bold text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.6)]">
@@ -95,13 +102,6 @@ export default function GameHeader({
               )}
             </div>
           </div>
-          <button
-            onClick={onLeaderboardClick}
-            className="p-2 bg-yellow-600/40 border-2 border-yellow-400/50 rounded-lg hover:bg-yellow-500/50 transition-all shadow-lg shadow-yellow-500/30"
-            title="Таблица лидеров"
-          >
-            <Icon name="Trophy" size={20} />
-          </button>
           <button
             onClick={onLogout}
             className="p-2 bg-red-600/40 border-2 border-red-400/50 rounded-lg hover:bg-red-500/50 transition-all shadow-lg shadow-red-500/30"
