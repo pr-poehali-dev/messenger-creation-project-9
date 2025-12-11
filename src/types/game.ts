@@ -14,6 +14,9 @@ export interface Dragon {
   coinsPerTap: number;
   maxEnergy: number;
   owned: boolean;
+  availableFrom?: string;
+  availableUntil?: string;
+  isTemporary?: boolean;
 }
 
 export interface GameState {
@@ -34,6 +37,7 @@ export interface GameState {
   totalClicks?: number;
   totalEnergyUsed?: number;
   totalUpgrades?: number;
+  previousDragonId?: string;
 }
 
 export interface Upgrade {

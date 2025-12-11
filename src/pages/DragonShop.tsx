@@ -272,6 +272,19 @@ export const DRAGONS: Dragon[] = [
     maxEnergy: 1000000,
     owned: false,
   },
+  {
+    id: 'dragon-29',
+    name: 'Огненный вестник 2026',
+    image: 'https://cdn.poehali.dev/files/2026.jpeg',
+    cost: 0,
+    goldCost: 0,
+    coinsPerTap: 200000,
+    maxEnergy: 1500000,
+    owned: false,
+    availableFrom: '2025-12-31',
+    availableUntil: '2026-01-01',
+    isTemporary: true,
+  },
 ];
 
 export default function DragonShop({
@@ -287,6 +300,25 @@ export default function DragonShop({
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
     return Math.floor(num).toString();
+  };
+
+  const isDragonAvailable = (dragon: Dragon) => {
+    if (!dragon.availableFrom && !dragon.availableUntil) return true;
+    
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    if (dragon.availableFrom) {
+      const fromDate = new Date(dragon.availableFrom);
+      if (today < fromDate) return false;
+    }
+    
+    if (dragon.availableUntil) {
+      const untilDate = new Date(dragon.availableUntil);
+      if (today > untilDate) return false;
+    }
+    
+    return true;
   };
 
   return (
@@ -336,9 +368,12 @@ export default function DragonShop({
             const isOwned = ownedDragons.includes(dragon.id);
             const isCurrent = currentDragonId === dragon.id;
             const isGoldDragon = dragon.goldCost !== undefined && dragon.goldCost > 0;
-            const canBuy = isGoldDragon 
+            const isAvailable = isDragonAvailable(dragon);
+            const canBuy = isAvailable && (isGoldDragon 
               ? goldCoins >= (dragon.goldCost || 0) && !isOwned
-              : coins >= dragon.cost && !isOwned;
+              : coins >= dragon.cost && !isOwned);
+            
+            if (!isAvailable && !isOwned) return null;
 
             return (
               <div
@@ -359,7 +394,14 @@ export default function DragonShop({
                     alt={dragon.name}
                     className="w-full h-full object-cover"
                   />
-                  {isGoldDragon && (
+                  {dragon.isTemporary && (
+                    <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-gradient-to-r from-orange-600 via-red-600 to-yellow-600 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg shadow-orange-500/50 animate-pulse">
+                      <Icon name="Sparkles" size={14} />
+                      <span className="hidden sm:inline">Новый год!</span>
+                      <span className="sm:hidden">2026</span>
+                    </div>
+                  )}
+                  {isGoldDragon && !dragon.isTemporary && (
                     <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-gradient-to-r from-yellow-600 to-amber-600 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg shadow-yellow-500/50">
                       <img 
                         src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"
@@ -400,6 +442,17 @@ export default function DragonShop({
                     </span>
                     <span className="font-bold text-cyan-400 text-sm sm:text-base">{dragon.maxEnergy}</span>
                   </div>
+                  {dragon.isTemporary && (
+                    <div className="bg-gradient-to-r from-orange-900/40 to-red-900/40 rounded-lg px-2 py-1.5 sm:px-3 sm:py-2 border border-orange-500/30">
+                      <p className="text-orange-300 text-xs sm:text-sm text-center font-semibold flex items-center justify-center gap-1">
+                        <Icon name="Clock" size={14} />
+                        Доступен только 31.12.2025
+                      </p>
+                      <p className="text-orange-400/80 text-xs text-center mt-0.5">
+                        Автоматически заменится 1.01.2026
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {!isOwned ? (
@@ -408,13 +461,20 @@ export default function DragonShop({
                     disabled={!canBuy}
                     className={`w-full py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm sm:text-base ${
                       canBuy
-                        ? isGoldDragon
+                        ? dragon.isTemporary
+                          ? 'bg-gradient-to-r from-orange-600 via-red-600 to-yellow-600 hover:from-orange-500 hover:via-red-500 hover:to-yellow-500 active:scale-95 cursor-pointer shadow-lg shadow-orange-500/50 animate-pulse'
+                          : isGoldDragon
                           ? 'bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 active:scale-95 cursor-pointer shadow-lg shadow-yellow-500/30'
                           : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 active:scale-95 cursor-pointer'
                         : 'bg-gray-700/50 cursor-not-allowed'
                     }`}
                   >
-                    {isGoldDragon ? (
+                    {dragon.isTemporary ? (
+                      <>
+                        <Icon name="Gift" size={18} />
+                        <span>Бесплатно! 🎆</span>
+                      </>
+                    ) : isGoldDragon ? (
                       <>
                         <img 
                           src="https://cdn.poehali.dev/files/2e73c9fd56f11f0b2426676413dfd84_1 копия.png"

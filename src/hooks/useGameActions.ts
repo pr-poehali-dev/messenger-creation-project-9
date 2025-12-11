@@ -483,6 +483,16 @@ export function useGameActions({
       setOwnedDragons(prev => [...prev, dragon.id]);
       setTotalUpgrades(prev => prev + 1);
       
+      // Save previous dragon if this is a temporary dragon
+      if (dragon.isTemporary) {
+        const gameState = localStorage.getItem('gameState');
+        if (gameState) {
+          const state = JSON.parse(gameState);
+          state.previousDragonId = currentDragonId;
+          localStorage.setItem('gameState', JSON.stringify(state));
+        }
+      }
+      
       setDragonChangeAnimation(true);
       setTimeout(() => {
         setCurrentDragonId(dragon.id);

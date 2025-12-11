@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User, GameState, Upgrade } from '@/types/game';
 import { saveGameState, getGameState } from '@/utils/storage';
+import { DRAGONS } from '@/pages/DragonShop';
 
 export const DEFAULT_UPGRADES: Upgrade[] = [
   { id: '1', name: 'Огненное дыхание', cost: 100, profit: 1, owned: 0, icon: 'Flame' },
@@ -46,7 +47,24 @@ export function useGameState(user: User) {
       setMaxEnergy(savedState.maxEnergy || 1000);
       setLevel(savedState.level);
       setUpgrades(savedState.upgrades);
-      setCurrentDragonId(savedState.currentDragonId || 'dragon-1');
+      
+      // Check if temporary dragon (dragon-29) should be replaced
+      const now = new Date();
+      const jan1 = new Date('2026-01-01');
+      
+      if (savedState.currentDragonId === 'dragon-29' && now >= jan1 && savedState.previousDragonId) {
+        // Restore previous dragon
+        setCurrentDragonId(savedState.previousDragonId);
+        const prevDragon = DRAGONS.find(d => d.id === savedState.previousDragonId);
+        
+        if (prevDragon) {
+          setCoinsPerTap(prevDragon.coinsPerTap);
+          setMaxEnergy(prevDragon.maxEnergy);
+        }
+      } else {
+        setCurrentDragonId(savedState.currentDragonId || 'dragon-1');
+      }
+      
       setOwnedDragons(savedState.ownedDragons || ['dragon-1']);
       setTotalClicks(savedState.totalClicks || 0);
       setTotalEnergyUsed(savedState.totalEnergyUsed || 0);
