@@ -158,6 +158,10 @@ export default function DragonClicker({
                   return { color: 'text-green-400', stroke: '1px rgba(74,222,128,1)', filter: 'drop-shadow(0 0 20px rgba(74,222,128,1))', emoji: '🌸🌿' };
                 case 'dragon-19':
                   return { color: 'text-rose-400', stroke: '1px rgba(251,113,133,1)', filter: 'drop-shadow(0 0 20px rgba(251,113,133,1))', emoji: '🌺🌹' };
+                case 'dragon-25':
+                  return { color: 'text-orange-400', stroke: '2px rgba(255,69,0,1)', filter: 'drop-shadow(0 0 25px rgba(255,69,0,1)) drop-shadow(0 0 40px rgba(255,140,0,0.9))', emoji: '🔥💥' };
+                case 'dragon-26':
+                  return { color: 'text-red-500', stroke: '2px rgba(220,38,38,1)', filter: 'drop-shadow(0 0 30px rgba(220,38,38,1)) drop-shadow(0 0 50px rgba(239,68,68,1))', emoji: '🔥⚡' };
                 default:
                   return { color: 'text-yellow-400', stroke: '1px rgba(255,100,0,0.8)', filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.8))', emoji: '' };
               }
@@ -203,7 +207,9 @@ export default function DragonClicker({
                 'dragon-16': '💠',
                 'dragon-17': '❄️',
                 'dragon-18': '🌸',
-                'dragon-19': '🌺'
+                'dragon-19': '🌺',
+                'dragon-25': '🔥',
+                'dragon-26': '💥'
               };
               return emojiMap[dragonId] || '✨';
             };

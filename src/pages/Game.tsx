@@ -94,6 +94,10 @@ export default function Game({ user, onLogout }: GameProps) {
     <div className={`min-h-screen text-white relative overflow-hidden ${
       gameState.currentDragonId === 'dragon-6' 
         ? 'bg-gradient-to-b from-blue-900 via-cyan-900 to-indigo-950'
+        : gameState.currentDragonId === 'dragon-25'
+        ? 'bg-gradient-to-b from-red-950 via-orange-900 to-black'
+        : gameState.currentDragonId === 'dragon-26'
+        ? 'bg-gradient-to-b from-red-900 via-orange-950 to-black'
         : 'bg-gradient-to-b from-purple-900 via-indigo-900 to-black'
     }`}>
       {showProfile && (
