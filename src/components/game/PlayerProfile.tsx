@@ -1,7 +1,6 @@
 import Icon from '@/components/ui/icon';
 import PlayerStats from '@/components/profile/PlayerStats';
-import AchievementCard from '@/components/profile/AchievementCard';
-import { getAchievements } from '@/data/achievements';
+import { Achievement } from '@/types/game';
 
 interface PlayerProfileProps {
   username: string;
@@ -16,6 +15,7 @@ interface PlayerProfileProps {
   ownedDragonsCount: number;
   upgradesOwned: number;
   maxCombo: number;
+  achievements: Achievement[];
   onClose: () => void;
   formatNumber: (num: number) => string;
 }
@@ -33,11 +33,11 @@ export default function PlayerProfile({
   ownedDragonsCount,
   upgradesOwned,
   maxCombo,
+  achievements,
   onClose,
   formatNumber
 }: PlayerProfileProps) {
-  const achievements = getAchievements(totalCoins, ownedDragonsCount, upgradesOwned, level, maxCombo);
-  const unlockedCount = achievements.filter(a => a.unlocked).length;
+  const unlockedCount = achievements.filter(a => a.completed).length;
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fadeIn">
@@ -84,12 +84,53 @@ export default function PlayerProfile({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto pr-2">
-            {achievements.map(achievement => (
-              <AchievementCard
+            {achievements.slice(0, 12).map(achievement => (
+              <div
                 key={achievement.id}
-                achievement={achievement}
-                formatNumber={formatNumber}
-              />
+                className={`bg-black/40 backdrop-blur-sm rounded-xl p-3 sm:p-4 border-2 transition-all ${
+                  achievement.completed
+                    ? 'border-yellow-500/50 shadow-lg shadow-yellow-500/20'
+                    : 'border-gray-700/30 opacity-60'
+                }`}
+              >
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${achievement.completed ? 'from-yellow-500 to-amber-500' : 'from-gray-700 to-gray-800'} rounded-lg flex items-center justify-center flex-shrink-0 ${
+                    achievement.completed ? 'animate-pulse' : ''
+                  }`}>
+                    <Icon name={achievement.icon as any} size={20} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-bold text-sm sm:text-base text-white mb-1 flex items-center gap-2">
+                      <span className="truncate">{achievement.name}</span>
+                      {achievement.completed && (
+                        <Icon name="Check" size={14} className="text-green-400 shrink-0" />
+                      )}
+                    </div>
+                    <div className="text-xs text-purple-300 mb-2 line-clamp-2">{achievement.description}</div>
+                    
+                    {!achievement.completed && (
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-400">Прогресс</span>
+                          <span className="text-white font-bold">
+                            {formatNumber(achievement.current)} / {formatNumber(achievement.target)}
+                          </span>
+                        </div>
+                        <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-yellow-500 to-orange-500 transition-all"
+                            style={{ width: `${(achievement.current / achievement.target) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {achievement.completed && (
+                      <div className="text-xs text-green-400 font-bold">✓ Выполнено</div>
+                    )}
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>

@@ -135,6 +135,7 @@ export default function Game({ user, onLogout }: GameProps) {
           ownedDragonsCount={gameState.ownedDragons.length}
           upgradesOwned={upgradesOwned}
           maxCombo={gameState.maxCombo}
+          achievements={gameState.achievements}
           onClose={() => setShowProfile(false)}
           formatNumber={formatNumber}
         />
