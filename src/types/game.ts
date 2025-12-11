@@ -50,6 +50,7 @@ export interface Upgrade {
   id: string;
   name: string;
   cost: number;
+  goldCost?: number;
   profit: number;
   owned: number;
   icon: string;

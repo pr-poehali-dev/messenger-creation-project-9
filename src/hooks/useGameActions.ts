@@ -491,13 +491,28 @@ export function useGameActions({
   };
 
   const handleBuyUpgrade = (upgrade: Upgrade) => {
-    if (coins >= upgrade.cost) {
-      setCoins(prev => prev - upgrade.cost);
+    const isGoldUpgrade = upgrade.goldCost !== undefined;
+    const canAfford = isGoldUpgrade 
+      ? goldCoins >= (upgrade.goldCost || 0)
+      : coins >= upgrade.cost;
+    
+    if (canAfford) {
+      if (isGoldUpgrade) {
+        setGoldCoins(prev => prev - (upgrade.goldCost || 0));
+      } else {
+        setCoins(prev => prev - upgrade.cost);
+      }
+      
       setCoinsPerSecond(prev => prev + upgrade.profit);
       setUpgrades(prev =>
         prev.map(u =>
           u.id === upgrade.id
-            ? { ...u, owned: u.owned + 1, cost: Math.floor(u.cost * 1.5) }
+            ? { 
+                ...u, 
+                owned: u.owned + 1, 
+                cost: isGoldUpgrade ? u.cost : Math.floor(u.cost * 1.5),
+                goldCost: isGoldUpgrade && u.goldCost ? Math.floor(u.goldCost * 1.5) : u.goldCost
+              }
             : u
         )
       );

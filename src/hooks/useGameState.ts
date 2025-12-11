@@ -10,6 +10,7 @@ export const DEFAULT_UPGRADES: Upgrade[] = [
   { id: '4', name: 'Армия драконов', cost: 10000, profit: 100, owned: 0, icon: 'Users' },
   { id: '5', name: 'Драконий замок', cost: 50000, profit: 500, owned: 0, icon: 'Castle' },
   { id: '6', name: 'Магический портал', cost: 200000, profit: 2000, owned: 0, icon: 'Sparkles' },
+  { id: '7', name: 'Монеты за золото', cost: 0, goldCost: 100, profit: 1000, owned: 0, icon: 'Coins' },
 ];
 
 export function useGameState(user: User) {

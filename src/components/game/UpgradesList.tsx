@@ -4,6 +4,7 @@ import { Upgrade } from '@/types/game';
 interface UpgradesListProps {
   upgrades: Upgrade[];
   coins: number;
+  goldCoins: number;
   onBuyUpgrade: (upgrade: Upgrade) => void;
   formatNumber: (num: number) => string;
 }
@@ -11,6 +12,7 @@ interface UpgradesListProps {
 export default function UpgradesList({
   upgrades,
   coins,
+  goldCoins,
   onBuyUpgrade,
   formatNumber
 }: UpgradesListProps) {
@@ -27,7 +29,11 @@ export default function UpgradesList({
       
       <div className="space-y-2 sm:space-y-3 max-h-[400px] sm:max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
         {upgrades.map(upgrade => {
-          const canBuy = coins >= upgrade.cost;
+          const isGoldUpgrade = upgrade.goldCost !== undefined;
+          const canBuy = isGoldUpgrade 
+            ? goldCoins >= (upgrade.goldCost || 0)
+            : coins >= upgrade.cost;
+          
           return (
             <button
               key={upgrade.id}
@@ -36,12 +42,12 @@ export default function UpgradesList({
               className={`w-full bg-black/40 backdrop-blur-sm rounded-xl p-3 sm:p-4 border-2 
                 transition-all ${
                   canBuy
-                    ? 'border-purple-500/50 hover:border-purple-400 hover:bg-purple-900/20 cursor-pointer active:scale-95'
+                    ? `${isGoldUpgrade ? 'border-amber-500/50 hover:border-amber-400 hover:bg-amber-900/20' : 'border-purple-500/50 hover:border-purple-400 hover:bg-purple-900/20'} cursor-pointer active:scale-95`
                     : 'border-gray-700/30 opacity-50 cursor-not-allowed'
                 }`}
             >
               <div className="flex items-center gap-2 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${isGoldUpgrade ? 'from-amber-600 to-yellow-600' : 'from-purple-600 to-pink-600'} rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0`}>
                   <Icon name={upgrade.icon as any} size={20} />
                 </div>
                 
@@ -53,7 +59,13 @@ export default function UpgradesList({
                 </div>
                 
                 <div className="text-right flex-shrink-0">
-                  <div className="font-bold text-yellow-400 text-sm sm:text-base">{formatNumber(upgrade.cost)}</div>
+                  {isGoldUpgrade ? (
+                    <div className="font-bold text-amber-400 text-sm sm:text-base flex items-center gap-1 justify-end">
+                      {formatNumber(upgrade.goldCost || 0)} 🪙
+                    </div>
+                  ) : (
+                    <div className="font-bold text-yellow-400 text-sm sm:text-base">{formatNumber(upgrade.cost)}</div>
+                  )}
                   {upgrade.owned > 0 && (
                     <div className="text-xs text-green-400">Ур. {upgrade.owned}</div>
                   )}

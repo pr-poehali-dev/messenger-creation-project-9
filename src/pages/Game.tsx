@@ -268,6 +268,7 @@ export default function Game({ user, onLogout }: GameProps) {
           <UpgradesList
             upgrades={gameState.upgrades}
             coins={gameState.coins}
+            goldCoins={gameState.goldCoins}
             onBuyUpgrade={gameActions.handleBuyUpgrade}
             formatNumber={formatNumber}
           />
