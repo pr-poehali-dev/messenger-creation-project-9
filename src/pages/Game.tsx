@@ -10,6 +10,7 @@ import PlayerProfile from '@/components/game/PlayerProfile';
 import GoldExchange from '@/components/game/GoldExchange';
 import QuestSystem from '@/components/game/QuestSystem';
 import Leaderboard from '@/components/game/Leaderboard';
+import AchievementsModal from '@/components/game/AchievementsModal';
 import { useGameState } from '@/hooks/useGameState';
 import { useGameTimers } from '@/hooks/useGameTimers';
 import { useGameActions } from '@/hooks/useGameActions';
@@ -25,6 +26,7 @@ export default function Game({ user, onLogout }: GameProps) {
   const [showGoldExchange, setShowGoldExchange] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
   const [rewardNotification, setRewardNotification] = useState<{amount: number; rank: number} | null>(null);
 
   const gameState = useGameState(user);
@@ -178,6 +180,28 @@ export default function Game({ user, onLogout }: GameProps) {
           rewardsClaimed={gameState.leaderboardRewardsClaimed}
         />
       )}
+
+      {showAchievements && (
+        <AchievementsModal
+          achievements={gameState.achievements}
+          onClose={() => setShowAchievements(false)}
+          onClaimReward={(achievementId) => {
+            const achievement = gameState.achievements.find(a => a.id === achievementId);
+            if (achievement && achievement.completed) {
+              if (achievement.reward.coins) {
+                gameState.setCoins(prev => prev + achievement.reward.coins!);
+              }
+              if (achievement.reward.goldCoins) {
+                gameState.setGoldCoins(prev => prev + achievement.reward.goldCoins!);
+              }
+              gameState.setAchievements(prev => 
+                prev.map(a => a.id === achievementId ? { ...a, completed: false } : a)
+              );
+            }
+          }}
+          formatNumber={formatNumber}
+        />
+      )}
       
       {gameState.currentDragonId === 'dragon-6' && (
         <div className="fixed inset-0 pointer-events-none z-0">
@@ -233,6 +257,7 @@ export default function Game({ user, onLogout }: GameProps) {
           onGoldClick={() => setShowGoldExchange(true)}
           onQuestClick={() => setShowQuests(true)}
           onLeaderboardClick={() => setShowLeaderboard(true)}
+          onAchievementsClick={() => setShowAchievements(true)}
           onLogout={handleLogout}
           formatNumber={formatNumber}
         />

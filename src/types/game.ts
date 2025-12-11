@@ -19,6 +19,21 @@ export interface Dragon {
   isTemporary?: boolean;
 }
 
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: 'clicks' | 'coins' | 'upgrades' | 'dragons' | 'combo' | 'energy';
+  target: number;
+  current: number;
+  completed: boolean;
+  reward: {
+    coins?: number;
+    goldCoins?: number;
+  };
+}
+
 export interface GameState {
   userId: string;
   coins: number;
@@ -44,6 +59,7 @@ export interface GameState {
     rank2?: boolean;
     rank3?: boolean;
   };
+  achievements?: Achievement[];
 }
 
 export interface Upgrade {

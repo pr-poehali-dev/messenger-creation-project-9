@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { User, GameState, Upgrade } from '@/types/game';
+import { User, GameState, Upgrade, Achievement } from '@/types/game';
 import { saveGameState, getGameState } from '@/utils/storage';
 import { DRAGONS } from '@/data/dragons';
+import { DEFAULT_ACHIEVEMENTS } from '@/data/achievements';
 
 export const DEFAULT_UPGRADES: Upgrade[] = [
   { id: '1', name: 'Огненное дыхание', cost: 100, profit: 1, owned: 0, icon: 'Flame' },
@@ -43,6 +44,7 @@ export function useGameState(user: User) {
   const [comboTimer, setComboTimer] = useState<number | null>(null);
   const [maxCombo, setMaxCombo] = useState(0);
   const [leaderboardRewardsClaimed, setLeaderboardRewardsClaimed] = useState<{rank1?: boolean; rank2?: boolean; rank3?: boolean;}>({});
+  const [achievements, setAchievements] = useState<Achievement[]>(DEFAULT_ACHIEVEMENTS);
 
   useEffect(() => {
     const savedState = getGameState();
@@ -80,11 +82,47 @@ export function useGameState(user: User) {
       setTotalUpgrades(savedState.totalUpgrades || 0);
       setMaxCombo(savedState.maxCombo || 0);
       setLeaderboardRewardsClaimed(savedState.leaderboardRewardsClaimed || {});
+      setAchievements(savedState.achievements || DEFAULT_ACHIEVEMENTS);
       if (savedState.energyRestoreTime) {
         setEnergyRestoreTime(savedState.energyRestoreTime);
       }
     }
   }, [user.id]);
+
+  useEffect(() => {
+    setAchievements(prev => prev.map(achievement => {
+      let current = achievement.current;
+      
+      switch (achievement.category) {
+        case 'clicks':
+          current = totalClicks;
+          break;
+        case 'coins':
+          current = totalCoins;
+          break;
+        case 'upgrades':
+          current = totalUpgrades;
+          break;
+        case 'dragons':
+          current = ownedDragons.length;
+          break;
+        case 'combo':
+          current = maxCombo;
+          break;
+        case 'energy':
+          current = totalEnergyUsed;
+          break;
+      }
+      
+      const completed = current >= achievement.target;
+      
+      return {
+        ...achievement,
+        current,
+        completed
+      };
+    }));
+  }, [totalClicks, totalCoins, totalUpgrades, ownedDragons.length, maxCombo, totalEnergyUsed]);
 
   useEffect(() => {
     const state: GameState = {
@@ -107,9 +145,10 @@ export function useGameState(user: User) {
       totalUpgrades,
       maxCombo,
       leaderboardRewardsClaimed,
+      achievements,
     };
     saveGameState(state);
-  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons, totalClicks, totalEnergyUsed, totalUpgrades, maxCombo, leaderboardRewardsClaimed]);
+  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons, totalClicks, totalEnergyUsed, totalUpgrades, maxCombo, leaderboardRewardsClaimed, achievements]);
 
   return {
     coins,
@@ -162,5 +201,7 @@ export function useGameState(user: User) {
     setMaxCombo,
     leaderboardRewardsClaimed,
     setLeaderboardRewardsClaimed,
+    achievements,
+    setAchievements,
   };
 }

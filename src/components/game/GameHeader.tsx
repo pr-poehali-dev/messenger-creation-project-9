@@ -12,6 +12,7 @@ interface GameHeaderProps {
   onGoldClick: () => void;
   onQuestClick: () => void;
   onLeaderboardClick: () => void;
+  onAchievementsClick: () => void;
   onLogout: () => void;
   formatNumber: (num: number) => string;
 }
@@ -28,6 +29,7 @@ export default function GameHeader({
   onGoldClick,
   onQuestClick,
   onLeaderboardClick,
+  onAchievementsClick,
   onLogout,
   formatNumber
 }: GameHeaderProps) {
@@ -68,6 +70,13 @@ export default function GameHeader({
             title="Таблица лидеров"
           >
             <Icon name="Award" size={20} />
+          </button>
+          <button
+            onClick={onAchievementsClick}
+            className="p-2 bg-amber-600/40 border-2 border-amber-400/50 rounded-lg hover:bg-amber-500/50 transition-all shadow-lg shadow-amber-500/30"
+            title="Достижения"
+          >
+            <Icon name="Medal" size={20} />
           </button>
           <button
             onClick={onGoldClick}

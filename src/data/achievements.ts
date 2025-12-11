@@ -1,141 +1,202 @@
-export interface Achievement {
-  id: number;
-  name: string;
-  description: string;
-  icon: string;
-  progress: number;
-  goal: number;
-  unlocked: boolean;
-  color: string;
-}
+import { Achievement } from '@/types/game';
 
-export function getAchievements(
-  totalCoins: number,
-  ownedDragonsCount: number,
-  upgradesOwned: number,
-  level: number,
-  maxCombo: number = 0
-): Achievement[] {
-  return [
-    {
-      id: 1,
-      name: 'Первые шаги',
-      description: 'Заработай 1,000 монет',
-      icon: 'Coins',
-      progress: Math.min(totalCoins, 1000),
-      goal: 1000,
-      unlocked: totalCoins >= 1000,
-      color: 'from-yellow-600 to-orange-600'
-    },
-    {
-      id: 2,
-      name: 'Богатей',
-      description: 'Заработай 100,000 монет',
-      icon: 'TrendingUp',
-      progress: Math.min(totalCoins, 100000),
-      goal: 100000,
-      unlocked: totalCoins >= 100000,
-      color: 'from-purple-600 to-pink-600'
-    },
-    {
-      id: 3,
-      name: 'Миллионер',
-      description: 'Заработай 1,000,000 монет',
-      icon: 'Crown',
-      progress: Math.min(totalCoins, 1000000),
-      goal: 1000000,
-      unlocked: totalCoins >= 1000000,
-      color: 'from-yellow-500 to-amber-500'
-    },
-    {
-      id: 4,
-      name: 'Коллекционер',
-      description: 'Купи 3 драконов',
-      icon: 'Flame',
-      progress: ownedDragonsCount,
-      goal: 3,
-      unlocked: ownedDragonsCount >= 3,
-      color: 'from-red-600 to-orange-600'
-    },
-    {
-      id: 5,
-      name: 'Повелитель драконов',
-      description: 'Купи всех драконов',
-      icon: 'Trophy',
-      progress: ownedDragonsCount,
-      goal: 14,
-      unlocked: ownedDragonsCount >= 14,
-      color: 'from-amber-500 to-yellow-500'
-    },
-    {
-      id: 6,
-      name: 'Прокачанный',
-      description: 'Купи 10 улучшений',
-      icon: 'Zap',
-      progress: upgradesOwned,
-      goal: 10,
-      unlocked: upgradesOwned >= 10,
-      color: 'from-blue-600 to-cyan-600'
-    },
-    {
-      id: 7,
-      name: 'Мастер улучшений',
-      description: 'Купи 50 улучшений',
-      icon: 'Sparkles',
-      progress: Math.min(upgradesOwned, 50),
-      goal: 50,
-      unlocked: upgradesOwned >= 50,
-      color: 'from-purple-500 to-pink-500'
-    },
-    {
-      id: 8,
-      name: 'Кликер-профи',
-      description: 'Достигни 10 уровня',
-      icon: 'Star',
-      progress: level,
-      goal: 10,
-      unlocked: level >= 10,
-      color: 'from-cyan-600 to-blue-600'
-    },
-    {
-      id: 9,
-      name: 'Начало комбо',
-      description: 'Набери комбо x10',
-      icon: 'Zap',
-      progress: Math.min(maxCombo, 10),
-      goal: 10,
-      unlocked: maxCombo >= 10,
-      color: 'from-yellow-500 to-orange-500'
-    },
-    {
-      id: 10,
-      name: 'Комбо-мастер',
-      description: 'Набери комбо x25',
-      icon: 'Flame',
-      progress: Math.min(maxCombo, 25),
-      goal: 25,
-      unlocked: maxCombo >= 25,
-      color: 'from-orange-500 to-red-500'
-    },
-    {
-      id: 11,
-      name: 'Комбо-легенда',
-      description: 'Набери комбо x50',
-      icon: 'Sparkles',
-      progress: Math.min(maxCombo, 50),
-      goal: 50,
-      unlocked: maxCombo >= 50,
-      color: 'from-red-500 to-pink-500'
-    },
-    {
-      id: 12,
-      name: 'Повелитель комбо',
-      description: 'Набери комбо x100',
-      icon: 'Trophy',
-      progress: Math.min(maxCombo, 100),
-      goal: 100,
-      unlocked: maxCombo >= 100,
-      color: 'from-purple-500 to-pink-600'
-    }
-  ];
-}
+export const DEFAULT_ACHIEVEMENTS: Achievement[] = [
+  {
+    id: 'clicks_100',
+    name: 'Первые клики',
+    description: 'Кликните по дракону 100 раз',
+    icon: 'MousePointerClick',
+    category: 'clicks',
+    target: 100,
+    current: 0,
+    completed: false,
+    reward: { coins: 1000 }
+  },
+  {
+    id: 'clicks_1000',
+    name: 'Активный игрок',
+    description: 'Кликните по дракону 1000 раз',
+    icon: 'Hand',
+    category: 'clicks',
+    target: 1000,
+    current: 0,
+    completed: false,
+    reward: { coins: 10000, goldCoins: 1 }
+  },
+  {
+    id: 'clicks_10000',
+    name: 'Мастер кликов',
+    description: 'Кликните по дракону 10000 раз',
+    icon: 'Zap',
+    category: 'clicks',
+    target: 10000,
+    current: 0,
+    completed: false,
+    reward: { coins: 100000, goldCoins: 5 }
+  },
+  {
+    id: 'coins_10000',
+    name: 'Первый капитал',
+    description: 'Накопите 10000 монет',
+    icon: 'Coins',
+    category: 'coins',
+    target: 10000,
+    current: 0,
+    completed: false,
+    reward: { coins: 5000 }
+  },
+  {
+    id: 'coins_1000000',
+    name: 'Миллионер',
+    description: 'Накопите 1000000 монет',
+    icon: 'DollarSign',
+    category: 'coins',
+    target: 1000000,
+    current: 0,
+    completed: false,
+    reward: { coins: 50000, goldCoins: 2 }
+  },
+  {
+    id: 'coins_1000000000',
+    name: 'Миллиардер',
+    description: 'Накопите 1000000000 монет',
+    icon: 'Landmark',
+    category: 'coins',
+    target: 1000000000,
+    current: 0,
+    completed: false,
+    reward: { coins: 500000, goldCoins: 10 }
+  },
+  {
+    id: 'upgrades_5',
+    name: 'Начинающий инвестор',
+    description: 'Купите 5 улучшений',
+    icon: 'TrendingUp',
+    category: 'upgrades',
+    target: 5,
+    current: 0,
+    completed: false,
+    reward: { coins: 5000 }
+  },
+  {
+    id: 'upgrades_20',
+    name: 'Опытный инвестор',
+    description: 'Купите 20 улучшений',
+    icon: 'BarChart3',
+    category: 'upgrades',
+    target: 20,
+    current: 0,
+    completed: false,
+    reward: { coins: 25000, goldCoins: 1 }
+  },
+  {
+    id: 'upgrades_50',
+    name: 'Магнат',
+    description: 'Купите 50 улучшений',
+    icon: 'LineChart',
+    category: 'upgrades',
+    target: 50,
+    current: 0,
+    completed: false,
+    reward: { coins: 100000, goldCoins: 5 }
+  },
+  {
+    id: 'dragons_3',
+    name: 'Коллекционер',
+    description: 'Получите 3 разных дракона',
+    icon: 'BookOpen',
+    category: 'dragons',
+    target: 3,
+    current: 0,
+    completed: false,
+    reward: { coins: 10000, goldCoins: 1 }
+  },
+  {
+    id: 'dragons_10',
+    name: 'Драконий повелитель',
+    description: 'Получите 10 разных драконов',
+    icon: 'Crown',
+    category: 'dragons',
+    target: 10,
+    current: 0,
+    completed: false,
+    reward: { coins: 50000, goldCoins: 5 }
+  },
+  {
+    id: 'dragons_20',
+    name: 'Легендарный тренер',
+    description: 'Получите 20 разных драконов',
+    icon: 'Trophy',
+    category: 'dragons',
+    target: 20,
+    current: 0,
+    completed: false,
+    reward: { coins: 200000, goldCoins: 15 }
+  },
+  {
+    id: 'combo_10',
+    name: 'Комбо мастер',
+    description: 'Достигните комбо x10',
+    icon: 'Flame',
+    category: 'combo',
+    target: 10,
+    current: 0,
+    completed: false,
+    reward: { coins: 15000, goldCoins: 1 }
+  },
+  {
+    id: 'combo_25',
+    name: 'Комбо легенда',
+    description: 'Достигните комбо x25',
+    icon: 'Sparkles',
+    category: 'combo',
+    target: 25,
+    current: 0,
+    completed: false,
+    reward: { coins: 50000, goldCoins: 3 }
+  },
+  {
+    id: 'combo_50',
+    name: 'Бог комбо',
+    description: 'Достигните комбо x50',
+    icon: 'Star',
+    category: 'combo',
+    target: 50,
+    current: 0,
+    completed: false,
+    reward: { coins: 150000, goldCoins: 10 }
+  },
+  {
+    id: 'energy_1000',
+    name: 'Энергичный',
+    description: 'Потратьте 1000 энергии',
+    icon: 'Battery',
+    category: 'energy',
+    target: 1000,
+    current: 0,
+    completed: false,
+    reward: { coins: 5000 }
+  },
+  {
+    id: 'energy_10000',
+    name: 'Неутомимый',
+    description: 'Потратьте 10000 энергии',
+    icon: 'BatteryCharging',
+    category: 'energy',
+    target: 10000,
+    current: 0,
+    completed: false,
+    reward: { coins: 25000, goldCoins: 2 }
+  },
+  {
+    id: 'energy_100000',
+    name: 'Вечный двигатель',
+    description: 'Потратьте 100000 энергии',
+    icon: 'Bolt',
+    category: 'energy',
+    target: 100000,
+    current: 0,
+    completed: false,
+    reward: { coins: 150000, goldCoins: 8 }
+  }
+];
