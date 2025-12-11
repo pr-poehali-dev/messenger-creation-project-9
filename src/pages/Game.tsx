@@ -165,6 +165,14 @@ export default function Game({ user, onLogout }: GameProps) {
           currentUsername={user.username}
           currentMaxCombo={gameState.maxCombo}
           onClose={() => setShowLeaderboard(false)}
+          onClaimReward={(rank, goldAmount) => {
+            gameState.setGoldCoins(prev => prev + goldAmount);
+            gameState.setLeaderboardRewardsClaimed(prev => ({
+              ...prev,
+              [`rank${rank}`]: true
+            }));
+          }}
+          rewardsClaimed={gameState.leaderboardRewardsClaimed}
         />
       )}
       

@@ -39,6 +39,11 @@ export interface GameState {
   totalUpgrades?: number;
   maxCombo?: number;
   previousDragonId?: string;
+  leaderboardRewardsClaimed?: {
+    rank1?: boolean;
+    rank2?: boolean;
+    rank3?: boolean;
+  };
 }
 
 export interface Upgrade {

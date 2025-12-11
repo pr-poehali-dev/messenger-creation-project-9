@@ -11,9 +11,15 @@ interface LeaderboardProps {
   currentUsername: string;
   currentMaxCombo: number;
   onClose: () => void;
+  onClaimReward: (rank: number, goldAmount: number) => void;
+  rewardsClaimed: {
+    rank1?: boolean;
+    rank2?: boolean;
+    rank3?: boolean;
+  };
 }
 
-export default function Leaderboard({ currentUsername, currentMaxCombo, onClose }: LeaderboardProps) {
+export default function Leaderboard({ currentUsername, currentMaxCombo, onClose, onClaimReward, rewardsClaimed }: LeaderboardProps) {
   const generateLeaderboard = (): LeaderboardEntry[] => {
     const names = [
       'DragonMaster', 'ComboKing', 'ClickerPro', 'FireStorm', 'IceWizard',
@@ -49,6 +55,29 @@ export default function Leaderboard({ currentUsername, currentMaxCombo, onClose 
   };
 
   const leaderboard = generateLeaderboard();
+  const currentUserEntry = leaderboard.find(e => e.isCurrentUser);
+  const currentRank = currentUserEntry?.rank || 0;
+
+  const getRewardAmount = (rank: number) => {
+    if (rank === 1) return 1000;
+    if (rank === 2) return 500;
+    if (rank === 3) return 250;
+    return 0;
+  };
+
+  const isRewardAvailable = (rank: number) => {
+    if (rank === 1) return !rewardsClaimed.rank1;
+    if (rank === 2) return !rewardsClaimed.rank2;
+    if (rank === 3) return !rewardsClaimed.rank3;
+    return false;
+  };
+
+  const handleClaimReward = (rank: number) => {
+    const reward = getRewardAmount(rank);
+    if (reward > 0 && isRewardAvailable(rank)) {
+      onClaimReward(rank, reward);
+    }
+  };
 
   const getRankColor = (rank: number) => {
     if (rank === 1) return 'from-yellow-500 to-amber-500';
@@ -117,6 +146,14 @@ export default function Leaderboard({ currentUsername, currentMaxCombo, onClose 
                   </div>
                 </div>
 
+                {entry.rank <= 3 && (
+                  <div className="shrink-0 ml-2">
+                    <div className="text-xs text-yellow-400 font-bold">
+                      +{getRewardAmount(entry.rank)} 🪙
+                    </div>
+                  </div>
+                )}
+
                 <div className="text-right shrink-0">
                   <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
                     {entry.maxCombo}x
@@ -136,12 +173,32 @@ export default function Leaderboard({ currentUsername, currentMaxCombo, onClose 
           ))}
         </div>
 
+        {currentRank > 0 && currentRank <= 3 && (
+          <div className="mt-6">
+            {isRewardAvailable(currentRank) ? (
+              <button
+                onClick={() => handleClaimReward(currentRank)}
+                className="w-full p-4 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 rounded-xl border-2 border-yellow-500/50 font-bold text-white text-lg transition-all transform hover:scale-105 shadow-lg shadow-yellow-500/30 animate-pulse"
+              >
+                🎁 Забрать награду {getRewardAmount(currentRank)} золотых монет!
+              </button>
+            ) : (
+              <div className="w-full p-4 bg-green-900/30 border-2 border-green-500/30 rounded-xl text-center">
+                <div className="text-green-400 font-bold">✅ Награда за {currentRank} место получена!</div>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="mt-6 p-4 bg-purple-900/30 border border-purple-500/30 rounded-xl text-center">
           <div className="text-sm text-purple-300 mb-2">
-            💡 Совет: Кликай быстро, чтобы набрать высокое комбо и подняться в таблице лидеров!
+            💡 Попади в топ-3 и получи золотые монеты!
+          </div>
+          <div className="text-xs text-purple-400 mb-2">
+            🥇 1 место: 1000 золота | 🥈 2 место: 500 золота | 🥉 3 место: 250 золота
           </div>
           <div className="text-xs text-purple-400">
-            Каждые 5 кликов подряд дают бонус к награде
+            Кликай быстро, чтобы набрать высокое комбо!
           </div>
         </div>
       </div>

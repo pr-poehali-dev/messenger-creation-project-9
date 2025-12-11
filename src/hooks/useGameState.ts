@@ -37,6 +37,7 @@ export function useGameState(user: User) {
   const [comboCount, setComboCount] = useState(0);
   const [comboTimer, setComboTimer] = useState<number | null>(null);
   const [maxCombo, setMaxCombo] = useState(0);
+  const [leaderboardRewardsClaimed, setLeaderboardRewardsClaimed] = useState<{rank1?: boolean; rank2?: boolean; rank3?: boolean;}>({});
 
   useEffect(() => {
     const savedState = getGameState();
@@ -73,6 +74,7 @@ export function useGameState(user: User) {
       setTotalEnergyUsed(savedState.totalEnergyUsed || 0);
       setTotalUpgrades(savedState.totalUpgrades || 0);
       setMaxCombo(savedState.maxCombo || 0);
+      setLeaderboardRewardsClaimed(savedState.leaderboardRewardsClaimed || {});
       if (savedState.energyRestoreTime) {
         setEnergyRestoreTime(savedState.energyRestoreTime);
       }
@@ -99,9 +101,10 @@ export function useGameState(user: User) {
       totalEnergyUsed,
       totalUpgrades,
       maxCombo,
+      leaderboardRewardsClaimed,
     };
     saveGameState(state);
-  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons, totalClicks, totalEnergyUsed, totalUpgrades, maxCombo]);
+  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons, totalClicks, totalEnergyUsed, totalUpgrades, maxCombo, leaderboardRewardsClaimed]);
 
   return {
     coins,
@@ -152,5 +155,7 @@ export function useGameState(user: User) {
     setComboTimer,
     maxCombo,
     setMaxCombo,
+    leaderboardRewardsClaimed,
+    setLeaderboardRewardsClaimed,
   };
 }
