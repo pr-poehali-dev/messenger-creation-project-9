@@ -13,6 +13,11 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
+    if (window.location.hash === '#admin') {
+      setCurrentPage('admin');
+      return;
+    }
+    
     const user = getUser();
     if (user) {
       setCurrentUser(user);
@@ -29,12 +34,6 @@ export default function App() {
     setCurrentUser(null);
     setCurrentPage('landing');
   };
-
-  useEffect(() => {
-    if (window.location.hash === '#admin') {
-      setCurrentPage('admin');
-    }
-  }, []);
 
   if (currentPage === 'admin') {
     return <AdminPanel />;

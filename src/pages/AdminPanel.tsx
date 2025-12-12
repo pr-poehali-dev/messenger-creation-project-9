@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 
 export default function AdminPanel() {
-  const navigate = useNavigate();
   const [adminKey, setAdminKey] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
@@ -103,7 +101,7 @@ export default function AdminPanel() {
           </form>
 
           <button
-            onClick={() => navigate('/game')}
+            onClick={() => window.location.href = '/'}
             className="w-full mt-4 text-purple-300 hover:text-white transition-colors text-sm"
           >
             ← Вернуться к игре
@@ -123,7 +121,7 @@ export default function AdminPanel() {
               <h1 className="text-3xl font-bold text-white">Панель администратора</h1>
             </div>
             <button
-              onClick={() => navigate('/game')}
+              onClick={() => window.location.href = '/'}
               className="text-purple-300 hover:text-white transition-colors"
             >
               <Icon name="X" size={24} />
