@@ -80,7 +80,7 @@ export default function GameHeader({
           </button>
           <button
             onClick={onGoldClick}
-            className="relative px-2 py-1.5 bg-gradient-to-br from-yellow-400 to-amber-500 border-2 border-yellow-200/70 rounded-lg hover:from-yellow-300 hover:to-amber-400 transition-all flex items-center gap-1 font-bold shadow-lg shadow-yellow-400/50"
+            className="relative p-2 bg-gradient-to-br from-yellow-400 to-amber-500 border-2 border-yellow-200/70 rounded-lg hover:from-yellow-300 hover:to-amber-400 transition-all shadow-lg shadow-yellow-400/50 flex flex-col items-center justify-center gap-0.5"
             title="Золотые монеты"
           >
             <img 
@@ -88,7 +88,7 @@ export default function GameHeader({
               alt="Gold"
               className="w-5 h-5"
             />
-            <span className="text-amber-900 text-sm">{goldCoins}</span>
+            <span className="text-amber-900 text-[10px] font-bold leading-none">{goldCoins}</span>
           </button>
           <button
             onClick={onProfileClick}
