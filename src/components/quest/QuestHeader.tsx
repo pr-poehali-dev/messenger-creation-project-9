@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 
 interface QuestHeaderProps {
@@ -8,6 +9,27 @@ interface QuestHeaderProps {
 }
 
 export default function QuestHeader({ completedQuests, totalQuests, totalRewards, onClose }: QuestHeaderProps) {
+  const [timeRemaining, setTimeRemaining] = useState('');
+
+  useEffect(() => {
+    const updateTimer = () => {
+      const now = new Date();
+      const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const diff = tomorrow.getTime() - now.getTime();
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      setTimeRemaining(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       <div className="flex items-center justify-between mb-6">
@@ -16,9 +38,15 @@ export default function QuestHeader({ completedQuests, totalQuests, totalRewards
             <Icon name="Trophy" size={32} />
             Ежедневные квесты
           </h2>
-          <p className="text-gray-300 text-sm mt-1">
-            Выполняй задания и зарабатывай золотые монеты!
-          </p>
+          <div className="flex items-center gap-3 mt-1">
+            <p className="text-gray-300 text-sm">
+              Выполняй задания и зарабатывай золотые монеты!
+            </p>
+            <div className="flex items-center gap-1.5 bg-blue-500/20 px-3 py-1 rounded-lg border border-blue-400/30">
+              <Icon name="Clock" size={14} className="text-blue-300" />
+              <span className="text-blue-200 text-xs font-mono font-semibold">{timeRemaining}</span>
+            </div>
+          </div>
         </div>
         <button
           onClick={onClose}
