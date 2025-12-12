@@ -2,22 +2,16 @@ import { useState, useEffect } from 'react';
 import Landing from '@/pages/Landing';
 import Auth from '@/pages/Auth';
 import Game from '@/pages/Game';
-import AdminPanel from '@/pages/AdminPanel';
 import { User } from '@/types/game';
 import { getUser } from '@/utils/storage';
 
-type Page = 'landing' | 'login' | 'register' | 'game' | 'admin';
+type Page = 'landing' | 'login' | 'register' | 'game';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    if (window.location.hash === '#admin') {
-      setCurrentPage('admin');
-      return;
-    }
-    
     const user = getUser();
     if (user) {
       setCurrentUser(user);
@@ -34,10 +28,6 @@ export default function App() {
     setCurrentUser(null);
     setCurrentPage('landing');
   };
-
-  if (currentPage === 'admin') {
-    return <AdminPanel />;
-  }
 
   if (currentPage === 'game' && currentUser) {
     return <Game user={currentUser} onLogout={handleLogout} />;
