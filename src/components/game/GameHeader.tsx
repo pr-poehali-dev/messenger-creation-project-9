@@ -80,7 +80,7 @@ export default function GameHeader({
           </button>
           <button
             onClick={onGoldClick}
-            className="relative p-2 bg-gradient-to-br from-yellow-400 to-amber-500 border-2 border-yellow-200/70 rounded-lg hover:from-yellow-300 hover:to-amber-400 transition-all shadow-lg shadow-yellow-400/50 flex flex-col items-center justify-center gap-0.5"
+            className="relative w-[44px] h-[44px] bg-gradient-to-br from-yellow-400 to-amber-500 border-2 border-yellow-200/70 rounded-lg hover:from-yellow-300 hover:to-amber-400 transition-all shadow-lg shadow-yellow-400/50 flex flex-col items-center justify-center gap-0.5 p-1"
             title="Золотые монеты"
           >
             <img 
