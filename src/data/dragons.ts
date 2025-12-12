@@ -405,4 +405,14 @@ export const DRAGONS: Dragon[] = [
     maxEnergy: 2000000,
     owned: false,
   },
+  {
+    id: 'dragon-44',
+    name: 'Солнечный владыка',
+    image: 'https://cdn.poehali.dev/files/089999999.jpeg',
+    cost: 0,
+    goldCost: 50000,
+    coinsPerTap: 5000000,
+    maxEnergy: 8000000,
+    owned: false,
+  },
 ];
