@@ -20,19 +20,40 @@ export function useQuestManager({
   const [quests, setQuests] = useState<Quest[]>([]);
 
   useEffect(() => {
-    const savedQuests = localStorage.getItem('dragonQuests');
-    const lastReset = localStorage.getItem('questsLastReset');
-    const now = Date.now();
-    const oneDay = 24 * 60 * 60 * 1000;
+    const checkAndResetQuests = () => {
+      const savedQuests = localStorage.getItem('dragonQuests');
+      const lastReset = localStorage.getItem('questsLastReset');
+      const now = new Date();
+      
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+      const lastResetDate = lastReset ? parseInt(lastReset) : 0;
+      const lastResetDay = new Date(lastResetDate);
+      const lastResetDayStart = new Date(lastResetDay.getFullYear(), lastResetDay.getMonth(), lastResetDay.getDate()).getTime();
 
-    if (savedQuests && lastReset && now - parseInt(lastReset) < oneDay) {
-      setQuests(JSON.parse(savedQuests));
-    } else {
-      const newQuests = generateDailyQuests();
-      setQuests(newQuests);
-      localStorage.setItem('dragonQuests', JSON.stringify(newQuests));
-      localStorage.setItem('questsLastReset', now.toString());
-    }
+      if (savedQuests && today === lastResetDayStart) {
+        setQuests(JSON.parse(savedQuests));
+      } else {
+        const newQuests = generateDailyQuests();
+        setQuests(newQuests);
+        localStorage.setItem('dragonQuests', JSON.stringify(newQuests));
+        localStorage.setItem('questsLastReset', today.toString());
+      }
+    };
+
+    checkAndResetQuests();
+
+    const now = new Date();
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const timeUntilMidnight = tomorrow.getTime() - now.getTime();
+
+    const midnightTimer = setTimeout(() => {
+      checkAndResetQuests();
+      
+      const dailyInterval = setInterval(checkAndResetQuests, 24 * 60 * 60 * 1000);
+      return () => clearInterval(dailyInterval);
+    }, timeUntilMidnight);
+
+    return () => clearTimeout(midnightTimer);
   }, []);
 
   useEffect(() => {
