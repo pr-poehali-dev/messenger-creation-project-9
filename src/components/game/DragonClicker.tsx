@@ -5,6 +5,7 @@ import DragonDisplay from '@/components/clicker/DragonDisplay';
 interface DragonClickerProps {
   currentDragon: Dragon;
   currentDragonId: string;
+  currentFrameId: string;
   energy: number;
   maxEnergy: number;
   energyRestoreTime: number | null;
@@ -20,6 +21,7 @@ interface DragonClickerProps {
 export default function DragonClicker({
   currentDragon,
   currentDragonId,
+  currentFrameId,
   energy,
   maxEnergy,
   energyRestoreTime,
@@ -43,6 +45,7 @@ export default function DragonClicker({
       <DragonDisplay
         currentDragon={currentDragon}
         currentDragonId={currentDragonId}
+        currentFrameId={currentFrameId}
         energy={energy}
         energyRestoreTime={energyRestoreTime}
         coinsPerTap={coinsPerTap}

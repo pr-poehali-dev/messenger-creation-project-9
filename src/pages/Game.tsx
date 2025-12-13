@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { User } from '@/types/game';
 import { removeUser } from '@/utils/storage';
 import DragonShop from '@/pages/DragonShop';
+import FrameShop from '@/pages/FrameShop';
 import { DRAGONS } from '@/data/dragons';
 import GameHeader from '@/components/game/GameHeader';
 import DragonClicker from '@/components/game/DragonClicker';
@@ -22,6 +23,7 @@ interface GameProps {
 
 export default function Game({ user, onLogout }: GameProps) {
   const [showShop, setShowShop] = useState(false);
+  const [showFrames, setShowFrames] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showGoldExchange, setShowGoldExchange] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
@@ -53,6 +55,7 @@ export default function Game({ user, onLogout }: GameProps) {
     coins: gameState.coins,
     goldCoins: gameState.goldCoins,
     ownedDragons: gameState.ownedDragons,
+    ownedFrames: gameState.ownedFrames,
     comboCount: gameState.comboCount,
     comboTimer: gameState.comboTimer,
     setCoins: gameState.setCoins,
@@ -66,6 +69,8 @@ export default function Game({ user, onLogout }: GameProps) {
     setUpgrades: gameState.setUpgrades,
     setGoldCoins: gameState.setGoldCoins,
     setOwnedDragons: gameState.setOwnedDragons,
+    setOwnedFrames: gameState.setOwnedFrames,
+    setCurrentFrameId: gameState.setCurrentFrameId,
     setDragonChangeAnimation: gameState.setDragonChangeAnimation,
     setCurrentDragonId: gameState.setCurrentDragonId,
     setCoinsPerTap: gameState.setCoinsPerTap,
@@ -103,6 +108,20 @@ export default function Game({ user, onLogout }: GameProps) {
         onBuyDragon={gameActions.handleBuyDragon}
         onSelectDragon={gameActions.handleSelectDragon}
         onBack={() => setShowShop(false)}
+      />
+    );
+  }
+
+  if (showFrames) {
+    return (
+      <FrameShop
+        coins={gameState.coins}
+        goldCoins={gameState.goldCoins}
+        currentFrameId={gameState.currentFrameId}
+        ownedFrames={gameState.ownedFrames}
+        onBuyFrame={gameActions.handleBuyFrame}
+        onSelectFrame={gameActions.handleSelectFrame}
+        onBack={() => setShowFrames(false)}
       />
     );
   }
@@ -282,6 +301,7 @@ export default function Game({ user, onLogout }: GameProps) {
           coinsPerSecond={gameState.coinsPerSecond}
           passiveIncomeIndicator={gameState.passiveIncomeIndicator}
           onShopClick={() => setShowShop(true)}
+          onFramesClick={() => setShowFrames(true)}
           onProfileClick={() => setShowProfile(true)}
           onGoldClick={() => setShowGoldExchange(true)}
           onQuestClick={() => setShowQuests(true)}
@@ -306,6 +326,7 @@ export default function Game({ user, onLogout }: GameProps) {
             <DragonClicker
               currentDragon={currentDragon}
               currentDragonId={gameState.currentDragonId}
+              currentFrameId={gameState.currentFrameId}
               energy={gameState.energy}
               maxEnergy={gameState.maxEnergy}
               energyRestoreTime={gameState.energyRestoreTime}

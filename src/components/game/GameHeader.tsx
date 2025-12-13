@@ -8,6 +8,7 @@ interface GameHeaderProps {
   coinsPerSecond: number;
   passiveIncomeIndicator: boolean;
   onShopClick: () => void;
+  onFramesClick: () => void;
   onProfileClick: () => void;
   onGoldClick: () => void;
   onQuestClick: () => void;
@@ -25,6 +26,7 @@ export default function GameHeader({
   coinsPerSecond,
   passiveIncomeIndicator,
   onShopClick,
+  onFramesClick,
   onProfileClick,
   onGoldClick,
   onQuestClick,
@@ -56,6 +58,13 @@ export default function GameHeader({
             title="Магазин"
           >
             <Icon name="ShoppingBag" size={20} />
+          </button>
+          <button
+            onClick={onFramesClick}
+            className="p-2 bg-gradient-to-br from-pink-500 to-purple-600 border-2 border-pink-300/50 rounded-lg hover:from-pink-400 hover:to-purple-500 transition-all shadow-lg shadow-pink-500/30"
+            title="Рамки"
+          >
+            <Icon name="Frame" size={20} />
           </button>
           <button
             onClick={onQuestClick}

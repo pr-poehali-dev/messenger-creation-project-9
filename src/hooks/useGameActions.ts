@@ -1,5 +1,6 @@
 import { Dragon, Upgrade } from '@/types/game';
 import { DRAGONS } from '@/data/dragons';
+import { Frame } from '@/data/frames';
 
 interface UseGameActionsProps {
   energy: number;
@@ -9,6 +10,7 @@ interface UseGameActionsProps {
   coins: number;
   goldCoins: number;
   ownedDragons: string[];
+  ownedFrames: string[];
   comboCount: number;
   comboTimer: number | null;
   maxCombo: number;
@@ -23,8 +25,10 @@ interface UseGameActionsProps {
   setUpgrades: React.Dispatch<React.SetStateAction<Upgrade[]>>;
   setGoldCoins: React.Dispatch<React.SetStateAction<number>>;
   setOwnedDragons: React.Dispatch<React.SetStateAction<string[]>>;
+  setOwnedFrames: React.Dispatch<React.SetStateAction<string[]>>;
   setDragonChangeAnimation: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentDragonId: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentFrameId: React.Dispatch<React.SetStateAction<string>>;
   setCoinsPerTap: React.Dispatch<React.SetStateAction<number>>;
   setMaxEnergy: React.Dispatch<React.SetStateAction<number>>;
   setTotalClicks: React.Dispatch<React.SetStateAction<number>>;
@@ -43,6 +47,7 @@ export function useGameActions({
   coins,
   goldCoins,
   ownedDragons,
+  ownedFrames,
   comboCount,
   comboTimer,
   maxCombo,
@@ -57,8 +62,10 @@ export function useGameActions({
   setUpgrades,
   setGoldCoins,
   setOwnedDragons,
+  setOwnedFrames,
   setDragonChangeAnimation,
   setCurrentDragonId,
+  setCurrentFrameId,
   setCoinsPerTap,
   setMaxEnergy,
   setTotalClicks,
@@ -580,11 +587,36 @@ export function useGameActions({
     }
   };
 
+  const handleBuyFrame = (frame: Frame) => {
+    if (frame.goldCost && frame.goldCost > 0) {
+      if (goldCoins >= frame.goldCost) {
+        setGoldCoins(prev => prev - frame.goldCost!);
+        setOwnedFrames(prev => [...prev, frame.id]);
+        frame.owned = true;
+        return true;
+      }
+    } else {
+      if (coins >= frame.cost) {
+        setCoins(prev => prev - frame.cost);
+        setOwnedFrames(prev => [...prev, frame.id]);
+        frame.owned = true;
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const handleSelectFrame = (frameId: string) => {
+    setCurrentFrameId(frameId);
+  };
+
   return {
     handleDragonClick,
     handleBuyUpgrade,
     handleGoldExchange,
     handleBuyDragon,
     handleSelectDragon,
+    handleBuyFrame,
+    handleSelectFrame,
   };
 }

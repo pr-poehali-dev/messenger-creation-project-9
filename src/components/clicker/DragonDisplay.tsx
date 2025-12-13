@@ -1,9 +1,11 @@
 import { Dragon } from '@/types/game';
+import { FRAMES } from '@/data/frames';
 import FloatingEffects from './FloatingEffects';
 
 interface DragonDisplayProps {
   currentDragon: Dragon;
   currentDragonId: string;
+  currentFrameId: string;
   energy: number;
   energyRestoreTime: number | null;
   coinsPerTap: number;
@@ -17,6 +19,7 @@ interface DragonDisplayProps {
 export default function DragonDisplay({
   currentDragon,
   currentDragonId,
+  currentFrameId,
   energy,
   energyRestoreTime,
   coinsPerTap,
@@ -26,6 +29,9 @@ export default function DragonDisplay({
   snowflakes,
   onDragonClick
 }: DragonDisplayProps) {
+  const currentFrame = FRAMES.find(f => f.id === currentFrameId);
+  const frameStyle = currentFrame?.style || {};
+
   return (
     <div className="relative">
       <button
@@ -36,6 +42,7 @@ export default function DragonDisplay({
           transition-all duration-100
           ${energy >= 10 && !energyRestoreTime ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'opacity-50 cursor-not-allowed'}
           ${clickAnimation ? 'scale-110' : ''}`}
+        style={frameStyle}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-purple-900 to-orange-600">
           <div className="absolute inset-0" style={{

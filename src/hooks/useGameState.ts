@@ -37,6 +37,8 @@ export function useGameState(user: User) {
   const [currentDragonId, setCurrentDragonId] = useState('dragon-1');
   const [ownedDragons, setOwnedDragons] = useState<string[]>(['dragon-1']);
   const [dragonChangeAnimation, setDragonChangeAnimation] = useState(false);
+  const [currentFrameId, setCurrentFrameId] = useState('frame-none');
+  const [ownedFrames, setOwnedFrames] = useState<string[]>(['frame-none']);
   const [totalClicks, setTotalClicks] = useState(0);
   const [totalEnergyUsed, setTotalEnergyUsed] = useState(0);
   const [totalUpgrades, setTotalUpgrades] = useState(0);
@@ -77,6 +79,8 @@ export function useGameState(user: User) {
       }
       
       setOwnedDragons(savedState.ownedDragons || ['dragon-1']);
+      setCurrentFrameId(savedState.currentFrameId || 'frame-none');
+      setOwnedFrames(savedState.ownedFrames || ['frame-none']);
       setTotalClicks(savedState.totalClicks || 0);
       setTotalEnergyUsed(savedState.totalEnergyUsed || 0);
       setTotalUpgrades(savedState.totalUpgrades || 0);
@@ -140,6 +144,8 @@ export function useGameState(user: User) {
       energyRestoreTime,
       currentDragonId,
       ownedDragons,
+      currentFrameId,
+      ownedFrames,
       totalClicks,
       totalEnergyUsed,
       totalUpgrades,
@@ -148,7 +154,7 @@ export function useGameState(user: User) {
       achievements,
     };
     saveGameState(state);
-  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons, totalClicks, totalEnergyUsed, totalUpgrades, maxCombo, leaderboardRewardsClaimed, achievements]);
+  }, [user.id, coins, goldCoins, totalCoins, coinsPerTap, coinsPerSecond, energy, maxEnergy, level, upgrades, energyRestoreTime, currentDragonId, ownedDragons, currentFrameId, ownedFrames, totalClicks, totalEnergyUsed, totalUpgrades, maxCombo, leaderboardRewardsClaimed, achievements]);
 
   return {
     coins,
@@ -185,6 +191,10 @@ export function useGameState(user: User) {
     setCurrentDragonId,
     ownedDragons,
     setOwnedDragons,
+    currentFrameId,
+    setCurrentFrameId,
+    ownedFrames,
+    setOwnedFrames,
     dragonChangeAnimation,
     setDragonChangeAnimation,
     totalClicks,
