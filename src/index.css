@@ -419,3 +419,15 @@ body {
 .animate-snowfall-6 {
   animation: snowfall6 5.4s linear infinite 2.5s;
 }
+
+@keyframes rotatingBorder {
+  0% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  50% {
+    filter: hue-rotate(180deg) brightness(1.2);
+  }
+  100% {
+    filter: hue-rotate(360deg) brightness(1);
+  }
+}

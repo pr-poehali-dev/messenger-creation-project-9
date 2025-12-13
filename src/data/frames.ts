@@ -335,4 +335,18 @@ export const FRAMES: Frame[] = [
       boxShadow: '0 0 65px rgba(176, 212, 232, 1), 0 0 45px rgba(240, 248, 255, 0.9), inset 0 0 35px rgba(255, 255, 255, 0.6)',
     },
   },
+  {
+    id: 'frame-26',
+    name: 'Галактическая бездна',
+    preview: '🌌',
+    cost: 0,
+    goldCost: 5000,
+    owned: false,
+    style: {
+      border: '14px solid transparent',
+      background: 'linear-gradient(#1a1a2e, #1a1a2e) padding-box, linear-gradient(90deg, #FF00FF, #00FFFF, #FF00FF, #FFFF00, #FF00FF) border-box',
+      boxShadow: '0 0 120px rgba(255, 0, 255, 1), 0 0 90px rgba(0, 255, 255, 0.9), 0 0 60px rgba(255, 255, 0, 0.8), inset 0 0 60px rgba(255, 0, 255, 0.4)',
+      animation: 'rotatingBorder 8s linear infinite',
+    },
+  },
 ];

@@ -112,6 +112,7 @@ export default function FrameShop({
               ? goldCoins >= (frame.goldCost || 0) && !isOwned
               : coins >= frame.cost && !isOwned;
             const isWinterFrame = ['frame-21', 'frame-22', 'frame-23', 'frame-24', 'frame-25'].includes(frame.id);
+            const isGalaxyFrame = frame.id === 'frame-26';
 
             return (
               <div
@@ -162,6 +163,21 @@ export default function FrameShop({
                         <div className="absolute top-[18%] right-[10%] text-white text-sm opacity-70 animate-snowfall-6">❄️</div>
                         <div className="absolute top-[10%] left-[80%] text-white text-xs opacity-80 animate-snowfall-1" style={{animationDelay: '1s'}}>❄️</div>
                         <div className="absolute top-[5%] right-[60%] text-white text-xs opacity-65 animate-snowfall-2" style={{animationDelay: '1.5s'}}>❄️</div>
+                      </>
+                    ) : isGalaxyFrame ? (
+                      <>
+                        <div className="absolute top-[8%] left-[12%] text-white text-xl opacity-90 animate-sparkle" style={{animationDelay: '0s'}}>⭐</div>
+                        <div className="absolute top-[20%] right-[18%] text-purple-300 text-sm opacity-80 animate-sparkle" style={{animationDelay: '0.5s'}}>✨</div>
+                        <div className="absolute top-[65%] left-[20%] text-cyan-300 text-lg opacity-85 animate-sparkle" style={{animationDelay: '1s'}}>⭐</div>
+                        <div className="absolute bottom-[15%] right-[12%] text-pink-300 text-base opacity-90 animate-sparkle" style={{animationDelay: '1.5s'}}>✨</div>
+                        <div className="absolute top-[45%] right-[25%] text-yellow-300 text-sm opacity-75 animate-sparkle" style={{animationDelay: '2s'}}>⭐</div>
+                        <div className="absolute bottom-[30%] left-[8%] text-blue-300 text-base opacity-80 animate-sparkle" style={{animationDelay: '2.5s'}}>✨</div>
+                        <div className="absolute top-[35%] left-[70%] text-purple-200 text-sm opacity-70 animate-sparkle" style={{animationDelay: '3s'}}>⭐</div>
+                        <div className="absolute bottom-[50%] right-[5%] text-pink-200 text-xs opacity-85 animate-sparkle" style={{animationDelay: '3.5s'}}>✨</div>
+                        
+                        <div className="absolute top-[15%] left-[40%] w-2 h-2 bg-purple-500 rounded-full animate-pulse shadow-lg shadow-purple-500/80"></div>
+                        <div className="absolute top-[55%] right-[40%] w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse shadow-lg shadow-cyan-400/80" style={{animationDelay: '0.7s'}}></div>
+                        <div className="absolute bottom-[25%] left-[35%] w-1 h-1 bg-pink-400 rounded-full animate-pulse shadow-lg shadow-pink-400/80" style={{animationDelay: '1.4s'}}></div>
                       </>
                     ) : (
                       <>
