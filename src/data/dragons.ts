@@ -510,14 +510,4 @@ export const DRAGONS: Dragon[] = [
     maxEnergy: 15000000,
     owned: false,
   },
-  {
-    id: 'dragon-55',
-    name: 'Городской огонёк',
-    image: 'https://cdn.poehali.dev/files/1.jpeg',
-    cost: 0,
-    goldCost: 200000,
-    coinsPerTap: 75000000,
-    maxEnergy: 100000000,
-    owned: false,
-  },
 ];
