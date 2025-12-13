@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Frame } from '@/data/frames';
 import { FRAMES } from '@/data/frames';
+import { DRAGONS } from '@/data/dragons';
 import Icon from '@/components/ui/icon';
 
 interface FrameShopProps {
@@ -7,6 +9,8 @@ interface FrameShopProps {
   goldCoins: number;
   currentFrameId: string;
   ownedFrames: string[];
+  ownedDragons: string[];
+  currentDragonId: string;
   onBuyFrame: (frame: Frame) => void;
   onSelectFrame: (frameId: string) => void;
   onBack: () => void;
@@ -19,15 +23,22 @@ export default function FrameShop({
   goldCoins,
   currentFrameId,
   ownedFrames,
+  ownedDragons,
+  currentDragonId,
   onBuyFrame,
   onSelectFrame,
   onBack,
 }: FrameShopProps) {
+  const [previewDragonId, setPreviewDragonId] = useState(currentDragonId);
+
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
     return Math.floor(num).toString();
   };
+
+  const ownedDragonsList = DRAGONS.filter(d => ownedDragons.includes(d.id));
+  const previewDragon = DRAGONS.find(d => d.id === previewDragonId) || ownedDragonsList[0];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-900 via-purple-900 to-black text-white">
@@ -60,6 +71,38 @@ export default function FrameShop({
       </div>
 
       <div className="max-w-6xl mx-auto p-3 sm:p-4 md:p-6 pb-20 md:pb-6">
+        {ownedDragonsList.length > 1 && (
+          <div className="mb-6 bg-purple-800/30 rounded-2xl p-4 border-2 border-purple-500/50">
+            <h3 className="text-lg font-bold text-center mb-3 text-purple-200">
+              Выберите дракона для превью
+            </h3>
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {ownedDragonsList.map((dragon) => (
+                <button
+                  key={dragon.id}
+                  onClick={() => setPreviewDragonId(dragon.id)}
+                  className={`flex-shrink-0 relative transition-all ${
+                    previewDragonId === dragon.id
+                      ? 'scale-110 ring-4 ring-pink-500'
+                      : 'hover:scale-105 opacity-70 hover:opacity-100'
+                  }`}
+                >
+                  <img
+                    src={dragon.image}
+                    alt={dragon.name}
+                    className="w-20 h-20 rounded-xl object-cover border-2 border-purple-400"
+                  />
+                  {previewDragonId === dragon.id && (
+                    <div className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
+                      ✓
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
           {FRAMES.map((frame) => {
             const isOwned = ownedFrames.includes(frame.id);
@@ -91,15 +134,22 @@ export default function FrameShop({
                   <h3 className="text-xl font-bold text-center mb-2">{frame.name}</h3>
                   
                   <div 
-                    className="w-full aspect-square rounded-2xl overflow-hidden mx-auto mb-3"
+                    className="w-full aspect-square rounded-2xl overflow-hidden mx-auto mb-3 relative"
                     style={{
                       ...frame.style,
                       backgroundColor: '#1a1a2e',
                     }}
                   >
-                    <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-indigo-900/50 flex items-center justify-center text-6xl">
-                      🐉
+                    <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-purple-900 to-orange-600">
+                      <div className="absolute inset-0" style={{
+                        backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,200,100,0.3) 0%, transparent 50%)',
+                      }}></div>
                     </div>
+                    <img
+                      src={previewDragon.image}
+                      alt={previewDragon.name}
+                      className="w-full h-full object-cover relative z-10"
+                    />
                   </div>
                 </div>
 

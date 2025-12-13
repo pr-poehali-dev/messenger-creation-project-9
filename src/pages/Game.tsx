@@ -120,6 +120,8 @@ export default function Game({ user, onLogout }: GameProps) {
         goldCoins={gameState.goldCoins}
         currentFrameId={gameState.currentFrameId}
         ownedFrames={gameState.ownedFrames}
+        ownedDragons={gameState.ownedDragons}
+        currentDragonId={gameState.currentDragonId}
         onBuyFrame={gameActions.handleBuyFrame}
         onSelectFrame={gameActions.handleSelectFrame}
         onBack={() => setShowFrames(false)}
