@@ -1,6 +1,7 @@
 import Icon from '@/components/ui/icon';
 import PlayerStats from '@/components/profile/PlayerStats';
 import { Achievement } from '@/types/game';
+import { getStorageStatus } from '@/utils/storage';
 
 interface PlayerProfileProps {
   username: string;
@@ -38,6 +39,7 @@ export default function PlayerProfile({
   formatNumber
 }: PlayerProfileProps) {
   const unlockedCount = achievements.filter(a => a.completed).length;
+  const storageStatus = getStorageStatus();
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fadeIn">
@@ -48,6 +50,18 @@ export default function PlayerProfile({
         >
           <Icon name="X" size={20} />
         </button>
+
+        {!storageStatus.isLocalStorageAvailable && (
+          <div className="mb-4 bg-yellow-900/50 border border-yellow-600/50 rounded-xl p-3 backdrop-blur-sm">
+            <div className="flex items-center gap-2 text-yellow-300 text-sm">
+              <Icon name="AlertTriangle" size={16} />
+              <span className="font-semibold">Временное хранилище</span>
+            </div>
+            <p className="text-yellow-200 text-xs mt-1">
+              Данные не сохранятся после закрытия вкладки
+            </p>
+          </div>
+        )}
 
         <div className="text-center mb-4 sm:mb-6 md:mb-8">
           <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full mx-auto mb-3 sm:mb-4 flex items-center justify-center text-3xl sm:text-4xl md:text-5xl font-bold text-white border-2 sm:border-4 border-purple-500">

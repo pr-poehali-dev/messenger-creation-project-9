@@ -1,13 +1,28 @@
 import Icon from '@/components/ui/icon';
+import { getStorageStatus } from '@/utils/storage';
 
 interface LandingProps {
   onNavigate: (page: 'login' | 'register') => void;
 }
 
 export default function Landing({ onNavigate }: LandingProps) {
+  const storageStatus = getStorageStatus();
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 via-indigo-900 to-black text-white">
       <div className="max-w-6xl mx-auto px-6 py-12">
+        {!storageStatus.isLocalStorageAvailable && (
+          <div className="mb-6 bg-yellow-900/50 border border-yellow-600/50 rounded-xl p-4 text-center backdrop-blur-sm">
+            <div className="flex items-center justify-center gap-2 text-yellow-300">
+              <Icon name="AlertTriangle" size={20} />
+              <span className="font-semibold">Режим временного хранилища</span>
+            </div>
+            <p className="text-yellow-200 text-sm mt-2">
+              Прогресс не будет сохранён после закрытия вкладки. Включите localStorage в настройках браузера для сохранения.
+            </p>
+          </div>
+        )}
+        
         <div className="text-center mb-16">
           <div className="text-8xl mb-6 animate-bounce">👀</div>
           <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
