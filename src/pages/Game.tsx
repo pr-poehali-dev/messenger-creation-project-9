@@ -57,6 +57,7 @@ export default function Game({ user, onLogout }: GameProps) {
     ownedDragons: gameState.ownedDragons,
     ownedFrames: gameState.ownedFrames,
     comboCount: gameState.comboCount,
+    setFrameChangeAnimation: gameState.setFrameChangeAnimation,
     comboTimer: gameState.comboTimer,
     setCoins: gameState.setCoins,
     setTotalCoins: gameState.setTotalCoins,
@@ -334,6 +335,7 @@ export default function Game({ user, onLogout }: GameProps) {
               coinsPerTap={gameState.coinsPerTap}
               clickAnimation={gameState.clickAnimation}
               dragonChangeAnimation={gameState.dragonChangeAnimation}
+              frameChangeAnimation={gameState.frameChangeAnimation}
               floatingTexts={gameState.floatingTexts}
               snowflakes={gameState.snowflakes}
               onDragonClick={gameActions.handleDragonClick}

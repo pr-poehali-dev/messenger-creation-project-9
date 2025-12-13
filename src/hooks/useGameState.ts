@@ -39,6 +39,7 @@ export function useGameState(user: User) {
   const [dragonChangeAnimation, setDragonChangeAnimation] = useState(false);
   const [currentFrameId, setCurrentFrameId] = useState('frame-none');
   const [ownedFrames, setOwnedFrames] = useState<string[]>(['frame-none']);
+  const [frameChangeAnimation, setFrameChangeAnimation] = useState(false);
   const [totalClicks, setTotalClicks] = useState(0);
   const [totalEnergyUsed, setTotalEnergyUsed] = useState(0);
   const [totalUpgrades, setTotalUpgrades] = useState(0);
@@ -197,6 +198,8 @@ export function useGameState(user: User) {
     setOwnedFrames,
     dragonChangeAnimation,
     setDragonChangeAnimation,
+    frameChangeAnimation,
+    setFrameChangeAnimation,
     totalClicks,
     setTotalClicks,
     totalEnergyUsed,

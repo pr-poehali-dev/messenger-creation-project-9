@@ -11,6 +11,7 @@ interface DragonDisplayProps {
   coinsPerTap: number;
   clickAnimation: boolean;
   dragonChangeAnimation: boolean;
+  frameChangeAnimation: boolean;
   floatingTexts: Array<{ id: number; value: number; x: number; y: number; dragonType?: string }>;
   snowflakes: Array<{ id: number; x: number; y: number; size: number }>;
   onDragonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -25,6 +26,7 @@ export default function DragonDisplay({
   coinsPerTap,
   clickAnimation,
   dragonChangeAnimation,
+  frameChangeAnimation,
   floatingTexts,
   snowflakes,
   onDragonClick
@@ -39,9 +41,10 @@ export default function DragonDisplay({
         disabled={energy < 10 || !!energyRestoreTime}
         className={`w-full aspect-square rounded-3xl overflow-hidden relative
           shadow-2xl shadow-orange-500/50 border-4 border-yellow-500/30 
-          transition-all duration-100
+          transition-all duration-500
           ${energy >= 10 && !energyRestoreTime ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'opacity-50 cursor-not-allowed'}
-          ${clickAnimation ? 'scale-110' : ''}`}
+          ${clickAnimation ? 'scale-110' : ''}
+          ${frameChangeAnimation ? 'animate-pulse scale-110' : ''}`}
         style={frameStyle}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-purple-900 to-orange-600">

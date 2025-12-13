@@ -27,6 +27,7 @@ interface UseGameActionsProps {
   setOwnedDragons: React.Dispatch<React.SetStateAction<string[]>>;
   setOwnedFrames: React.Dispatch<React.SetStateAction<string[]>>;
   setDragonChangeAnimation: React.Dispatch<React.SetStateAction<boolean>>;
+  setFrameChangeAnimation: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentDragonId: React.Dispatch<React.SetStateAction<string>>;
   setCurrentFrameId: React.Dispatch<React.SetStateAction<string>>;
   setCoinsPerTap: React.Dispatch<React.SetStateAction<number>>;
@@ -64,6 +65,7 @@ export function useGameActions({
   setOwnedDragons,
   setOwnedFrames,
   setDragonChangeAnimation,
+  setFrameChangeAnimation,
   setCurrentDragonId,
   setCurrentFrameId,
   setCoinsPerTap,
@@ -607,7 +609,11 @@ export function useGameActions({
   };
 
   const handleSelectFrame = (frameId: string) => {
+    setFrameChangeAnimation(true);
     setCurrentFrameId(frameId);
+    setTimeout(() => {
+      setFrameChangeAnimation(false);
+    }, 500);
   };
 
   return {

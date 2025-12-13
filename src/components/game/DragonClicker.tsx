@@ -13,6 +13,7 @@ interface DragonClickerProps {
   coinsPerTap: number;
   clickAnimation: boolean;
   dragonChangeAnimation: boolean;
+  frameChangeAnimation: boolean;
   floatingTexts: Array<{ id: number; value: number; x: number; y: number; dragonType?: string }>;
   snowflakes: Array<{ id: number; x: number; y: number; size: number }>;
   onDragonClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -29,6 +30,7 @@ export default function DragonClicker({
   coinsPerTap,
   clickAnimation,
   dragonChangeAnimation,
+  frameChangeAnimation,
   floatingTexts,
   snowflakes,
   onDragonClick
@@ -51,6 +53,7 @@ export default function DragonClicker({
         coinsPerTap={coinsPerTap}
         clickAnimation={clickAnimation}
         dragonChangeAnimation={dragonChangeAnimation}
+        frameChangeAnimation={frameChangeAnimation}
         floatingTexts={floatingTexts}
         snowflakes={snowflakes}
         onDragonClick={onDragonClick}
