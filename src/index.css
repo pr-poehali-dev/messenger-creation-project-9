@@ -277,3 +277,19 @@ body {
 .animate-sparkle-6 {
   animation: sparkleFloat6 3.1s ease-in-out infinite 1.5s;
 }
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.9;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.15);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 4s ease-in-out infinite;
+}

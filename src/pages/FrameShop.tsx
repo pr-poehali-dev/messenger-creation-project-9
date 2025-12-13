@@ -140,7 +140,12 @@ export default function FrameShop({
                       backgroundColor: '#1a1a2e',
                     }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-purple-900 to-orange-600">
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-b from-blue-900 via-purple-900 to-orange-600 animate-glow-pulse"
+                      style={{
+                        filter: `hue-rotate(${frame.id === 'frame-none' ? 0 : parseInt(frame.id.split('-')[1]) * 15}deg)`,
+                      }}
+                    >
                       <div className="absolute inset-0" style={{
                         backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,200,100,0.3) 0%, transparent 50%)',
                       }}></div>
