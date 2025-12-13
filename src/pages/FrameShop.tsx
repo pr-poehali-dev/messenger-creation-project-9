@@ -111,6 +111,7 @@ export default function FrameShop({
             const canBuy = isGoldFrame 
               ? goldCoins >= (frame.goldCost || 0) && !isOwned
               : coins >= frame.cost && !isOwned;
+            const isWinterFrame = ['frame-21', 'frame-22', 'frame-23', 'frame-24', 'frame-25'].includes(frame.id);
 
             return (
               <div
@@ -151,12 +152,27 @@ export default function FrameShop({
                       }}></div>
                     </div>
                     
-                    <div className="absolute top-[10%] left-[15%] w-1 h-1 bg-yellow-300 rounded-full animate-sparkle-1 shadow-lg shadow-yellow-300/80"></div>
-                    <div className="absolute top-[25%] right-[20%] w-1.5 h-1.5 bg-pink-300 rounded-full animate-sparkle-2 shadow-lg shadow-pink-300/80"></div>
-                    <div className="absolute top-[60%] left-[25%] w-1 h-1 bg-blue-300 rounded-full animate-sparkle-3 shadow-lg shadow-blue-300/80"></div>
-                    <div className="absolute bottom-[20%] right-[15%] w-1.5 h-1.5 bg-purple-300 rounded-full animate-sparkle-4 shadow-lg shadow-purple-300/80"></div>
-                    <div className="absolute top-[40%] right-[30%] w-1 h-1 bg-cyan-300 rounded-full animate-sparkle-5 shadow-lg shadow-cyan-300/80"></div>
-                    <div className="absolute bottom-[35%] left-[10%] w-1 h-1 bg-amber-300 rounded-full animate-sparkle-6 shadow-lg shadow-amber-300/80"></div>
+                    {isWinterFrame ? (
+                      <>
+                        <div className="absolute top-[5%] left-[10%] text-white text-sm opacity-80 animate-snowfall-1">❄️</div>
+                        <div className="absolute top-[15%] right-[25%] text-white text-xs opacity-70 animate-snowfall-2">❄️</div>
+                        <div className="absolute top-[8%] left-[35%] text-white text-xs opacity-60 animate-snowfall-3">❄️</div>
+                        <div className="absolute top-[12%] right-[45%] text-white text-sm opacity-75 animate-snowfall-4">❄️</div>
+                        <div className="absolute top-[6%] left-[60%] text-white text-xs opacity-65 animate-snowfall-5">❄️</div>
+                        <div className="absolute top-[18%] right-[10%] text-white text-sm opacity-70 animate-snowfall-6">❄️</div>
+                        <div className="absolute top-[10%] left-[80%] text-white text-xs opacity-80 animate-snowfall-1" style={{animationDelay: '1s'}}>❄️</div>
+                        <div className="absolute top-[5%] right-[60%] text-white text-xs opacity-65 animate-snowfall-2" style={{animationDelay: '1.5s'}}>❄️</div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="absolute top-[10%] left-[15%] w-1 h-1 bg-yellow-300 rounded-full animate-sparkle-1 shadow-lg shadow-yellow-300/80"></div>
+                        <div className="absolute top-[25%] right-[20%] w-1.5 h-1.5 bg-pink-300 rounded-full animate-sparkle-2 shadow-lg shadow-pink-300/80"></div>
+                        <div className="absolute top-[60%] left-[25%] w-1 h-1 bg-blue-300 rounded-full animate-sparkle-3 shadow-lg shadow-blue-300/80"></div>
+                        <div className="absolute bottom-[20%] right-[15%] w-1.5 h-1.5 bg-purple-300 rounded-full animate-sparkle-4 shadow-lg shadow-purple-300/80"></div>
+                        <div className="absolute top-[40%] right-[30%] w-1 h-1 bg-cyan-300 rounded-full animate-sparkle-5 shadow-lg shadow-cyan-300/80"></div>
+                        <div className="absolute bottom-[35%] left-[10%] w-1 h-1 bg-amber-300 rounded-full animate-sparkle-6 shadow-lg shadow-amber-300/80"></div>
+                      </>
+                    )}
                     
                     <img
                       src={previewDragon.image}
