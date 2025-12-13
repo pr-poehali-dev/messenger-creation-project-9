@@ -148,7 +148,7 @@ export default function FrameShop({
                     <img
                       src={previewDragon.image}
                       alt={previewDragon.name}
-                      className="w-full h-full object-cover relative z-10"
+                      className="w-full h-full object-cover relative z-10 animate-dragon-preview"
                     />
                   </div>
                 </div>
