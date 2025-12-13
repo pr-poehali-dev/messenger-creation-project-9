@@ -12,10 +12,18 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const user = getUser();
-    if (user) {
-      setCurrentUser(user);
-      setCurrentPage('game');
+    try {
+      console.log('[App] Loading user from storage...');
+      const user = getUser();
+      if (user) {
+        console.log('[App] User found:', user.username);
+        setCurrentUser(user);
+        setCurrentPage('game');
+      } else {
+        console.log('[App] No user found, showing landing');
+      }
+    } catch (error) {
+      console.error('[App] Error loading user:', error);
     }
   }, []);
 

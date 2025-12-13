@@ -7,12 +7,21 @@ const STORAGE_KEYS = {
 };
 
 export const saveUser = (user: User): void => {
-  localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+  try {
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+  } catch (error) {
+    console.error('Failed to save user to localStorage:', error);
+  }
 };
 
 export const getUser = (): User | null => {
-  const data = localStorage.getItem(STORAGE_KEYS.USER);
-  return data ? JSON.parse(data) : null;
+  try {
+    const data = localStorage.getItem(STORAGE_KEYS.USER);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.error('Failed to get user from localStorage:', error);
+    return null;
+  }
 };
 
 export const removeUser = (): void => {
@@ -20,26 +29,44 @@ export const removeUser = (): void => {
 };
 
 export const saveGameState = (state: GameState): void => {
-  localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify({
-    ...state,
-    lastSaved: new Date().toISOString(),
-  }));
+  try {
+    localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify({
+      ...state,
+      lastSaved: new Date().toISOString(),
+    }));
+  } catch (error) {
+    console.error('Failed to save game state to localStorage:', error);
+  }
 };
 
 export const getGameState = (): GameState | null => {
-  const data = localStorage.getItem(STORAGE_KEYS.GAME_STATE);
-  return data ? JSON.parse(data) : null;
+  try {
+    const data = localStorage.getItem(STORAGE_KEYS.GAME_STATE);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.error('Failed to get game state from localStorage:', error);
+    return null;
+  }
 };
 
 export const getAllUsers = (): User[] => {
-  const data = localStorage.getItem(STORAGE_KEYS.USERS_DB);
-  return data ? JSON.parse(data) : [];
+  try {
+    const data = localStorage.getItem(STORAGE_KEYS.USERS_DB);
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error('Failed to get users from localStorage:', error);
+    return [];
+  }
 };
 
 export const addUserToDB = (user: User): void => {
-  const users = getAllUsers();
-  users.push(user);
-  localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify(users));
+  try {
+    const users = getAllUsers();
+    users.push(user);
+    localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify(users));
+  } catch (error) {
+    console.error('Failed to add user to localStorage:', error);
+  }
 };
 
 export const findUserByEmail = (email: string): User | undefined => {

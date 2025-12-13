@@ -113,6 +113,8 @@ export default function FrameShop({
               : coins >= frame.cost && !isOwned;
             const isWinterFrame = ['frame-21', 'frame-22', 'frame-23', 'frame-24', 'frame-25'].includes(frame.id);
             const isGalaxyFrame = frame.id === 'frame-26';
+            const isFireFrame = frame.id === 'frame-27';
+            const isMagicFrame = frame.id === 'frame-28';
 
             return (
               <div
@@ -178,6 +180,32 @@ export default function FrameShop({
                         <div className="absolute top-[15%] left-[40%] w-2 h-2 bg-purple-500 rounded-full animate-pulse shadow-lg shadow-purple-500/80"></div>
                         <div className="absolute top-[55%] right-[40%] w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse shadow-lg shadow-cyan-400/80" style={{animationDelay: '0.7s'}}></div>
                         <div className="absolute bottom-[25%] left-[35%] w-1 h-1 bg-pink-400 rounded-full animate-pulse shadow-lg shadow-pink-400/80" style={{animationDelay: '1.4s'}}></div>
+                      </>
+                    ) : isFireFrame ? (
+                      <>
+                        <div className="absolute top-[8%] left-[15%] text-2xl opacity-90 animate-float" style={{animationDelay: '0s'}}>🔥</div>
+                        <div className="absolute top-[25%] right-[12%] text-xl opacity-85 animate-float" style={{animationDelay: '0.5s'}}>🔥</div>
+                        <div className="absolute bottom-[30%] left-[20%] text-lg opacity-80 animate-float" style={{animationDelay: '1s'}}>🔥</div>
+                        <div className="absolute bottom-[15%] right-[18%] text-xl opacity-90 animate-float" style={{animationDelay: '1.5s'}}>🔥</div>
+                        <div className="absolute top-[45%] left-[8%] text-base opacity-75 animate-float" style={{animationDelay: '2s'}}>🔥</div>
+                        <div className="absolute top-[60%] right-[25%] text-lg opacity-85 animate-float" style={{animationDelay: '2.5s'}}>🔥</div>
+                        
+                        <div className="absolute top-[20%] left-[40%] w-2 h-2 bg-orange-500 rounded-full animate-pulse shadow-lg shadow-orange-500/80"></div>
+                        <div className="absolute bottom-[40%] right-[35%] w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/80" style={{animationDelay: '0.7s'}}></div>
+                        <div className="absolute top-[55%] left-[45%] w-1 h-1 bg-yellow-400 rounded-full animate-pulse shadow-lg shadow-yellow-400/80" style={{animationDelay: '1.4s'}}></div>
+                      </>
+                    ) : isMagicFrame ? (
+                      <>
+                        <div className="absolute top-[10%] left-[12%] text-xl opacity-90 animate-sparkle" style={{animationDelay: '0s'}}>✨</div>
+                        <div className="absolute top-[28%] right-[15%] text-lg opacity-85 animate-sparkle" style={{animationDelay: '0.6s'}}>🌟</div>
+                        <div className="absolute bottom-[25%] left-[18%] text-base opacity-80 animate-sparkle" style={{animationDelay: '1.2s'}}>💫</div>
+                        <div className="absolute bottom-[12%] right-[20%] text-xl opacity-90 animate-sparkle" style={{animationDelay: '1.8s'}}>✨</div>
+                        <div className="absolute top-[50%] left-[5%] text-sm opacity-75 animate-sparkle" style={{animationDelay: '2.4s'}}>🌟</div>
+                        <div className="absolute top-[65%] right-[10%] text-base opacity-85 animate-sparkle" style={{animationDelay: '3s'}}>💫</div>
+                        
+                        <div className="absolute top-[35%] left-[50%] w-2 h-2 bg-purple-400 rounded-full animate-pulse shadow-lg shadow-purple-400/80"></div>
+                        <div className="absolute bottom-[45%] right-[45%] w-1.5 h-1.5 bg-pink-400 rounded-full animate-pulse shadow-lg shadow-pink-400/80" style={{animationDelay: '0.8s'}}></div>
+                        <div className="absolute top-[48%] left-[30%] w-1 h-1 bg-blue-300 rounded-full animate-pulse shadow-lg shadow-blue-300/80" style={{animationDelay: '1.6s'}}></div>
                       </>
                     ) : (
                       <>

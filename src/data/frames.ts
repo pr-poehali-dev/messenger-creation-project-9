@@ -349,4 +349,29 @@ export const FRAMES: Frame[] = [
       animation: 'rotatingBorder 8s linear infinite',
     },
   },
+  {
+    id: 'frame-27',
+    name: 'Пламя дракона',
+    preview: '🔥',
+    cost: 1500000,
+    owned: false,
+    style: {
+      border: '12px solid',
+      borderImage: 'linear-gradient(45deg, #FF0000, #FF4500, #FF8C00, #FFD700, #FF8C00, #FF4500, #FF0000) 1',
+      boxShadow: '0 0 80px rgba(255, 69, 0, 1), 0 0 60px rgba(255, 140, 0, 0.9), 0 0 40px rgba(255, 0, 0, 0.8), inset 0 0 50px rgba(255, 69, 0, 0.5)',
+    },
+  },
+  {
+    id: 'frame-28',
+    name: 'Магический кристалл',
+    preview: '🔮',
+    cost: 0,
+    goldCost: 3500,
+    owned: false,
+    style: {
+      border: '13px solid transparent',
+      background: 'linear-gradient(#1a1a2e, #1a1a2e) padding-box, linear-gradient(135deg, #9370DB, #BA55D3, #DDA0DD, #BA55D3, #9370DB) border-box',
+      boxShadow: '0 0 90px rgba(147, 112, 219, 1), 0 0 70px rgba(186, 85, 211, 0.9), 0 0 50px rgba(221, 160, 221, 0.8), inset 0 0 55px rgba(147, 112, 219, 0.5)',
+    },
+  },
 ];
