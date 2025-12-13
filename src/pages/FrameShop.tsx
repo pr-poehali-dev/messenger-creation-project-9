@@ -145,6 +145,14 @@ export default function FrameShop({
                         backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,200,100,0.3) 0%, transparent 50%)',
                       }}></div>
                     </div>
+                    
+                    <div className="absolute top-[10%] left-[15%] w-1 h-1 bg-yellow-300 rounded-full animate-sparkle-1 shadow-lg shadow-yellow-300/80"></div>
+                    <div className="absolute top-[25%] right-[20%] w-1.5 h-1.5 bg-pink-300 rounded-full animate-sparkle-2 shadow-lg shadow-pink-300/80"></div>
+                    <div className="absolute top-[60%] left-[25%] w-1 h-1 bg-blue-300 rounded-full animate-sparkle-3 shadow-lg shadow-blue-300/80"></div>
+                    <div className="absolute bottom-[20%] right-[15%] w-1.5 h-1.5 bg-purple-300 rounded-full animate-sparkle-4 shadow-lg shadow-purple-300/80"></div>
+                    <div className="absolute top-[40%] right-[30%] w-1 h-1 bg-cyan-300 rounded-full animate-sparkle-5 shadow-lg shadow-cyan-300/80"></div>
+                    <div className="absolute bottom-[35%] left-[10%] w-1 h-1 bg-amber-300 rounded-full animate-sparkle-6 shadow-lg shadow-amber-300/80"></div>
+                    
                     <img
                       src={previewDragon.image}
                       alt={previewDragon.name}
