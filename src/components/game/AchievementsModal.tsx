@@ -5,6 +5,7 @@ interface AchievementsModalProps {
   achievements: Achievement[];
   onClose: () => void;
   onClaimReward: (achievementId: string) => void;
+  onClaimAllRewards?: () => void;
   formatNumber: (num: number) => string;
 }
 
@@ -12,6 +13,7 @@ export default function AchievementsModal({
   achievements,
   onClose,
   onClaimReward,
+  onClaimAllRewards,
   formatNumber
 }: AchievementsModalProps) {
   const categories = {
@@ -24,6 +26,7 @@ export default function AchievementsModal({
   };
 
   const completedCount = achievements.filter(a => a.completed).length;
+  const unclaimedCount = achievements.filter(a => a.completed && !a.claimed).length;
   const totalCount = achievements.length;
   const completionPercent = Math.round((completedCount / totalCount) * 100);
 
@@ -55,6 +58,16 @@ export default function AchievementsModal({
               style={{ width: `${completionPercent}%` }}
             />
           </div>
+
+          {unclaimedCount > 0 && onClaimAllRewards && (
+            <button
+              onClick={onClaimAllRewards}
+              className="mt-4 w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white font-bold py-3 px-6 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-green-500/30 animate-pulse"
+            >
+              <Icon name="Gift" size={24} />
+              Забрать всё ({unclaimedCount})
+            </button>
+          )}
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)] custom-scrollbar">
@@ -140,13 +153,19 @@ export default function AchievementsModal({
                               )}
                             </div>
 
-                            {isCompleted && (
+                            {isCompleted && !achievement.claimed && (
                               <button
                                 onClick={() => onClaimReward(achievement.id)}
                                 className="mt-2 w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-white font-bold py-1.5 px-3 rounded-lg transition-all active:scale-95 text-xs"
                               >
                                 Забрать награду
                               </button>
+                            )}
+                            {isCompleted && achievement.claimed && (
+                              <div className="mt-2 w-full bg-green-900/30 border border-green-500/30 text-green-400 font-bold py-1.5 px-3 rounded-lg text-xs text-center flex items-center justify-center gap-1">
+                                <Icon name="Check" size={14} />
+                                Получено
+                              </div>
                             )}
                           </div>
                         </div>

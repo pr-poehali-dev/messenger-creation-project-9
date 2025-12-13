@@ -188,7 +188,7 @@ export default function Game({ user, onLogout }: GameProps) {
           onClose={() => setShowAchievements(false)}
           onClaimReward={(achievementId) => {
             const achievement = gameState.achievements.find(a => a.id === achievementId);
-            if (achievement && achievement.completed) {
+            if (achievement && achievement.completed && !achievement.claimed) {
               if (achievement.reward.coins) {
                 gameState.setCoins(prev => prev + achievement.reward.coins!);
               }
@@ -196,9 +196,37 @@ export default function Game({ user, onLogout }: GameProps) {
                 gameState.setGoldCoins(prev => prev + achievement.reward.goldCoins!);
               }
               gameState.setAchievements(prev => 
-                prev.map(a => a.id === achievementId ? { ...a, completed: false } : a)
+                prev.map(a => a.id === achievementId ? { ...a, claimed: true } : a)
               );
             }
+          }}
+          onClaimAllRewards={() => {
+            const unclaimedAchievements = gameState.achievements.filter(
+              a => a.completed && !a.claimed
+            );
+            
+            let totalCoins = 0;
+            let totalGoldCoins = 0;
+            
+            unclaimedAchievements.forEach(achievement => {
+              if (achievement.reward.coins) {
+                totalCoins += achievement.reward.coins;
+              }
+              if (achievement.reward.goldCoins) {
+                totalGoldCoins += achievement.reward.goldCoins;
+              }
+            });
+            
+            if (totalCoins > 0) {
+              gameState.setCoins(prev => prev + totalCoins);
+            }
+            if (totalGoldCoins > 0) {
+              gameState.setGoldCoins(prev => prev + totalGoldCoins);
+            }
+            
+            gameState.setAchievements(prev => 
+              prev.map(a => a.completed && !a.claimed ? { ...a, claimed: true } : a)
+            );
           }}
           formatNumber={formatNumber}
         />

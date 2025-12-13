@@ -28,6 +28,7 @@ export interface Achievement {
   target: number;
   current: number;
   completed: boolean;
+  claimed?: boolean;
   reward: {
     coins?: number;
     goldCoins?: number;
